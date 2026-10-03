@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>pulse! — разбор карт osu!</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="pulse! Главная"><span class="brand-mark">✦</span><span>pulse<span class="brand-bang">!</span></span></a>
+      <div class="brand-caption">твой радар сложности</div>
+      <nav class="nav" aria-label="Разделы">
+        <a href="#analysis" class="nav-item active"><span class="nav-icon">◎</span> Анализ карты</a>
+        <a href="#recommendations" class="nav-item"><span class="nav-icon">✧</span> Подбор карт</a>
+        <a href="#catalog" class="nav-item"><span class="nav-icon">▦</span> Каталог</a>
+      </nav>
+      <div class="side-spacer"></div>
+      <div class="side-note"><span class="status-dot"></span> Локальный прототип <small>Данные хранятся на этом компьютере</small></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">Главная <span>/</span> Анализ карты</div>
+        <div class="topbar-right"><span class="mode-chip">osu!standard</span><span class="avatar" id="avatar">?</span></div>
+      </header>
+
+      <div class="content">
+        <section class="hero" id="analysis">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="eyebrow-line"></span> ИГРАЙ С ПОНИМАНИЕМ</div>
+            <h1>Найди карту <em>по себе.</em></h1>
+            <p>Разберём нагрузку, отметим самые сложные моменты и оценим, как карта сочетается с твоими результатами.</p>
+          </div>
+          <div class="hero-orbit" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit-core">◎</div><i class="orb orb-a"></i><i class="orb orb-b"></i><i class="orb orb-c"></i></div>
+        </section>
+
+        <section class="setup-grid">
+          <div class="panel input-panel">
+            <div class="panel-top"><div><div class="step">01 / КАРТА</div><h2>Что будем разбирать?</h2></div><span class="panel-icon">♫</span></div>
+            <form id="map-form" class="input-row">
+              <input id="map-input" type="text" autocomplete="off" placeholder="Ссылка на карту osu! или ID" aria-label="Ссылка на карту osu! или ID" required>
+              <button class="primary-button" type="submit" id="map-submit">Анализировать <span>→</span></button>
+            </form>
+            <div class="input-help"><span>Например, osu.ppy.sh/beatmapsets/…#osu/221777</span><button id="sample-button" class="text-button" type="button">Попробовать примеры →</button></div>
+            <div class="divider"><span>или</span></div>
+            <label class="upload-area" for="map-file"><span class="upload-icon">↑</span><span><strong>Загрузить .osu или .osz</strong><small>Для локальных и неранкнутых карт · до 25 МБ</small></span><span class="upload-arrow">↗</span></label>
+            <input type="file" id="map-file" accept=".osu,.osz" hidden>
+          </div>
+
+          <div class="panel player-panel">
+            <div class="panel-top"><div><div class="step">02 / ИГРОК</div><h2>Чьи результаты?</h2></div><span class="panel-icon player-icon">◉</span></div>
+            <form id="player-form" class="input-row player-input-row">
+              <input id="player-input" type="text" autocomplete="off" placeholder="Твой ник в osu!" aria-label="Имя игрока" maxlength="50" required>
+              <button class="secondary-button" type="submit">Выбрать</button>
+            </form>
+            <div id="player-summary" class="player-summary"><span class="mini-dot"></span> Укажи ник, чтобы создать локальный профиль.</div>
+            <button id="import-button" class="import-button" type="button"><span>↻</span> Импортировать результаты из osu! API</button>
+            <div id="api-hint" class="api-hint"></div>
+          </div>
+        </section>
+
+        <section id="result-section" class="result-section hidden" aria-live="polite">
+          <div class="section-heading"><div><div class="eyebrow small">АНАЛИЗ</div><h2>Твоя карта</h2></div><div class="header-actions"><a id="official-link" class="outline-link" href="#" target="_blank" rel="noopener noreferrer">Открыть в osu! ↗</a><button id="log-play" class="outline-link" type="button">+ Добавить результат</button></div></div>
+          <div class="map-hero panel">
+            <div class="map-hero-main"><div class="map-difficulty" id="map-difficulty">—</div><div><div class="map-label">ВЫБРАННАЯ КАРТА</div><h3 id="map-title">—</h3><p id="map-subtitle">—</p></div></div>
+            <div class="mods-picker" id="mods-picker" aria-label="Моды"><span>МОДЫ</span><button type="button" data-mod="NM" class="selected">NM</button><button type="button" data-mod="HD">HD</button><button type="button" data-mod="HR">HR</button><button type="button" data-mod="DT">DT</button><button type="button" data-mod="EZ">EZ</button><button type="button" data-mod="HT">HT</button></div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric panel"><div class="metric-label">ЗВЁЗДЫ <span>✦</span></div><div class="metric-value" id="stat-stars">—</div><div class="metric-foot">Общая сложность</div></div>
+            <div class="metric panel"><div class="metric-label">AIM <span>↗</span></div><div class="metric-value" id="stat-aim">—</div><div class="metric-foot">Нагрузка на наведение</div></div>
+            <div class="metric panel"><div class="metric-label">SPEED <span>↝</span></div><div class="metric-value" id="stat-speed">—</div><div class="metric-foot">Скорость нажатий</div></div>
+            <div class="metric panel"><div class="metric-label">BPM <span>♫</span></div><div class="metric-value" id="stat-bpm">—</div><div class="metric-foot" id="stat-duration">—</div></div>
+          </div>
+          <div class="insights-grid">
+            <div class="panel prediction-panel"><div class="panel-top"><div><div class="step">ПЕРСОНАЛЬНЫЙ ПРОГНОЗ</div><h2>Как сыграется у тебя</h2></div><span class="panel-icon">✧</span></div><div id="prediction-content" class="prediction-content"></div></div>
+            <div class="panel timeline-panel"><div class="panel-top"><div><div class="step">НАГРУЗКА ПО ВРЕМЕНИ</div><h2>Где будет сложно</h2></div><div class="timeline-legend"><span class="aim-key"></span> Aim <span class="speed-key"></span> Speed</div></div><div id="timeline" class="timeline" role="img" aria-label="Нагрузка по участкам карты"></div><div id="peak-list" class="peak-list"></div></div>
+          </div>
+        </section>
+
+        <section id="recommendations" class="recommend-section"><div class="section-heading"><div><div class="eyebrow small">СЛЕДУЮЩИЙ ШАГ</div><h2>Что сыграть дальше</h2></div><div class="goal-tabs" id="goal-tabs"><button data-goal="warmup" type="button">Разминка</button><button data-goal="comfort" type="button" class="selected">В своём темпе</button><button data-goal="challenge" type="button">Вызов</button></div></div><div id="recommendation-list" class="recommendation-list"><div class="empty-state panel">Добавь несколько карт и результатов, чтобы увидеть персональный подбор.</div></div></section>
+
+        <section id="catalog" class="catalog-section"><div class="section-heading"><div><div class="eyebrow small">ТВОЯ БИБЛИОТЕКА</div><h2>Добавленные карты <span id="catalog-count" class="count-badge">0</span></h2></div></div><div id="catalog-list" class="catalog-list"><div class="empty-state panel">Каталог пока пуст. Вставь ссылку на карту или загрузи файл .osu.</div></div></section>
+        <footer class="footer">pulse! · Экспериментальный локальный прототип · Не связан с osu! или ppy Pty Ltd</footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="play-dialog" class="play-dialog"><form id="play-form" method="dialog"><button type="button" id="dialog-close" class="dialog-close" aria-label="Закрыть">×</button><div class="step">ОБРАТНАЯ СВЯЗЬ</div><h2>Как прошла игра?</h2><p id="dialog-map-name">—</p><label>Точность, %<input id="play-accuracy" type="number" min="0" max="100" step="0.01" value="95" required></label><label>Промахи<input id="play-misses" type="number" min="0" step="1" value="0" required></label><label class="checkbox-line"><input id="play-passed" type="checkbox" checked> Карта пройдена</label><button type="submit" class="primary-button wide">Сохранить результат →</button><div class="divider"><span>или импортировать файл</span></div><label class="replay-import" for="replay-file">↑ Загрузить собственный реплей .osr</label><input id="replay-file" type="file" accept=".osr" hidden><small class="replay-hint">Для osu!stable. Приложение найдёт карту по хешу; отметка «Карта пройдена» применяется к реплею.</small></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
