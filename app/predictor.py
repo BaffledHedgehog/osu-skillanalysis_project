@@ -8,7 +8,7 @@ from typing import Any
 
 import numpy as np
 
-from .ml import predict_pass, vector
+from .ml import model_context, predict_pass, vector
 from .storage import Store
 
 
@@ -44,7 +44,8 @@ def _records(store: Store, user: str) -> list[dict[str, Any]]:
         except ValueError:
             age_days = 0
         play["analysis"] = analysis
-        play["weight"] = 0.5 ** (age_days / 180)
+        source_weight = 0.35 if play["source"] in ("osu_api_best", "hinai_best", "osu_api") else 1.0
+        play["weight"] = source_weight * 0.5 ** (age_days / 180)
         records.append(play)
     return records
 
@@ -54,7 +55,7 @@ def _summary_from_records(user: str, records: list[dict[str, Any]]) -> dict[str,
     if not records:
         return {"user": user, "plays": 0, "passed": 0, "accuracy": None,
                 "comfort_stars": None, "aim_level": None, "speed_level": None,
-                "sources": {}, "recent": []}
+                "best_pp": None, "sources": {}, "recent": []}
     weights = [r["weight"] for r in records]
     source_counts: dict[str, int] = {}
     for r in records:
@@ -64,6 +65,8 @@ def _summary_from_records(user: str, records: list[dict[str, Any]]) -> dict[str,
         "plays": len(records),
         "passed": len(passed),
         "accuracy": round(sum(r["accuracy"] * r["weight"] for r in records) / sum(weights) * 100, 1),
+        "best_pp": round(max((r["pp"] for r in records if r["pp"] is not None), default=0), 1)
+                   if any(r["pp"] is not None for r in records) else None,
         "comfort_stars": round(_weighted_quantile(
             [r["analysis"]["stars"] for r in passed], [r["weight"] for r in passed], 0.7), 2) if passed else None,
         "aim_level": round(_weighted_quantile(
@@ -82,7 +85,8 @@ def user_summary(store: Store, user: str) -> dict[str, Any]:
 
 def predict(store: Store, user: str, target: dict[str, Any],
             records: list[dict[str, Any]] | None = None,
-            summary: dict[str, Any] | None = None) -> dict[str, Any]:
+            summary: dict[str, Any] | None = None,
+            ml_context: tuple[dict[str, Any] | None, dict[str, Any]] | None = None) -> dict[str, Any]:
     records = records if records is not None else _records(store, user)
     if len(records) < 3:
         return {
@@ -118,7 +122,7 @@ def predict(store: Store, user: str, target: dict[str, Any],
 
     failed = sum(not r["passed"] for r in records)
     model = "similarity_and_prior"
-    ml_p, ml_status = predict_pass(store, user, target)
+    ml_p, ml_status = predict_pass(store, user, target, ml_context)
     if ml_p is not None:
         p = 0.7 * ml_p + 0.3 * p
         model = "validated_personal_logistic_and_similarity"
@@ -128,9 +132,9 @@ def predict(store: Store, user: str, target: dict[str, Any],
     factors = []
     delta = target["stars"] - ability
     if delta > 0.35:
-        factors.append(f"Сложность карты выше твоего текущего ориентира примерно на {delta:.1f}★.")
+        factors.append(f"Сложность карты выше твоего текущего ориентира примерно на {delta:.1f} звезды.")
     elif delta < -0.35:
-        factors.append(f"Сложность карты ниже твоего текущего ориентира примерно на {-delta:.1f}★.")
+        factors.append(f"Сложность карты ниже твоего текущего ориентира примерно на {-delta:.1f} звезды.")
     summary = summary or _summary_from_records(user, records)
     if summary["aim_level"] is not None and target["aim"] > summary["aim_level"] + 0.45:
         factors.append("Aim нагрузка выше, чем на большинстве успешно пройденных тобой карт.")
@@ -158,6 +162,7 @@ def recommendations(store: Store, user: str, goal: str = "comfort", mods: str = 
     played_ids = {r["map_id"] for r in store.plays(user)}
     records = _records(store, user)
     summary = _summary_from_records(user, records)
+    ml_context = model_context(store, user) if len(records) >= 3 else None
     ranked = []
     for item in store.list_maps():
         if item["id"] in played_ids:
@@ -168,7 +173,7 @@ def recommendations(store: Store, user: str, goal: str = "comfort", mods: str = 
             continue
         if not analysis:
             continue
-        prediction = predict(store, user, analysis, records, summary)
+        prediction = predict(store, user, analysis, records, summary, ml_context)
         p = prediction["pass_probability"]
         if p is None:
             # With no history, simply sort by chart stars and avoid invented personalization.

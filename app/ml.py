@@ -40,6 +40,10 @@ def _dataset(store: Store, user: str) -> tuple[np.ndarray, np.ndarray, np.ndarra
     rows = []
     identity = []
     for play in store.plays(user, limit=100_000):
+        if play["source"] in ("osu_api_best", "hinai_best", "osu_api"):
+            # Best scores were selected for success and cannot estimate pass rate.
+            # Older mixed API rows have no recoverable source distinction.
+            continue
         analysis = store.analysis(play["map_id"], play["mods"])
         if analysis is None:
             continue
@@ -158,13 +162,18 @@ def _ensure_cached(database: str, user: str, fingerprint: str) -> tuple[dict[str
 
 
 def model_status(store: Store, user: str) -> dict[str, Any]:
-    _, _, _, fingerprint = _dataset(store, user)
-    return _ensure_cached(str(store.path.resolve()), user.strip().casefold(), fingerprint)[1]
+    return model_context(store, user)[1]
 
 
-def predict_pass(store: Store, user: str, analysis: dict[str, Any]) -> tuple[float | None, dict[str, Any]]:
+def model_context(store: Store, user: str) -> tuple[dict[str, Any] | None, dict[str, Any]]:
     _, _, _, fingerprint = _dataset(store, user)
-    model, status = _ensure_cached(str(store.path.resolve()), user.strip().casefold(), fingerprint)
+    return _ensure_cached(str(store.path.resolve()), user.strip().casefold(), fingerprint)
+
+
+def predict_pass(store: Store, user: str, analysis: dict[str, Any],
+                 context: tuple[dict[str, Any] | None, dict[str, Any]] | None = None
+                 ) -> tuple[float | None, dict[str, Any]]:
+    model, status = context if context is not None else model_context(store, user)
     return (_score(model, analysis) if model else None), status
 
 

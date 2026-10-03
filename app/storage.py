@@ -35,11 +35,14 @@ class Store:
                 CREATE TABLE IF NOT EXISTS plays (
                     id TEXT PRIMARY KEY, user_key TEXT NOT NULL, map_id TEXT NOT NULL,
                     mods TEXT NOT NULL, accuracy REAL NOT NULL, passed INTEGER NOT NULL,
-                    misses INTEGER NOT NULL, played_at TEXT NOT NULL, source TEXT NOT NULL
+                    misses INTEGER NOT NULL, played_at TEXT NOT NULL, source TEXT NOT NULL,
+                    pp REAL
                 );
                 CREATE INDEX IF NOT EXISTS plays_user_date ON plays(user_key, played_at DESC);
                 """
             )
+            if "pp" not in {row[1] for row in db.execute("PRAGMA table_info(plays)")}:
+                db.execute("ALTER TABLE plays ADD COLUMN pp REAL")
 
     @contextmanager
     def _connection(self):
@@ -108,6 +111,7 @@ class Store:
     def save_play(
         self, user: str, map_id: str, mods: str, accuracy: float, passed: bool,
         misses: int = 0, played_at: str | None = None, source: str = "manual", play_id: str | None = None,
+        pp: float | None = None,
     ) -> bool:
         if not self.get_map(map_id):
             raise ValueError("Сначала добавьте эту карту в каталог.")
@@ -115,10 +119,16 @@ class Store:
         play_id = play_id or str(uuid.uuid4())
         with self._connection() as db:
             cursor = db.execute(
-                "INSERT OR IGNORE INTO plays(id,user_key,map_id,mods,accuracy,passed,misses,played_at,source) "
-                "VALUES(?,?,?,?,?,?,?,?,?)",
-                (play_id, user.strip().casefold(), map_id, mods, accuracy, int(passed), misses, played_at, source),
+                "INSERT OR IGNORE INTO plays(id,user_key,map_id,mods,accuracy,passed,misses,played_at,source,pp) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?)",
+                (play_id, user.strip().casefold(), map_id, mods, accuracy, int(passed), misses, played_at, source, pp),
             )
+            if cursor.rowcount == 0:
+                if source in ("osu_api_recent", "osu_api_best", "hinai_recent", "hinai_best"):
+                    db.execute("UPDATE plays SET source=? WHERE id=? AND source='osu_api'",
+                               (source, play_id))
+                if pp is not None:
+                    db.execute("UPDATE plays SET pp=COALESCE(pp, ?) WHERE id=?", (pp, play_id))
             return cursor.rowcount > 0
 
     def plays(self, user: str, limit: int = 300) -> list[dict[str, Any]]:

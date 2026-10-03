@@ -39,7 +39,7 @@ class PlayInput(BaseModel):
 
 
 class UserInput(BaseModel):
-    username: str = Field(min_length=1, max_length=50)
+    username: str = Field(min_length=1, max_length=300)
 
 
 def _map_id(value: str) -> str:
@@ -180,9 +180,9 @@ def create_app(db_path: str | Path | None = None) -> FastAPI:
         except httpx.HTTPStatusError as exc:
             if exc.response.status_code == 404:
                 raise HTTPException(404, "Игрок не найден на osu!.") from exc
-            raise HTTPException(502, "osu! API вернул ошибку. Попробуйте позже.") from exc
+            raise HTTPException(502, "Источник результатов недоступен. Попробуйте позже.") from exc
         except httpx.HTTPError as exc:
-            raise HTTPException(502, "Не удалось связаться с osu! API.") from exc
+            raise HTTPException(502, "Не удалось получить результаты игрока.") from exc
 
     @app.get("/api/recommendations")
     def recommend(user: str, goal: str = Query("comfort", pattern="^(warmup|comfort|challenge)$"),
