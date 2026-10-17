@@ -1,0 +1,13 @@
+Договорились на лекции, что работаем в этих инструментах 
+
+Репозиторий
+GitHub / GitLab
+Управление задачами YouTrack/
+План проекта
+ProjectLibre
+Документация
+Markdown в Git + Google Docs / Word
+Разработка
+Python. + Jupyter Notebook / VS Code
+Схемы
+draw.io
