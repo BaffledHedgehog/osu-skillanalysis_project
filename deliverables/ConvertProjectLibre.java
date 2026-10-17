@@ -21,10 +21,17 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.HashSet;
+import java.util.Set;
+import com.projectlibre1.pm.calendar.WorkingCalendar;
+import com.projectlibre1.pm.calendar.WorkDay;
 
 public class ConvertProjectLibre {
     private static final Pattern RACI = Pattern.compile(
             "RACI: R: (.*?); A: (.*?); C: (.*?); I: (.*?)\\.$");
+    private static final Pattern EXECUTOR = Pattern.compile("исполнитель (.*?); выход:");
 
     private static String tag(Element parent, String name) {
         NodeList elements = parent.getElementsByTagNameNS("http://schemas.microsoft.com/project", name);
@@ -65,6 +72,31 @@ public class ConvertProjectLibre {
         return result;
     }
 
+    private static void applyCalendarExceptions(Project project, String fileName) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        NodeList exceptions = factory.newDocumentBuilder().parse(new File(fileName))
+                .getElementsByTagNameNS("http://schemas.microsoft.com/project", "Exception");
+        Set<WorkingCalendar> calendars = new HashSet<>();
+        calendars.add((WorkingCalendar) project.getEffectiveWorkCalendar());
+        for (Object item : project.getTasks())
+            calendars.add((WorkingCalendar) ((Task) item).getEffectiveWorkCalendar());
+        for (int i = 0; i < exceptions.getLength(); i++) {
+            Element exception = (Element) exceptions.item(i);
+            if (!tag(exception, "DayWorking").equals("0")) continue;
+            long day = LocalDate.parse(tag(exception, "FromDate").substring(0, 10))
+                    .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            for (WorkingCalendar calendar : calendars) {
+                WorkDay nonWorking = new WorkDay(day);
+                nonWorking.getWorkingHours().setNonWorking();
+                calendar.addOrReplaceException(nonWorking);
+                calendar.invalidate();
+                calendar.notifyChanged();
+            }
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
             throw new IllegalArgumentException("Usage: ConvertProjectLibre input.xml output.pod");
@@ -103,8 +135,10 @@ public class ConvertProjectLibre {
         }
         Map<String, Integer> daysByWbs = plannedDays(args[0]);
         Map<String, String[]> datesByWbs = plannedDates(args[0]);
+        applyCalendarExceptions(project, args[0]);
         for (Object item : project.getTasks()) {
             Task task = (Task) item;
+            ((com.projectlibre1.pm.task.NormalTask) task).invalidateAssignmentCalendars();
             Integer days = daysByWbs.get(task.getWbs());
             if (days == null) throw new IllegalStateException("Unknown WBS " + task.getWbs());
             if (days > 0) ((com.projectlibre1.pm.task.NormalTask) task)
@@ -116,7 +150,27 @@ public class ConvertProjectLibre {
             for (int field = 0; field < 4; field++) {
                 task.setCustomText(field, match.group(field + 1));
             }
+            Matcher executor = EXECUTOR.matcher(task.getNotes());
+            if (!executor.find()) throw new IllegalStateException("Missing executor role for " + task.getName());
+            task.setCustomText(4, executor.group(1));
         }
+        project.recalculate();
+        // ProjectLibre can retain a nonworking day as the start of a one-day task.
+        // Move only such starts to the next working interval after a calendar exception.
+        for (Object item : project.getTasks()) {
+            Task task = (Task) item;
+            if (task.isMilestone()) continue;
+            String expectedStart = datesByWbs.get(task.getWbs())[0];
+            String actualStart = new SimpleDateFormat("yyyy-MM-dd").format(new Date(task.getStart()));
+            String actualEnd = new SimpleDateFormat("yyyy-MM-dd").format(new Date(task.getEnd()));
+            if (actualStart.compareTo(expectedStart) < 0 &&
+                    actualEnd.equals(datesByWbs.get(task.getWbs())[1])) {
+                long earliest = LocalDate.parse(expectedStart).atTime(9, 0)
+                        .toInstant(ZoneOffset.UTC).toEpochMilli();
+                task.setStartNoEarlierThan(earliest);
+            }
+        }
+        project.recalculate();
         LocalFileImporter output = new LocalFileImporter();
         output.setProject(project);
         output.setFileName(args[1]);
@@ -143,9 +197,11 @@ public class ConvertProjectLibre {
             String[] expectedDates = datesByWbs.get(task.getWbs());
             if (!dateFormat.format(new Date(task.getStart())).equals(expectedDates[0]) ||
                     !dateFormat.format(new Date(task.getEnd())).equals(expectedDates[1])) {
-                throw new IllegalStateException("Wrong schedule dates for " + task.getWbs());
+                throw new IllegalStateException("Wrong schedule dates for " + task.getWbs() +
+                        ": " + dateFormat.format(new Date(task.getStart())) + ".." + dateFormat.format(new Date(task.getEnd())) +
+                        " expected " + expectedDates[0] + ".." + expectedDates[1]);
             }
-            for (int field = 0; field < 4; field++) {
+            for (int field = 0; field < 5; field++) {
                 if (task.getCustomText(field) == null) {
                     throw new IllegalStateException("Missing RACI Text" + (field + 1) +
                             " for " + task.getName());
@@ -161,6 +217,6 @@ public class ConvertProjectLibre {
             throw new IllegalStateException("POD content mismatch: tasks=" + tasks +
                     ", milestones=" + milestones + ", dependencies=" + dependencies);
         }
-        System.out.println("Verified POD: 20 works, 5 milestones, 34 dependencies, all durations and dates match XML, RACI in Text1-Text4: " + args[1]);
+        System.out.println("Verified POD: 20 works, 5 milestones, 34 dependencies, dates match XML, RACI in Text1-Text4, executor role in Text5: " + args[1]);
     }
 }

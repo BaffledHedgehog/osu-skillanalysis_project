@@ -5,7 +5,7 @@
   <Title>pulse! - календарный план</Title>
   <ScheduleFromStart>1</ScheduleFromStart>
   <StartDate>2026-10-19T09:00:00</StartDate>
-  <FinishDate>2026-12-21T18:00:00</FinishDate>
+  <FinishDate>2026-11-11T18:00:00</FinishDate>
   <MinutesPerDay>480</MinutesPerDay>
   <MinutesPerWeek>2400</MinutesPerWeek>
   <DaysPerMonth>20</DaysPerMonth>
@@ -98,6 +98,19 @@
           <DayWorking>0</DayWorking>
         </WeekDay>
       </WeekDays>
+      <Exceptions>
+        <Exception>
+          <EnteredByOccurrences>0</EnteredByOccurrences>
+          <TimePeriod>
+            <FromDate>2026-11-04T00:00:00</FromDate>
+            <ToDate>2026-11-04T23:59:00</ToDate>
+          </TimePeriod>
+          <Occurrences>1</Occurrences>
+          <Name>Нерабочий день 4 ноября</Name>
+          <Type>1</Type>
+          <DayWorking>0</DayWorking>
+        </Exception>
+      </Exceptions>
     </Calendar>
   </Calendars>
   <Tasks>
@@ -111,14 +124,14 @@
       <OutlineNumber>1.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
       <Start>2026-10-19T09:00:00</Start>
-      <Finish>2026-10-20T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Finish>2026-10-19T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T01; исполнитель Ляхов Я.П.; выход: Паспорт и Scope. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
+      <Notes>ID T01; исполнитель Заказчик / руководитель; выход: Паспорт и Scope. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
       <Text1>Заказчик / руководитель</Text1>
       <Text2>Заказчик / руководитель</Text2>
       <Text3>Данные и модели, Разработка, Преподаватель</Text3>
@@ -133,15 +146,15 @@
       <WBS>1.2</WBS>
       <OutlineNumber>1.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-21T09:00:00</Start>
-      <Finish>2026-10-23T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-10-20T09:00:00</Start>
+      <Finish>2026-10-20T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T02; исполнитель Ляхов Я.П.; выход: Реестр и критерии. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
+      <Notes>ID T02; исполнитель Заказчик / руководитель; выход: Реестр и критерии. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
       <Text1>Заказчик / руководитель</Text1>
       <Text2>Заказчик / руководитель</Text2>
       <Text3>Данные и модели, Разработка, Преподаватель</Text3>
@@ -163,15 +176,15 @@
       <WBS>1.3</WBS>
       <OutlineNumber>1.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-26T09:00:00</Start>
-      <Finish>2026-10-27T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Start>2026-10-21T09:00:00</Start>
+      <Finish>2026-10-21T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T03; исполнитель Ляхов Я.П.; выход: ТЗ и WBS версии 1. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
+      <Notes>ID T03; исполнитель Заказчик / руководитель; выход: ТЗ и WBS версии 1. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
       <Text1>Заказчик / руководитель</Text1>
       <Text2>Заказчик / руководитель</Text2>
       <Text3>Данные и модели, Разработка, Преподаватель</Text3>
@@ -193,15 +206,15 @@
       <WBS>1.4</WBS>
       <OutlineNumber>1.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-27T18:00:00</Start>
-      <Finish>2026-10-27T18:00:00</Finish>
+      <Start>2026-10-21T18:00:00</Start>
+      <Finish>2026-10-21T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID M01; исполнитель Ляхов Я.П.; выход: Решение о переходе к MVP. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
+      <Notes>ID M01; исполнитель Заказчик / руководитель; выход: Решение о переходе к MVP. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Разработка, Преподаватель; I: Тесты и документы, Игроки пилота.</Notes>
       <Text1>Заказчик / руководитель</Text1>
       <Text2>Заказчик / руководитель</Text2>
       <Text3>Данные и модели, Разработка, Преподаватель</Text3>
@@ -223,15 +236,15 @@
       <WBS>2.1</WBS>
       <OutlineNumber>2.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-28T09:00:00</Start>
-      <Finish>2026-10-30T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-10-22T09:00:00</Start>
+      <Finish>2026-10-22T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T04; исполнитель Гайфуллин А.Р.; выход: Таблица попыток. RACI: R: Разработка; A: Данные и модели; C: Тесты и документы; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T04; исполнитель Разработка; выход: Таблица попыток. RACI: R: Разработка; A: Данные и модели; C: Тесты и документы; I: Заказчик / руководитель.</Notes>
       <Text1>Разработка</Text1>
       <Text2>Данные и модели</Text2>
       <Text3>Тесты и документы</Text3>
@@ -253,15 +266,15 @@
       <WBS>2.2</WBS>
       <OutlineNumber>2.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-28T09:00:00</Start>
-      <Finish>2026-10-29T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Start>2026-10-22T09:00:00</Start>
+      <Finish>2026-10-22T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
-      <Critical>0</Critical>
+      <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T05; исполнитель Темиров А.М.; выход: Протокол импорта. RACI: R: Разработка, Тесты и документы; A: Разработка; C: Данные и модели; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T05; исполнитель Тесты и документы; выход: Протокол импорта. RACI: R: Разработка, Тесты и документы; A: Разработка; C: Данные и модели; I: Заказчик / руководитель.</Notes>
       <Text1>Разработка, Тесты и документы</Text1>
       <Text2>Разработка</Text2>
       <Text3>Данные и модели</Text3>
@@ -283,18 +296,18 @@
       <WBS>2.3</WBS>
       <OutlineNumber>2.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-28T09:00:00</Start>
-      <Finish>2026-10-29T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Start>2026-10-22T09:00:00</Start>
+      <Finish>2026-10-22T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
-      <Critical>0</Critical>
+      <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T06; исполнитель Ляхов Я.П.; выход: Форма согласия и схема. RACI: R: Данные и модели, Тесты и документы; A: Заказчик / руководитель; C: Игроки пилота; I: Разработка, Преподаватель.</Notes>
-      <Text1>Данные и модели, Тесты и документы</Text1>
+      <Notes>ID T06; исполнитель Заказчик / руководитель; выход: Форма согласия и схема. RACI: R: Заказчик / руководитель; A: Заказчик / руководитель; C: Данные и модели, Тесты и документы, Игроки пилота; I: Разработка, Преподаватель.</Notes>
+      <Text1>Заказчик / руководитель</Text1>
       <Text2>Заказчик / руководитель</Text2>
-      <Text3>Игроки пилота</Text3>
+      <Text3>Данные и модели, Тесты и документы, Игроки пилота</Text3>
       <Text4>Разработка, Преподаватель</Text4>
       <PredecessorLink>
         <PredecessorUID>4</PredecessorUID>
@@ -313,19 +326,19 @@
       <WBS>2.4</WBS>
       <OutlineNumber>2.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-02T09:00:00</Start>
-      <Finish>2026-11-06T18:00:00</Finish>
-      <Duration>PT40H0M0S</Duration>
+      <Start>2026-10-23T09:00:00</Start>
+      <Finish>2026-10-26T18:00:00</Finish>
+      <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T07; исполнитель Темиров А.М.; выход: Пилотный набор. RACI: R: Данные и модели, Тесты и документы; A: Заказчик / руководитель; C: Игроки пилота; I: Разработка, Преподаватель.</Notes>
-      <Text1>Данные и модели, Тесты и документы</Text1>
-      <Text2>Заказчик / руководитель</Text2>
-      <Text3>Игроки пилота</Text3>
-      <Text4>Разработка, Преподаватель</Text4>
+      <Notes>ID T07; исполнитель Тесты и документы; выход: Пилотный набор. RACI: R: Тесты и документы; A: Тесты и документы; C: Данные и модели, Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Text1>Тесты и документы</Text1>
+      <Text2>Тесты и документы</Text2>
+      <Text3>Данные и модели, Разработка, Игроки пилота</Text3>
+      <Text4>Заказчик / руководитель, Преподаватель</Text4>
       <PredecessorLink>
         <PredecessorUID>5</PredecessorUID>
         <Type>1</Type>
@@ -357,19 +370,19 @@
       <WBS>2.5</WBS>
       <OutlineNumber>2.5</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-09T09:00:00</Start>
-      <Finish>2026-11-11T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-10-27T09:00:00</Start>
+      <Finish>2026-10-27T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T08; исполнитель Недугов Д.; выход: Проверенный датасет. RACI: R: Данные и модели, Тесты и документы; A: Заказчик / руководитель; C: Игроки пилота; I: Разработка, Преподаватель.</Notes>
-      <Text1>Данные и модели, Тесты и документы</Text1>
-      <Text2>Заказчик / руководитель</Text2>
-      <Text3>Игроки пилота</Text3>
-      <Text4>Разработка, Преподаватель</Text4>
+      <Notes>ID T08; исполнитель Данные и модели; выход: Проверенный датасет. RACI: R: Данные и модели; A: Данные и модели; C: Разработка, Тесты и документы; I: Заказчик / руководитель, Преподаватель, Игроки пилота.</Notes>
+      <Text1>Данные и модели</Text1>
+      <Text2>Данные и модели</Text2>
+      <Text3>Разработка, Тесты и документы</Text3>
+      <Text4>Заказчик / руководитель, Преподаватель, Игроки пилота</Text4>
       <PredecessorLink>
         <PredecessorUID>8</PredecessorUID>
         <Type>1</Type>
@@ -387,19 +400,19 @@
       <WBS>2.6</WBS>
       <OutlineNumber>2.6</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-11T18:00:00</Start>
-      <Finish>2026-11-11T18:00:00</Finish>
+      <Start>2026-10-27T18:00:00</Start>
+      <Finish>2026-10-27T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID M02; исполнитель Недугов Д.; выход: Отчет по данным. RACI: R: Данные и модели, Тесты и документы; A: Заказчик / руководитель; C: Игроки пилота; I: Разработка, Преподаватель.</Notes>
-      <Text1>Данные и модели, Тесты и документы</Text1>
-      <Text2>Заказчик / руководитель</Text2>
-      <Text3>Игроки пилота</Text3>
-      <Text4>Разработка, Преподаватель</Text4>
+      <Notes>ID M02; исполнитель Данные и модели; выход: Отчет по данным. RACI: R: Данные и модели; A: Данные и модели; C: Разработка, Тесты и документы; I: Заказчик / руководитель, Преподаватель, Игроки пилота.</Notes>
+      <Text1>Данные и модели</Text1>
+      <Text2>Данные и модели</Text2>
+      <Text3>Разработка, Тесты и документы</Text3>
+      <Text4>Заказчик / руководитель, Преподаватель, Игроки пилота</Text4>
       <PredecessorLink>
         <PredecessorUID>9</PredecessorUID>
         <Type>1</Type>
@@ -417,15 +430,15 @@
       <WBS>3.1</WBS>
       <OutlineNumber>3.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-28T09:00:00</Start>
-      <Finish>2026-11-02T18:00:00</Finish>
-      <Duration>PT32H0M0S</Duration>
+      <Start>2026-10-22T09:00:00</Start>
+      <Finish>2026-10-23T18:00:00</Finish>
+      <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>0</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T09; исполнитель Недугов Д.; выход: Список признаков. RACI: R: Данные и модели; A: Данные и модели; C: Разработка, Тесты и документы, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Notes>ID T09; исполнитель Данные и модели; выход: Список признаков. RACI: R: Данные и модели; A: Данные и модели; C: Разработка, Тесты и документы, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
       <Text1>Данные и модели</Text1>
       <Text2>Данные и модели</Text2>
       <Text3>Разработка, Тесты и документы, Игроки пилота</Text3>
@@ -447,15 +460,15 @@
       <WBS>3.2</WBS>
       <OutlineNumber>3.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-12T09:00:00</Start>
-      <Finish>2026-11-17T18:00:00</Finish>
-      <Duration>PT32H0M0S</Duration>
+      <Start>2026-10-28T09:00:00</Start>
+      <Finish>2026-10-28T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T10; исполнитель Недугов Д.; выход: Профиль навыков. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T10; исполнитель Данные и модели; выход: Профиль навыков. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
       <Text1>Данные и модели, Разработка</Text1>
       <Text2>Данные и модели</Text2>
       <Text3>Тесты и документы, Игроки пилота</Text3>
@@ -484,15 +497,15 @@
       <WBS>3.3</WBS>
       <OutlineNumber>3.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-18T09:00:00</Start>
-      <Finish>2026-11-20T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-10-29T09:00:00</Start>
+      <Finish>2026-10-29T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T11; исполнитель Недугов Д.; выход: Оценки по скиллсетам. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T11; исполнитель Данные и модели; выход: Оценки по скиллсетам. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
       <Text1>Данные и модели, Разработка</Text1>
       <Text2>Данные и модели</Text2>
       <Text3>Тесты и документы, Игроки пилота</Text3>
@@ -514,15 +527,15 @@
       <WBS>3.4</WBS>
       <OutlineNumber>3.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-12T09:00:00</Start>
-      <Finish>2026-11-17T18:00:00</Finish>
-      <Duration>PT32H0M0S</Duration>
+      <Start>2026-10-28T09:00:00</Start>
+      <Finish>2026-10-29T18:00:00</Finish>
+      <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>0</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T12; исполнитель Гайфуллин А.Р.; выход: Brier score и сравнение. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Notes>ID T12; исполнитель Разработка; выход: Brier score и сравнение. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы; I: Заказчик / руководитель, Преподаватель.</Notes>
       <Text1>Данные и модели, Разработка</Text1>
       <Text2>Данные и модели</Text2>
       <Text3>Тесты и документы</Text3>
@@ -551,15 +564,15 @@
       <WBS>3.5</WBS>
       <OutlineNumber>3.5</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-23T09:00:00</Start>
-      <Finish>2026-11-26T18:00:00</Finish>
-      <Duration>PT32H0M0S</Duration>
+      <Start>2026-10-30T09:00:00</Start>
+      <Finish>2026-11-02T18:00:00</Finish>
+      <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T13; исполнитель Недугов Д.; выход: MAE и сравнение. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Notes>ID T13; исполнитель Данные и модели; выход: MAE и сравнение. RACI: R: Данные и модели, Разработка; A: Данные и модели; C: Тесты и документы; I: Заказчик / руководитель, Преподаватель.</Notes>
       <Text1>Данные и модели, Разработка</Text1>
       <Text2>Данные и модели</Text2>
       <Text3>Тесты и документы</Text3>
@@ -581,19 +594,26 @@
       <WBS>4.1</WBS>
       <OutlineNumber>4.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-03T09:00:00</Start>
-      <Finish>2026-11-06T18:00:00</Finish>
-      <Duration>PT32H0M0S</Duration>
+      <Start>2026-10-26T09:00:00</Start>
+      <Finish>2026-10-27T18:00:00</Finish>
+      <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>0</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T14; исполнитель Гайфуллин А.Р.; выход: Интерфейс MVP. RACI: R: Разработка; A: Разработка; C: Данные и модели, Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T14; исполнитель Разработка; выход: Интерфейс MVP. RACI: R: Разработка; A: Разработка; C: Данные и модели, Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
       <Text1>Разработка</Text1>
       <Text2>Разработка</Text2>
       <Text3>Данные и модели, Тесты и документы, Игроки пилота</Text3>
       <Text4>Заказчик / руководитель</Text4>
+      <PredecessorLink>
+        <PredecessorUID>5</PredecessorUID>
+        <Type>1</Type>
+        <CrossProject>0</CrossProject>
+        <LinkLag>0</LinkLag>
+        <LagFormat>7</LagFormat>
+      </PredecessorLink>
       <PredecessorLink>
         <PredecessorUID>6</PredecessorUID>
         <Type>1</Type>
@@ -618,15 +638,15 @@
       <WBS>4.2</WBS>
       <OutlineNumber>4.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-27T09:00:00</Start>
-      <Finish>2026-12-01T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-11-03T09:00:00</Start>
+      <Finish>2026-11-03T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T15; исполнитель Гайфуллин А.Р.; выход: Рабочий сценарий MVP. RACI: R: Разработка; A: Разработка; C: Данные и модели, Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T15; исполнитель Разработка; выход: Рабочий сценарий MVP. RACI: R: Разработка; A: Разработка; C: Данные и модели, Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
       <Text1>Разработка</Text1>
       <Text2>Разработка</Text2>
       <Text3>Данные и модели, Тесты и документы, Игроки пилота</Text3>
@@ -669,15 +689,15 @@
       <WBS>4.3</WBS>
       <OutlineNumber>4.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-01T18:00:00</Start>
-      <Finish>2026-12-01T18:00:00</Finish>
+      <Start>2026-11-03T18:00:00</Start>
+      <Finish>2026-11-03T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID M03; исполнитель Ляхов Я.П.; выход: Демо. RACI: R: Разработка; A: Разработка; C: Данные и модели, Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
+      <Notes>ID M03; исполнитель Разработка; выход: Демо. RACI: R: Разработка; A: Разработка; C: Данные и модели, Тесты и документы, Игроки пилота; I: Заказчик / руководитель.</Notes>
       <Text1>Разработка</Text1>
       <Text2>Разработка</Text2>
       <Text3>Данные и модели, Тесты и документы, Игроки пилота</Text3>
@@ -699,15 +719,15 @@
       <WBS>5.1</WBS>
       <OutlineNumber>5.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-02T09:00:00</Start>
-      <Finish>2026-12-04T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-11-05T09:00:00</Start>
+      <Finish>2026-11-05T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T16; исполнитель Темиров А.М.; выход: Протокол тестов. RACI: R: Данные и модели, Разработка, Тесты и документы; A: Тесты и документы; C: -; I: Заказчик / руководитель.</Notes>
+      <Notes>ID T16; исполнитель Тесты и документы; выход: Протокол тестов. RACI: R: Данные и модели, Разработка, Тесты и документы; A: Тесты и документы; C: -; I: Заказчик / руководитель.</Notes>
       <Text1>Данные и модели, Разработка, Тесты и документы</Text1>
       <Text2>Тесты и документы</Text2>
       <Text3 />
@@ -729,15 +749,15 @@
       <WBS>5.2</WBS>
       <OutlineNumber>5.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-07T09:00:00</Start>
-      <Finish>2026-12-09T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-11-06T09:00:00</Start>
+      <Finish>2026-11-09T18:00:00</Finish>
+      <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T17; исполнитель Темиров А.М.; выход: Отзывы и новые игры. RACI: R: Данные и модели, Тесты и документы; A: Тесты и документы; C: Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Notes>ID T17; исполнитель Тесты и документы; выход: Отзывы и новые игры. RACI: R: Данные и модели, Тесты и документы; A: Тесты и документы; C: Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
       <Text1>Данные и модели, Тесты и документы</Text1>
       <Text2>Тесты и документы</Text2>
       <Text3>Разработка, Игроки пилота</Text3>
@@ -759,15 +779,15 @@
       <WBS>5.3</WBS>
       <OutlineNumber>5.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-10T09:00:00</Start>
-      <Finish>2026-12-14T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-11-10T09:00:00</Start>
+      <Finish>2026-11-10T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T18; исполнитель Недугов Д.; выход: Отчет по метрикам. RACI: R: Данные и модели, Тесты и документы; A: Тесты и документы; C: Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Notes>ID T18; исполнитель Данные и модели; выход: Отчет по метрикам. RACI: R: Данные и модели, Тесты и документы; A: Тесты и документы; C: Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
       <Text1>Данные и модели, Тесты и документы</Text1>
       <Text2>Тесты и документы</Text2>
       <Text3>Разработка, Игроки пилота</Text3>
@@ -789,15 +809,15 @@
       <WBS>5.4</WBS>
       <OutlineNumber>5.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-14T18:00:00</Start>
-      <Finish>2026-12-14T18:00:00</Finish>
+      <Start>2026-11-10T18:00:00</Start>
+      <Finish>2026-11-10T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
       <Summary>0</Summary>
-      <Critical>0</Critical>
+      <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID M04; исполнитель Темиров А.М.; выход: Решение по качеству. RACI: R: Данные и модели, Тесты и документы; A: Тесты и документы; C: Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
+      <Notes>ID M04; исполнитель Тесты и документы; выход: Решение по качеству. RACI: R: Данные и модели, Тесты и документы; A: Тесты и документы; C: Разработка, Игроки пилота; I: Заказчик / руководитель, Преподаватель.</Notes>
       <Text1>Данные и модели, Тесты и документы</Text1>
       <Text2>Тесты и документы</Text2>
       <Text3>Разработка, Игроки пилота</Text3>
@@ -819,28 +839,21 @@
       <WBS>6.1</WBS>
       <OutlineNumber>6.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-15T09:00:00</Start>
-      <Finish>2026-12-16T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Start>2026-11-10T09:00:00</Start>
+      <Finish>2026-11-10T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T19; исполнитель Темиров А.М.; выход: Комплект передачи. RACI: R: Заказчик / руководитель, Тесты и документы; A: Заказчик / руководитель; C: Данные и модели, Разработка; I: Преподаватель.</Notes>
-      <Text1>Заказчик / руководитель, Тесты и документы</Text1>
-      <Text2>Заказчик / руководитель</Text2>
-      <Text3>Данные и модели, Разработка</Text3>
+      <Notes>ID T19; исполнитель Тесты и документы; выход: Комплект передачи. RACI: R: Тесты и документы; A: Тесты и документы; C: Заказчик / руководитель, Данные и модели, Разработка; I: Преподаватель.</Notes>
+      <Text1>Тесты и документы</Text1>
+      <Text2>Тесты и документы</Text2>
+      <Text3>Заказчик / руководитель, Данные и модели, Разработка</Text3>
       <Text4>Преподаватель</Text4>
       <PredecessorLink>
-        <PredecessorUID>19</PredecessorUID>
-        <Type>1</Type>
-        <CrossProject>0</CrossProject>
-        <LinkLag>0</LinkLag>
-        <LagFormat>7</LagFormat>
-      </PredecessorLink>
-      <PredecessorLink>
-        <PredecessorUID>21</PredecessorUID>
+        <PredecessorUID>20</PredecessorUID>
         <Type>1</Type>
         <CrossProject>0</CrossProject>
         <LinkLag>0</LinkLag>
@@ -856,15 +869,15 @@
       <WBS>6.2</WBS>
       <OutlineNumber>6.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-17T09:00:00</Start>
-      <Finish>2026-12-21T18:00:00</Finish>
-      <Duration>PT24H0M0S</Duration>
+      <Start>2026-11-11T09:00:00</Start>
+      <Finish>2026-11-11T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID T20; исполнитель Ляхов Я.П.; выход: Протокол приемки. RACI: R: Заказчик / руководитель, Разработка, Тесты и документы; A: Заказчик / руководитель; C: -; I: Данные и модели, Преподаватель, Игроки пилота.</Notes>
+      <Notes>ID T20; исполнитель Заказчик / руководитель; выход: Протокол приемки. RACI: R: Заказчик / руководитель, Разработка, Тесты и документы; A: Заказчик / руководитель; C: -; I: Данные и модели, Преподаватель, Игроки пилота.</Notes>
       <Text1>Заказчик / руководитель, Разработка, Тесты и документы</Text1>
       <Text2>Заказчик / руководитель</Text2>
       <Text3 />
@@ -893,15 +906,15 @@
       <WBS>6.3</WBS>
       <OutlineNumber>6.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-12-21T18:00:00</Start>
-      <Finish>2026-12-21T18:00:00</Finish>
+      <Start>2026-11-11T18:00:00</Start>
+      <Finish>2026-11-11T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
       <Summary>0</Summary>
       <Critical>1</Critical>
       <CalendarUID>1</CalendarUID>
-      <Notes>ID M05; исполнитель Ляхов Я.П.; выход: Защита и передача. RACI: R: Заказчик / руководитель, Тесты и документы; A: Преподаватель; C: -; I: Данные и модели, Разработка, Игроки пилота.</Notes>
+      <Notes>ID M05; исполнитель Заказчик / руководитель; выход: Защита и передача. RACI: R: Заказчик / руководитель, Тесты и документы; A: Преподаватель; C: -; I: Данные и модели, Разработка, Игроки пилота.</Notes>
       <Text1>Заказчик / руководитель, Тесты и документы</Text1>
       <Text2>Преподаватель</Text2>
       <Text3 />
