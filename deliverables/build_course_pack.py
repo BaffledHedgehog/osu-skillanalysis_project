@@ -694,7 +694,9 @@ def main():
     build_raci()
     build_calendar(entries, duration)
     build_projectlibre_xml(entries, duration)
-    print(f"Created 7 files; {duration} working days; finish {workday(duration - 1):%d.%m.%Y}; reserve to {workday(duration + RESERVE_DAYS - 1):%d.%m.%Y}; deadline {DEADLINE:%d.%m.%Y}.")
+    from build_mvp_canvas import build_canvas
+    build_canvas(TEAM, DEADLINE, ROOT)
+    print(f"Created 9 files; {duration} working days; finish {workday(duration - 1):%d.%m.%Y}; reserve to {workday(duration + RESERVE_DAYS - 1):%d.%m.%Y}; deadline {DEADLINE:%d.%m.%Y}.")
     print("Critical path:", " -> ".join(r["id"] for r in entries if r["critical"]))
 
 
