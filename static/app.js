@@ -1,5 +1,5 @@
 const state = {
-  user: localStorage.getItem('pulse-user') || '',
+  user: new URLSearchParams(location.search).get('user') || localStorage.getItem('pulse-user') || '',
   mapId: new URLSearchParams(location.search).get('map') || localStorage.getItem('pulse-map') || '',
   mods: new Set(), goal: 'comfort', maps: [], analysis: null,
 };
