@@ -1,0 +1,2 @@
+# Optional training/runtime dependency. Pick CPU or CUDA wheels for your machine.
+torch>=2.9,<3

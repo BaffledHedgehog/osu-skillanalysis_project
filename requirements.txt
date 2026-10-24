@@ -6,3 +6,4 @@ rosu-pp-py>=4.0.2,<5
 scikit-learn>=1.5,<2
 python-dotenv>=1,<2
 osrparse>=6,<7
+psutil>=5.9,<8

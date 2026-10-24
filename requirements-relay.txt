@@ -1,0 +1,2 @@
+# Optional tools for the relay setup. The app itself does not need Paramiko.
+paramiko>=3.5,<5

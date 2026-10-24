@@ -4,3 +4,12 @@ __pycache__/
 .data/
 *.pyc
 .env
+.env.*
+!.env.example
+.private/
+serverdata.txt
+*.pem
+*.key
+**/obj/
+**/bin/
+headless/

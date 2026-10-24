@@ -1,0 +1,27 @@
+.local-options { margin-top: 14px; font-size: 12px; color: #b7c2d6; }
+.local-options summary { cursor: pointer; margin-bottom: 10px; }
+.local-options input[type=text] { width: 100%; margin-bottom: 8px; }
+.local-options label { display: block; margin: 8px 0; }
+#local-clients { white-space: pre-wrap; overflow-wrap: anywhere; }
+#cookies-text { width: 100%; resize: vertical; background: #10182a; color: #e5eaf4; border: 1px solid #49536f; border-radius: 8px; padding: 10px; font: 12px monospace; }
+#cookies-dialog { width: min(560px, calc(100vw - 30px)); }
+.local-options label { display: block; margin: 10px 0; }
+.local-options label input[type="number"] { display: block; width: 100%; margin-top: 5px; }
+[hidden] { display: none !important; }
+#training-maps { margin-top: 20px; border-top: 1px solid #35415a; padding-top: 12px; }
+.dialog-error { padding: 12px; border: 1px solid #bb617e; border-radius: 8px; color: #ffe3e9; background: #442438; font-size: 13px; overflow-wrap: anywhere; }
+dialog .toast { z-index: 100; max-width: min(420px, calc(100vw - 32px)); }
+#oauth-dialog { width: min(600px, calc(100vw - 30px)); max-height: calc(100vh - 40px); overflow-y: auto; }
+.oauth-help { padding-left: 22px; margin: 0; font-size: 13px; line-height: 1.6; color: #bbc5da; }
+.oauth-help a, #oauth-dialog a { color: #b7a5ff; text-decoration: underline; }
+#oauth-form input { width: 100%; background: #10182a; color: #e5eaf4; border: 1px solid #49536f; border-radius: 8px; padding: 10px; }
+#nf-health-dialog { width: min(800px, calc(100vw - 30px)); max-height: calc(100vh - 40px); overflow-y: auto; }
+#nf-health-select { width: 100%; background: #10182a; color: #e5eaf4; padding: 10px; border: 1px solid #49536f; border-radius: 8px; }
+.hp-chart { width: 100%; background: #10182a; border-radius: 8px; }
+#cnn-dialog { width: min(950px, calc(100vw - 30px)); max-height: calc(100vh - 40px); overflow-y: auto; }
+.cnn-table-wrap { overflow-x: auto; }
+.cnn-table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 14px 0; }
+.cnn-table th, .cnn-table td { padding: 9px; text-align: left; border-bottom: 1px solid #35415a; }
+.cnn-table tr.cnn-selected { background: #282445; }
+#cnn-result { margin-top: 18px; }
+#cnn-result progress { width: 100%; accent-color: #9e82ff; }

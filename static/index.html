@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0b1020">
   <title>pulse! - анализ карт osu!</title>
   <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/imports.css">
   <script src="/static/app.js" defer></script>
 </head>
 <body>
@@ -59,6 +60,22 @@
             </form>
             <div id="player-summary" class="player-summary"><span class="mini-dot"></span> Вставь ссылку на профиль osu! или укажи ник.</div>
             <button id="import-button" class="import-button" type="button">Обновить результаты профиля</button>
+            <button id="train-model-button" class="import-button" type="button">Обучить и проверить ML</button>
+            <button id="cnn-button" class="import-button" type="button">CNN: паттерны карты и обучение</button>
+            <button id="local-import-button" class="import-button" type="button">Найти osu! и импортировать локальные результаты</button>
+            <button id="nf-health-button" class="import-button" type="button">Посчитать HP для No Fail</button>
+            <button id="cookies-button" class="import-button" type="button">Импорт cookie osu!</button>
+            <button id="oauth-button" class="import-button" type="button">Подключить OAuth / официальный API</button>
+            <button id="more-scores-button" class="import-button" type="button">Загрузить больше истории</button>
+            <div id="session-status" class="api-hint"></div>
+            <details class="local-options" id="local-options">
+              <summary>Настройки локального импорта</summary>
+              <input id="local-path" type="text" placeholder="Папка osu! (определяется автоматически)" aria-label="Папка osu!">
+              <input id="local-player" type="text" placeholder="Игрок в локальной базе (необязательно)" aria-label="Локальное имя игрока">
+              <label><input id="local-force" type="checkbox"> Перепроверить неизменившиеся файлы</label>
+              <button id="find-client-button" class="text-button" type="button">Показать найденные клиенты</button>
+              <div id="local-clients" class="api-hint"></div>
+            </details>
             <div id="api-hint" class="api-hint"></div>
           </div>
         </section>
@@ -67,7 +84,7 @@
           <div class="section-heading"><div><div class="eyebrow small">АНАЛИЗ</div><h2>Выбранная карта</h2></div><div class="header-actions"><a id="official-link" class="outline-link" href="#" target="_blank" rel="noopener noreferrer">Открыть в osu!</a><button id="log-play" class="outline-link" type="button">+ Добавить результат</button></div></div>
           <div class="map-hero panel">
             <div class="map-hero-main"><div class="map-difficulty" id="map-difficulty">-</div><div><div class="map-label">ВЫБРАННАЯ КАРТА</div><h3 id="map-title">-</h3><p id="map-subtitle">-</p></div></div>
-            <div class="mods-picker" id="mods-picker" aria-label="Моды"><span>МОДЫ</span><button type="button" data-mod="NM" class="selected">NM</button><button type="button" data-mod="HD">HD</button><button type="button" data-mod="HR">HR</button><button type="button" data-mod="DT">DT</button><button type="button" data-mod="EZ">EZ</button><button type="button" data-mod="HT">HT</button></div>
+            <div class="mods-picker" id="mods-picker" aria-label="Моды"><span>МОДЫ</span><button type="button" data-mod="NM" class="selected">NM</button><button type="button" data-mod="HD">HD</button><button type="button" data-mod="HR">HR</button><button type="button" data-mod="DT">DT</button><button type="button" data-mod="EZ">EZ</button><button type="button" data-mod="HT">HT</button><button type="button" data-mod="CL" title="Classic / stable">CL</button></div>
           </div>
           <div class="metrics-grid">
             <div class="metric panel"><div class="metric-label">ЗВЕЗДЫ</div><div class="metric-value" id="stat-stars">-</div><div class="metric-foot">Общая сложность</div></div>
@@ -77,7 +94,7 @@
           </div>
           <div class="insights-grid">
             <div class="panel prediction-panel"><div class="panel-top"><div><div class="step">ПЕРСОНАЛЬНЫЙ ПРОГНОЗ</div><h2>Прогноз для игрока</h2></div><span class="panel-icon">ML</span></div><div id="prediction-content" class="prediction-content"></div></div>
-            <div class="panel timeline-panel"><div class="panel-top"><div><div class="step">НАГРУЗКА ПО ВРЕМЕНИ</div><h2>Где будет сложно</h2></div><div class="timeline-legend"><span class="aim-key"></span> Aim <span class="speed-key"></span> Speed</div></div><div id="timeline" class="timeline" role="img" aria-label="Нагрузка по участкам карты"></div><div id="peak-list" class="peak-list"></div></div>
+            <div class="panel timeline-panel"><div class="panel-top"><div><div class="step">НАГРУЗКА ПО ВРЕМЕНИ</div><h2>Где будет сложно</h2></div><div class="timeline-legend"><span class="aim-key"></span> Aim <span class="speed-key"></span> Speed</div></div><div id="timeline" class="timeline" role="img" aria-label="Нагрузка по участкам карты"></div><div id="peak-list" class="peak-list"></div><div id="local-patterns"></div></div>
           </div>
         </section>
 
@@ -90,6 +107,73 @@
   </div>
 
   <dialog id="play-dialog" class="play-dialog"><form id="play-form" method="dialog"><button type="button" id="dialog-close" class="dialog-close" aria-label="Закрыть">X</button><div class="step">ДОБАВИТЬ РЕЗУЛЬТАТ</div><h2>Как прошла игра?</h2><p id="dialog-map-name">-</p><label>Точность, %<input id="play-accuracy" type="number" min="0" max="100" step="0.01" value="95" required></label><label>Промахи<input id="play-misses" type="number" min="0" step="1" value="0" required></label><label class="checkbox-line"><input id="play-passed" type="checkbox" checked> Карта пройдена</label><button type="submit" class="primary-button wide">Сохранить результат</button><div class="divider"><span>или импортировать файл</span></div><label class="replay-import" for="replay-file">Загрузить свой реплей .osr</label><input id="replay-file" type="file" accept=".osr" hidden><small class="replay-hint">Для osu!stable. Приложение найдет карту по хешу. Статус "Карта пройдена" применяется к реплею.</small></form></dialog>
+  <dialog id="cookies-dialog" class="play-dialog">
+    <form id="cookies-form">
+      <button id="cookies-close" type="button" class="dialog-close">X</button>
+      <h2>Cookie osu!</h2>
+      <div class="dialog-error" role="alert" hidden></div>
+      <p>JSON из Cookie Editor, Netscape cookies.txt или строка Cookie. Только для osu.ppy.sh. Хранятся в памяти локального сервера до 8 часов, на диск не записываются.</p>
+      <textarea id="cookies-text" rows="7" placeholder="Вставьте экспорт cookie" aria-label="Экспорт cookie" required></textarea>
+      <label>Или файл JSON / TXT<input id="cookies-file" type="file" accept=".json,.txt"></label>
+      <small>Экспортируйте все cookie со страницы osu.ppy.sh, включая HttpOnly osu_session. Успешный импорт формата еще не подтверждает вход на сайте.</small>
+      <button type="submit" class="primary-button">Импортировать cookie</button>
+      <button id="cookies-to-oauth" type="button" class="outline-link">Использовать OAuth вместо cookie</button>
+      <button id="cookies-clear" type="button" class="outline-link">Удалить сессию</button>
+    </form>
+  </dialog>
+  <dialog id="oauth-dialog" class="play-dialog">
+    <form id="oauth-form">
+      <button id="oauth-close" type="button" class="dialog-close" aria-label="Закрыть">X</button>
+      <h2>Официальный API osu!</h2>
+      <div class="dialog-error" role="alert" hidden></div>
+      <p>OAuth Client Credentials читает публичные результаты без cookie и входа игрока. Нужны ключи приложения API v2.</p>
+      <ol class="oauth-help">
+        <li>Войдите на osu! и откройте <a href="https://osu.ppy.sh/home/account/edit#oauth" target="_blank" rel="noopener noreferrer">настройки OAuth-приложений</a>.</li>
+        <li>Нажмите "New OAuth Application". Назовите приложение, например pulse personal.</li>
+        <li>Для Client Credentials поле Application Callback URL можно оставить пустым.</li>
+        <li>Скопируйте Client ID и Client Secret одного приложения в поля ниже. Старый API key не подходит.</li>
+      </ol>
+      <p>Ключи и токен хранятся только в памяти локального сервера до 8 часов. Перезапуск удаляет сессию. Это не дает доступа к полному архиву игр.</p>
+      <p id="oauth-local-note" hidden>На веб-демо по HTTP ввод ключей отключен. Откройте локальную версию на http://127.0.0.1:8000. Владелец сервера также может настроить API через .env.</p>
+      <label>Client ID<input id="oauth-id" type="text" inputmode="numeric" autocomplete="off" maxlength="20" required></label>
+      <label>Client Secret<input id="oauth-secret" type="password" autocomplete="off" maxlength="512" required></label>
+      <button id="oauth-submit" type="submit" class="primary-button">Проверить и подключить OAuth</button>
+      <button id="oauth-clear" type="button" class="outline-link">Отключить OAuth этой сессии</button>
+      <a class="outline-link" href="https://osu.ppy.sh/docs/#authentication" target="_blank" rel="noopener noreferrer">Документация osu! API</a>
+    </form>
+  </dialog>
+  <dialog id="nf-health-dialog" class="play-dialog">
+    <form id="nf-health-form">
+      <button id="nf-health-close" type="button" class="dialog-close" aria-label="Закрыть">X</button>
+      <h2>HP по NF-реплею</h2>
+      <div class="dialog-error" role="alert" hidden></div>
+      <p>Официальный движок osu! воспроизводит курсор и нажатия, считает попадания, тики, промахи и HP. Исходная игра и файлы клиента не меняются. Расчет может занять до 3 минут, повторный берется из кеша.</p>
+      <label>Сохраненная попытка<select id="nf-health-select" required></select></label>
+      <button id="nf-health-submit" type="submit" class="primary-button">Рассчитать HP</button>
+      <label>Или загрузить свой NF-реплей .osr<input id="nf-health-file" type="file" accept=".osr"></label>
+      <p>Для файла нужна точная карта в каталоге. Подходят stable и lazer, только osu!standard. Результат расчета не превращается в новую сыгранную попытку без NF.</p>
+      <div id="nf-health-result" aria-live="polite"></div>
+    </form>
+  </dialog>
+  <dialog id="cnn-dialog" class="play-dialog">
+    <button id="cnn-close" type="button" class="dialog-close" aria-label="Закрыть">X</button>
+    <h2>CNN: паттерны карты</h2>
+    <div class="dialog-error" role="alert" hidden></div>
+    <p>Модель читает последовательность нот и форму слайдеров. Обучение сравнивает оригинал, отражения X, Y, XY и все четыре варианта вместе. Результаты попыток сохраняются. Проверка идет на исходных картах из других семейств песен.</p>
+    <p>Обучение запускается отдельно и может занять несколько минут. Каждый выход подключается к прогнозу только после улучшения на проверке. Для accuracy используются полные проходы; NF и best в этот эксперимент не входят.</p>
+    <button id="cnn-train" type="button" class="primary-button">Обучить и сравнить варианты</button>
+    <button id="cnn-refresh" type="button" class="outline-link">Обновить статус</button>
+    <a id="cnn-report" class="outline-link" hidden>Скачать отчет JSON</a>
+    <button id="cnn-forward" type="button" class="outline-link">Проверить на новых попытках</button>
+    <div id="cnn-result" aria-live="polite"></div>
+    <h3>Ошибки по участкам</h3>
+    <p>Отдельная модель учится на событиях локальных реплеев stable и lazer: промахах, срывах комбо и попаданиях ниже 300. Она не определяет причину ошибки. Реплеи с несовпавшей статистикой исключаются. В этом наборе только законченные карты.</p>
+    <p>Разбор реплеев идет без звука, по одному процессу. Перед запуском проверяется отключение звука. Первый сбор может занять десятки минут, повторный использует кеш.</p>
+    <button id="local-cnn-train" type="button" class="primary-button">Подготовить реплеи и обучить</button>
+    <button id="cnn-stop" type="button" class="outline-link" disabled>Остановить обработку</button>
+    <a id="local-cnn-report" class="outline-link" hidden>Скачать отчет по участкам</a>
+    <div id="local-cnn-result" aria-live="polite"></div>
+  </dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

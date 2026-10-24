@@ -11,8 +11,10 @@ from urllib.parse import quote, unquote, urlparse
 import httpx
 from dotenv import load_dotenv
 
-from .analyzer import normalize_mods, parse_map
+from .analyzer import MOD_BITS, normalize_mods, parse_map
 from .storage import Store
+from .web_session import ProfileParser, web_get
+from .oauth_session import request_token
 
 
 USER_AGENT = "osu-skillanalysis/0.2 (Innopolis student project; local use)"
@@ -22,6 +24,7 @@ SCORES_PER_SOURCE = 100
 MAX_SCORE_PAGES = 10
 PUBLIC_API = "https://mirror.hinamizawa.ai/api/v1/hinai/player"
 PROFILE_PATH = re.compile(r"^/users/(\d{1,12})(?:/(?:osu|taiko|fruits|mania))?/?$")
+_IMPORT_LOCKS = {}
 
 
 def parse_player_reference(value: str) -> str:
@@ -60,20 +63,34 @@ def api_configured() -> bool:
     return bool(os.getenv("OSU_CLIENT_ID") and os.getenv("OSU_CLIENT_SECRET"))
 
 
-async def _token(client: httpx.AsyncClient) -> str:
-    response = await client.post("https://osu.ppy.sh/oauth/token", json={
-        "client_id": os.environ["OSU_CLIENT_ID"],
-        "client_secret": os.environ["OSU_CLIENT_SECRET"],
-        "grant_type": "client_credentials", "scope": "public",
-    })
-    response.raise_for_status()
-    return response.json()["access_token"]
+async def _token(client: httpx.AsyncClient, credentials=None) -> str:
+    return await request_token(client, credentials if credentials is not None else {
+        'client_id': os.environ['OSU_CLIENT_ID'], 'client_secret': os.environ['OSU_CLIENT_SECRET']})
 
 
-async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
+async def import_user_scores(store: Store, username: str, *, force=False, max_scores=100, cookies=None, oauth=None) -> dict[str, Any]:
     reference = parse_player_reference(username)
-    provider = "osu_api" if api_configured() else "hinai"
+    if not 1 <= max_scores <= 1000:
+        raise ValueError('Лимит импорта должен быть от 1 до 1000 результатов на список.')
+    provider = 'osu_api' if oauth or api_configured() else 'osu_web' if cookies else 'hinai'
+    key = f'online:{provider}:{reference.casefold()}:{max_scores}'
+    lock_key = (id(asyncio.get_running_loop()), str(store.path.resolve()), key)
+    lock = _IMPORT_LOCKS.setdefault(lock_key, asyncio.Lock())
+    async with lock:
+        cached = store.cached_import(key)
+        if cached and not force:
+            return {**cached, 'cached': True, 'imported': 0, 'maps_fetched': 0,
+                    'total_plays': store.play_count(cached['username'])}
+        result = await _import_user_scores(store, reference, provider, max_scores, cookies, oauth)
+        result['cached'] = False
+        for alias in {reference.casefold(), result['username'].casefold(), str(result['user_id'])}:
+            store.cache_import(f'online:{provider}:{alias}:{max_scores}', result)
+        return result
+
+
+async def _import_user_scores(store: Store, reference: str, provider: str, max_scores: int, cookies, oauth=None) -> dict[str, Any]:
     selected: dict[str, dict[str, Any]] = {}
+    raw_attempts = {}
     selected_by_source = {"recent": 0, "best": 0}
     received_by_source = {"recent": 0, "best": 0}
     skipped = 0
@@ -82,15 +99,25 @@ async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
     async with httpx.AsyncClient(timeout=20, headers={"User-Agent": USER_AGENT}) as client:
         headers = {"Accept": "application/json"}
         if provider == "osu_api":
-            token = await _token(client)
+            token = await _token(client, oauth) if oauth else await _token(client)
             headers["Authorization"] = f"Bearer {token}"
             profile_url = ("https://osu.ppy.sh/api/v2/users/"
                            f"{reference if reference.isdigit() else '@' + quote(reference, safe='')}/osu")
-        else:
+        elif provider == 'hinai':
             profile_url = f"{PUBLIC_API}/{quote(reference, safe='')}"
-        response = await client.get(profile_url, headers=headers)
-        response.raise_for_status()
-        player = response.json()
+        else:
+            profile_url = f"https://osu.ppy.sh/users/{quote(reference, safe='')}/osu"
+        if provider == 'osu_web':
+            response = await web_get(client, profile_url, cookies, accept_json=False)
+            parser = ProfileParser()
+            parser.feed(response.text)
+            player = parser.profile
+            if not isinstance(player, dict) or 'id' not in player or 'username' not in player:
+                raise ValueError('Не удалось прочитать профиль с osu!. Проверьте сессию или используйте открытый источник.')
+        else:
+            response = await client.get(profile_url, headers=headers)
+            response.raise_for_status()
+            player = response.json()
         user_id = player["id"]
         canonical_username = player["username"]
         # Recent is processed first, so a recent fail is retained if its map
@@ -98,25 +125,33 @@ async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
         for source in ("recent", "best"):
             offset = 0
             previous_page_ids: tuple[str, ...] | None = None
-            page_count = MAX_SCORE_PAGES if provider == "osu_api" else 1
+            page_count = MAX_SCORE_PAGES if provider != "hinai" else 1
             for page in range(page_count):
-                if selected_by_source[source] >= SCORES_PER_SOURCE:
+                if selected_by_source[source] >= max_scores:
                     break
                 if provider == "osu_api":
                     score_url = f"https://osu.ppy.sh/api/v2/users/{user_id}/scores/{source}"
                     params = {"mode": "osu", "limit": SCORES_PER_SOURCE, "offset": offset}
                     if source == "recent":
                         params["include_fails"] = 1
-                else:
+                elif provider == 'hinai':
                     score_url = f"{PUBLIC_API}/{user_id}/scores"
                     params = {"type": source, "mode": "osu", "limit": SCORES_PER_SOURCE}
-                scores_response = await client.get(score_url, headers=headers, params=params)
+                else:
+                    score_url = f'https://osu.ppy.sh/users/{user_id}/scores/{source}'
+                    params = {'mode': 'osu', 'limit': SCORES_PER_SOURCE, 'offset': offset}
+                    if source == 'recent':
+                        params['include_fails'] = 1
+                scores_response = (await web_get(client, score_url, cookies, params=params)) if provider == 'osu_web' else await client.get(score_url, headers=headers, params=params)
                 # Some score lists expose only the first 100 rows. A later page
                 # may be rejected instead of returning an empty list.
                 if provider == "osu_api" and offset and scores_response.status_code in (400, 404, 416, 422):
                     break
                 scores_response.raise_for_status()
-                payload = scores_response.json()
+                try:
+                    payload = scores_response.json()
+                except ValueError as exc:
+                    raise ValueError('osu! вернул страницу вместо результатов. Обновите cookie или используйте открытый источник.') from exc
                 scores = payload.get("scores") if provider == "hinai" and isinstance(payload, dict) else payload
                 if not isinstance(scores, list):
                     raise ValueError("Источник данных вернул неожиданный формат результатов.")
@@ -132,6 +167,12 @@ async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
                         skipped += 1
                         continue
                     raw_mods = score.get("mods") or []
+                    if isinstance(raw_mods, int):
+                        allowed_bits = sum(MOD_BITS[name] for name in ('NF', 'EZ', 'HD', 'HR', 'DT', 'HT', 'NC', 'FL'))
+                        if raw_mods & ~allowed_bits:
+                            skipped += 1
+                            continue
+                        raw_mods = [name for name, bit in MOD_BITS.items() if raw_mods & bit]
                     if any(isinstance(mod, dict) and mod.get("settings") for mod in raw_mods):
                         skipped += 1
                         continue
@@ -158,19 +199,24 @@ async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
                     if not 0 <= accuracy <= 1:
                         skipped += 1
                         continue
+                    score_key = str(score.get('legacy_score_id') or score['id'])
+                    entry = {"score": score, "mods": mods, "source": source,
+                             "accuracy": accuracy, 'map_id': map_id}
+                    if score_key not in raw_attempts or source == 'recent':
+                        raw_attempts[score_key] = entry
                     if map_id in selected:
                         duplicates += 1
                         continue
                     selected[map_id] = {"score": score, "mods": mods, "source": source,
                                         "accuracy": accuracy}
                     selected_by_source[source] += 1
-                    if selected_by_source[source] >= SCORES_PER_SOURCE:
+                    if selected_by_source[source] >= max_scores:
                         break
                 offset += len(scores)
                 if len(scores) < SCORES_PER_SOURCE:
                     break
             else:
-                if provider == "osu_api" and selected_by_source[source] < SCORES_PER_SOURCE:
+                if provider != "hinai" and selected_by_source[source] < max_scores:
                     page_limit_hit.append(source)
 
     fetched = 0
@@ -196,22 +242,23 @@ async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
     map_ids = list(selected)
     availability = await asyncio.gather(*(ensure_map(map_id) for map_id in map_ids))
     highlight_map_id = next((map_id for map_id, available in zip(map_ids, availability) if available), None)
-    for map_id, available in zip(map_ids, availability):
+    available_maps = dict(zip(map_ids, availability))
+    for score_key, entry in raw_attempts.items():
+        map_id = entry['map_id']
+        available = available_maps.get(map_id, False)
         if not available:
             skipped += 1
             continue
-        score = selected[map_id]["score"]
-        mods = selected[map_id]["mods"]
-        source = selected[map_id]["source"]
+        score, mods, source = entry['score'], entry['mods'], entry['source']
         try:
             stats = score.get("statistics") or {}
             raw_pp = score.get("pp")
             pp = float(raw_pp) if raw_pp is not None else None
             changed = store.save_play(
-                canonical_username, map_id, mods, selected[map_id]["accuracy"], bool(score["passed"]),
+                canonical_username, map_id, mods, entry["accuracy"], bool(score["passed"]),
                 int(stats.get("miss", stats.get("count_miss", 0)) or 0),
                 score.get("ended_at") or score.get("created_at"),
-                f"{provider}_{source}", f"osu-{score['id']}", pp,
+                f"{provider}_{source}", f"osu-{score_key}", pp,
             )
             imported += int(changed)
         except (ValueError, KeyError, TypeError):
@@ -224,4 +271,6 @@ async def import_user_scores(store: Store, username: str) -> dict[str, Any]:
             "unique_maps": len(selected), "recent_unique": selected_by_source["recent"],
             "best_unique": selected_by_source["best"], "highlight_map_id": highlight_map_id,
             "page_limit_hit": page_limit_hit,
+            'raw_scores': len(raw_attempts), 'requested_per_source': max_scores,
+            'source_limits': 'Recent ограничен историей сайта; cookie не дают полный архив. Hinamizawa возвращает только первую страницу.',
             "total_plays": store.play_count(canonical_username)}

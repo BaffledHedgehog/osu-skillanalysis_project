@@ -10,8 +10,8 @@ from typing import Any
 import rosu_pp_py
 
 
-MOD_BITS = {"NF": 1, "EZ": 2, "HD": 8, "HR": 16, "DT": 64, "HT": 256, "NC": 512, "FL": 1024}
-VISIBLE_MODS = ("NM", "HD", "HR", "DT", "NC", "EZ", "HT", "FL", "NF")
+MOD_BITS = {"NF": 1, "EZ": 2, "HD": 8, "HR": 16, "DT": 64, "HT": 256, "NC": 512, "FL": 1024, "CL": 0}
+VISIBLE_MODS = ("NM", "HD", "HR", "DT", "NC", "EZ", "HT", "FL", "NF", "CL")
 
 
 def normalize_mods(value: str | list[str] | None) -> tuple[str, int]:
@@ -23,7 +23,7 @@ def normalize_mods(value: str | list[str] | None) -> tuple[str, int]:
     if not tokens or tokens == ["NM"]:
         return "NM", 0
     if any(token not in MOD_BITS for token in tokens):
-        raise ValueError("Поддерживаются только NM, HD, HR, DT, NC, EZ, HT, FL и NF.")
+        raise ValueError("Поддерживаются только NM, HD, HR, DT, NC, EZ, HT, FL, NF и CL.")
     unique = set(tokens)
     if "DT" in unique and "NC" in unique:
         unique.remove("DT")
@@ -135,9 +135,9 @@ def parse_map(raw: bytes, forced_id: str | None = None) -> ParsedMap:
     return ParsedMap(str(beatmap_id), checksum, content, metadata)
 
 
-def _strain_segments(content: bytes, bits: int) -> list[dict[str, Any]]:
+def _strain_segments(content: bytes, bits: int, classic: bool = False) -> tuple[list[dict[str, Any]], dict[str, float]]:
     beatmap = rosu_pp_py.Beatmap(content=content)
-    strain = rosu_pp_py.Difficulty(mods=bits).strains(beatmap)
+    strain = rosu_pp_py.Difficulty(mods=bits, lazer=not classic).strains(beatmap)
     aim = list(strain.aim or [])
     speed = list(strain.speed or [])
     step = float(strain.section_length or 400) / 1000
@@ -149,15 +149,55 @@ def _strain_segments(content: bytes, bits: int) -> list[dict[str, Any]]:
         sv = max(speed[i : i + per_window], default=0)
         windows.append({"start": round(i * step, 1), "end": round((i + per_window) * step, 1),
                         "aim": round(av, 2), "speed": round(sv, 2), "load": round(av + sv, 2)})
-    return windows
+    loads = [a + s for a, s in zip(aim, speed)]
+    average = sum(loads) / max(1, len(loads))
+    peak = max(loads, default=0)
+    tail = loads[int(len(loads) * .9):]
+    return windows, {
+        'peak_aim': max(aim, default=0), 'peak_speed': max(speed, default=0),
+        'peak_load': peak, 'peak_to_mean': peak / max(average, .001),
+        'ending_peak_load': max(tail, default=0),
+        'ending_peak_fraction': max(tail, default=0) / max(peak, .001),
+    }
+
+
+def pattern_features(parsed: ParsedMap, clock_rate: float) -> dict[str, Any]:
+    objects = []
+    sliders = 0
+    for line in _sections(parsed.content).get('HitObjects', []):
+        fields = line.split(',')
+        try:
+            kind = int(fields[3])
+            if kind & 8:  # Spinners do not require repeated taps.
+                continue
+            objects.append(float(fields[2]) / clock_rate)
+            sliders += bool(kind & 2)
+        except (ValueError, IndexError):
+            continue
+    objects.sort()
+    gaps = [b - a for a, b in zip(objects, objects[1:]) if b > a]
+    # Slowest interval in a consecutive run limits its sustained rate.
+    # 7 taps: a short stream, 3 taps: a burst. Values are 1/4-equivalent BPM.
+    def run_bpm(taps):
+        rates = []
+        for i in range(len(objects) - taps + 1):
+            intervals = [objects[j + 1] - objects[j] for j in range(i, i + taps - 1)]
+            if min(intervals) >= 25 and max(intervals) <= 250:
+                rates.append(15000 / max(intervals))
+        return round(max(rates, default=0), 1)
+    mean_gap = sum(gaps) / len(gaps) if gaps else 0
+    return {'stream_bpm': run_bpm(7), 'burst_bpm': run_bpm(3),
+            'slider_fraction': sliders / max(1, len(objects)),
+            'rhythm_variation': (sum((g - mean_gap) ** 2 for g in gaps) / len(gaps)) ** .5 / mean_gap if mean_gap else 0}
 
 
 def analyze_map(parsed: ParsedMap, mods: str = "NM") -> dict[str, Any]:
     mods_label, bits = normalize_mods(mods)
     raw = parsed.content.encode("utf-8")
     beatmap = rosu_pp_py.Beatmap(content=raw)
-    attrs = rosu_pp_py.Difficulty(mods=bits).calculate(beatmap)
-    windows = _strain_segments(raw, bits)
+    attrs = rosu_pp_py.Difficulty(mods=bits, lazer='CL' not in mods_label).calculate(beatmap)
+    attributes = rosu_pp_py.BeatmapAttributesBuilder(map=beatmap, mods=bits).build()
+    windows, spike_features = _strain_segments(raw, bits, classic='CL' in mods_label)
     peaks = sorted(windows, key=lambda window: window["load"], reverse=True)[:3]
     speed_factor = 1.5 if bits & MOD_BITS["DT"] else 0.75 if bits & MOD_BITS["HT"] else 1.0
     return {
@@ -170,8 +210,13 @@ def analyze_map(parsed: ParsedMap, mods: str = "NM") -> dict[str, Any]:
         "speed": round(float(attrs.speed or 0), 2),
         "bpm": round(float(beatmap.bpm) * speed_factor),
         "duration": round(parsed.metadata["duration"] / speed_factor),
-        "ar": round(float(attrs.ar or parsed.metadata["ar"]), 1),
-        "od": round(float(parsed.metadata["od"]), 1),
+        "ar": round(float(attributes.ar), 2),
+        "od": round(float(attributes.od), 2),
+        "cs": round(float(attributes.cs), 2),
+        "preempt_ms": float(attributes.ar_hit_window),
+        "clock_rate": float(attributes.clock_rate),
+        **pattern_features(parsed, float(attributes.clock_rate)),
+        **spike_features,
         "max_combo": int(attrs.max_combo or 0),
         "windows": windows,
         "peaks": peaks,

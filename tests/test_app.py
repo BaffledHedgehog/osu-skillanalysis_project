@@ -7,7 +7,7 @@ from osrparse import GameMode, Key, Mod, Replay, ReplayEventOsu
 
 from app.analyzer import normalize_mods, parse_map
 from app.main import create_app
-from app.ml import predict_pass, train
+from app.ml import predict_accuracy, predict_pass, train, train_accuracy
 from app.storage import Store
 from app import osu_api
 
@@ -72,12 +72,14 @@ def test_personal_result_feedback_and_recommendation(tmp_path: Path):
     for _ in range(3):
         response = client.post("/api/plays", json={"user": "Player", "map_id": "101", "accuracy": 96, "passed": True})
         assert response.status_code == 200
-    before = client.get("/api/maps/102/analysis", params={"user": "Player"}).json()["prediction"]
+    before = client.get("/api/maps/101/analysis", params={"user": "Player"}).json()["prediction"]
     for _ in range(4):
         client.post("/api/plays", json={"user": "Player", "map_id": "101", "accuracy": 73, "passed": False, "misses": 12})
-    after = client.get("/api/maps/102/analysis", params={"user": "Player"}).json()["prediction"]
+    after = client.get("/api/maps/101/analysis", params={"user": "Player"}).json()["prediction"]
     assert before["pass_probability"] is not None
     assert after["pass_probability"] < before["pass_probability"]
+    unseen = client.get('/api/maps/102/analysis', params={'user': 'Player'}).json()['prediction']
+    assert unseen['pass_probability'] is None and unseen['prediction_status'] == 'unknown_skill_range'
     suggestions = client.get("/api/recommendations", params={"user": "Player"}).json()["maps"]
     assert [item["id"] for item in suggestions] == ["102"]
     assert client.get("/api/users/Player/summary").json()["plays"] == 7
@@ -135,6 +137,56 @@ def test_personal_ml_trains_on_real_stored_outcomes_and_unseen_maps(tmp_path: Pa
     easy_p, _ = predict_pass(store, "Player", easy)
     hard_p, _ = predict_pass(store, "Player", hard)
     assert easy_p is not None and hard_p is not None and easy_p > hard_p
+
+
+def test_accuracy_ml_is_used_in_api_and_best_never_enables_pass_ml(tmp_path: Path, monkeypatch):
+    client = TestClient(create_app(tmp_path / "accuracy.db"))
+    store = client.app.state.store
+    # Constructed test data only; no generated results are added to the real database.
+    for index in range(12):
+        mid = str(2000 + index)
+        store.save_map(parse_map(chart(int(mid), spacing=275 - index * 17)))
+        for attempt in range(5):
+            store.save_play("Player", mid, "NM", .99 - index * .015, True,
+                            source="hinai_best", play_id=f"best-{mid}-{attempt}")
+    trained = client.post("/api/users/Player/model/train").json()
+    assert trained["pass"]["status"] == "insufficient_data"
+    assert trained["pass"]["plays"] == 0
+    accuracy = trained["accuracy"]
+    assert accuracy["status"] == "trained" and accuracy["source_mode"] == "best_scores"
+    assert accuracy["metrics"]["mae_pp"] < accuracy["metrics"]["baseline_mae_pp"]
+    prediction = client.get("/api/maps/2005/analysis", params={"user": "Player"}).json()["prediction"]
+    estimate, _ = predict_accuracy(store, "Player", store.analysis("2005"))
+    assert prediction["accuracy_model"] == "validated_personal_ridge"
+    assert prediction["expected_accuracy"] == round(estimate * 100, 1)
+    assert prediction["model"] == "similarity_and_prior"
+    # A new process must be able to reuse the saved JSON without fitting again.
+    from app import ml
+    ml._ensure_accuracy_cached.cache_clear()
+    def fail_if_refitted(*args, **kwargs):
+        raise AssertionError("Saved accuracy model should be reused")
+    monkeypatch.setattr(ml, "train_accuracy", fail_if_refitted)
+    reloaded, _ = predict_accuracy(Store(store.path), "Player", store.analysis("2005"))
+    assert reloaded == estimate
+    outside = {**store.analysis("2005"), "stars": 999}
+    outside_value, outside_status = predict_accuracy(store, "Player", outside)
+    assert outside_value is None and outside_status["status"] == "out_of_range"
+
+
+def test_accuracy_ml_prefers_attempts_excludes_fails_and_rejects_constant_target(tmp_path: Path):
+    store = Store(tmp_path / "accuracy-selection.db")
+    for index in range(12):
+        mid = str(3000 + index)
+        store.save_map(parse_map(chart(int(mid), spacing=275 - index * 17)))
+        for attempt in range(5):
+            store.save_play("Player", mid, "NM", .95, True, source="manual")
+            store.save_play("Player", mid, "NM", .99 - index * .015, True, source="hinai_best")
+            store.save_play("Player", mid, "NM", .30, False, source="manual")
+    result = train_accuracy(store, "Player")
+    assert result["source_mode"] == "attempts" and result["plays"] == 60
+    assert result["status"] == "rejected"
+    value, status = predict_accuracy(store, "Player", store.analysis("3005"))
+    assert value is None and status["status"] == "rejected"
 
 
 def test_profile_link_imports_100_score_windows_without_40_chart_cap(tmp_path: Path, monkeypatch):
@@ -195,10 +247,10 @@ def test_profile_link_imports_100_score_windows_without_40_chart_cap(tmp_path: P
     assert data["unique_maps"] == 55
     assert data["recent_unique"] == 45 and data["best_unique"] == 10
     assert data["duplicates"] == 21
-    assert data["imported"] == 55 and data["maps_fetched"] == 55
+    assert data["imported"] == 76 and data["maps_fetched"] == 55
     plays = client.app.state.store.plays("ActualPlayer")
-    assert len(plays) == 55
-    repeated_map = next(play for play in plays if play["map_id"] == "25")
+    assert len(plays) == 76
+    repeated_map = next(play for play in plays if play["map_id"] == "25" and play['source'] == 'osu_api_recent')
     assert repeated_map["passed"] == 0 and repeated_map["source"] == "osu_api_recent"
     assert repeated_map["played_at"] == "2026-10-01T12:00:00Z"
     assert next(play for play in plays if play["map_id"] == "55")["source"] == "osu_api_best"
@@ -263,11 +315,11 @@ def test_profile_import_pages_until_100_unique_maps_per_list(tmp_path: Path, mon
     monkeypatch.setattr(osu_api, "download_beatmap", beatmap)
     monkeypatch.setattr(osu_api.httpx, "AsyncClient", Client)
     client = TestClient(create_app(tmp_path / "pages.db"))
-    result = client.post("/api/users/import", json={"username": "https://osu.ppy.sh/users/123"})
+    result = client.post("/api/users/import", json={"username": "https://osu.ppy.sh/users/123", "max_scores": 4})
     assert result.status_code == 200, result.text
     body = result.json()
     assert body["recent_unique"] == 4 and body["best_unique"] == 4
-    assert body["unique_maps"] == 8 and body["imported"] == 8
+    assert body["unique_maps"] == 8 and body["imported"] == 13
     assert requests == [("recent", 0), ("recent", 4), ("best", 0), ("best", 4)]
 
 
