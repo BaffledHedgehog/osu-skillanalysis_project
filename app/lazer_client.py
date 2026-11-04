@@ -36,7 +36,7 @@ def _reader():
     return dotnet, binary
 
 
-def _read_realm(root: Path):
+def _read_realm(root: Path, include_inventory=False):
     database = root / 'client.realm'
     before = database.stat()
     if before.st_size > 512_000_000:
@@ -48,12 +48,14 @@ def _read_realm(root: Path):
         after = database.stat()
         if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
             raise ValueError('osu!lazer изменил базу во время копирования. Закройте клиент и повторите импорт.')
-        result = subprocess.run([dotnet, str(binary), str(snapshot)], capture_output=True, timeout=90,
+        command = [dotnet, str(binary), str(snapshot)] + (['--inventory'] if include_inventory else [])
+        result = subprocess.run(command, capture_output=True, timeout=90,
                                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
         if result.returncode:
             raise ValueError('Не удалось прочитать копию client.realm. Закройте lazer и повторите; при новой версии клиента может потребоваться обновление модуля.')
         try:
-            return json.loads(result.stdout)['scores']
+            payload = json.loads(result.stdout)
+            return payload if include_inventory else payload['scores']
         except (ValueError, KeyError, TypeError) as exc:
             raise ValueError('Модуль Realm вернул неизвестный формат результатов.') from exc
 
@@ -74,7 +76,7 @@ def import_lazer_scores(store: Store, root: Path, user=None, force=False):
 
 def _import_lazer_scores(store: Store, root: Path, user=None, force=False):
     info = (root / 'client.realm').stat()
-    key = f'lazer-rank-v3:{root}:{(user or "").casefold()}:{info.st_size}:{info.st_mtime_ns}'
+    key = f'lazer-raw-v4:{root}:{(user or "").casefold()}:{info.st_size}:{info.st_mtime_ns}'
     if not force:
         cached = store.cached_import(key, ttl=None)
         if cached:
@@ -90,6 +92,9 @@ def _import_lazer_scores(store: Store, root: Path, user=None, force=False):
     imported = skipped = incomplete = replays = known = no_fail = 0
     missing, seen_maps, unsupported = set(), {}, Counter()
     for row in selected:
+        raw_key = str(next((row[k] for k in ('legacy_online_id', 'online_id') if (row.get(k) or 0) > 0), row['id']))
+        store.save_score_payload(user, 'local_lazer', 'local', raw_key,
+                                 row.get('map_online_id') or '', row, 'local_not_normalized')
         try:
             mods_data = json.loads(row.get('mods') or '[]')
             if not isinstance(mods_data, list) or any(mod.get('settings') for mod in mods_data):

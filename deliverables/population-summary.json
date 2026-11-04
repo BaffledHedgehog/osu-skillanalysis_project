@@ -1,0 +1,588 @@
+{
+  "players": 155,
+  "with_recent": 53,
+  "sources": {
+    "recent": 2556,
+    "best": 15454,
+    "firsts": 3130
+  },
+  "raw_unique": 20706,
+  "ordinary_passes": 370,
+  "ordinary_fails": 1989,
+  "normalized": 11563,
+  "loaded_charts": 4116,
+  "analyzable_charts": 2955,
+  "chart_scope": {
+    "stage": "completed",
+    "completed": 1230,
+    "pending_at_start": 1230,
+    "selected_maps": 2034,
+    "failures": 4,
+    "context_limit": 30,
+    "recent_only_players": true,
+    "quality": {
+      "normalized": 11563,
+      "by_source": {
+        "hinai_best": 8807,
+        "hinai_recent": 2359,
+        "hinai_firsts": 397
+      },
+      "ordinary_passes": 370,
+      "ordinary_fails": 1989,
+      "rejected": {
+        "chart_not_loaded": 8795,
+        "unsupported_or_incomplete_label": 333,
+        "chart_checksum_mismatch": 15
+      },
+      "consented_players": 155
+    },
+    "models": {
+      "pass": "candidate",
+      "accuracy": "candidate"
+    }
+  },
+  "quality": {
+    "normalized": 11563,
+    "by_source": {
+      "hinai_best": 8807,
+      "hinai_recent": 2359,
+      "hinai_firsts": 397
+    },
+    "ordinary_passes": 370,
+    "ordinary_fails": 1989,
+    "rejected": {
+      "chart_not_loaded": 8795,
+      "unsupported_or_incomplete_label": 333,
+      "chart_checksum_mismatch": 15
+    },
+    "consented_players": 155
+  },
+  "model": {
+    "schema": "population-context-v1",
+    "trained_at": "2026-11-04T19:44:09.329712+00:00",
+    "protocol": "disjoint_players_and_song_families_with_strictly_earlier_train_family_context",
+    "prospective_validation": false,
+    "tasks": {
+      "pass": {
+        "status": "candidate",
+        "accepted": false,
+        "metrics": {
+          "train": {
+            "samples": 1207,
+            "players": 34,
+            "families": 335,
+            "passes": 180,
+            "fails": 1027,
+            "pp_bins": {
+              "2000-4000": 54,
+              "6000-8000": 20,
+              "8000-10000": 169,
+              "10000-12000": 118,
+              "12000-14000": 126,
+              "14000-16000": 225,
+              "16000-18000": 147,
+              "18000-20000": 75,
+              "20000-22000": 117,
+              "22000-24000": 93,
+              "26000-28000": 14,
+              "30000-32000": 38,
+              "32000-34000": 11
+            },
+            "mods": {
+              "NM": 504,
+              "HD": 107,
+              "HDDT": 157,
+              "HR": 169,
+              "HDHR": 85,
+              "DT": 144,
+              "HDEZ": 7,
+              "HDDTEZ": 11,
+              "DTEZ": 4,
+              "HDHRDT": 5,
+              "EZ": 4,
+              "HDNC": 10
+            },
+            "model_error": 0.11091864058242389,
+            "baseline_error": 0.13976244325319223,
+            "baselines": {
+              "constant": 0.13976244325319223,
+              "player_history": 0.1614361838810727
+            },
+            "metric": "brier",
+            "by_pp_bin": {
+              "10000-12000": {
+                "samples": 118,
+                "players": 4,
+                "model_error": 0.15018062685774847
+              },
+              "12000-14000": {
+                "samples": 126,
+                "players": 3,
+                "model_error": 0.10186341244666773
+              },
+              "14000-16000": {
+                "samples": 225,
+                "players": 5,
+                "model_error": 0.11062919180227626
+              },
+              "16000-18000": {
+                "samples": 147,
+                "players": 6,
+                "model_error": 0.10371923204486497
+              },
+              "18000-20000": {
+                "samples": 75,
+                "players": 2,
+                "model_error": 0.03383909602512374
+              },
+              "2000-4000": {
+                "samples": 54,
+                "players": 1,
+                "model_error": 0.11116240621865718
+              },
+              "20000-22000": {
+                "samples": 117,
+                "players": 4,
+                "model_error": 0.06283706198736133
+              },
+              "22000-24000": {
+                "samples": 93,
+                "players": 1,
+                "model_error": 0.010644669518724238
+              },
+              "26000-28000": {
+                "samples": 14,
+                "players": 1,
+                "model_error": 0.0014199359672397373
+              },
+              "30000-32000": {
+                "samples": 38,
+                "players": 1,
+                "model_error": 0.0006619941435996386
+              },
+              "32000-34000": {
+                "samples": 11,
+                "players": 1,
+                "model_error": 0.11224644519379798
+              },
+              "6000-8000": {
+                "samples": 20,
+                "players": 1,
+                "model_error": 0.19205943582578594
+              },
+              "8000-10000": {
+                "samples": 169,
+                "players": 4,
+                "model_error": 0.23555958922083658
+              }
+            }
+          },
+          "validation": {
+            "samples": 72,
+            "players": 7,
+            "families": 31,
+            "passes": 9,
+            "fails": 63,
+            "pp_bins": {
+              "8000-10000": 16,
+              "12000-14000": 31,
+              "18000-20000": 14,
+              "20000-22000": 7,
+              "22000-24000": 4
+            },
+            "mods": {
+              "DT": 26,
+              "NM": 27,
+              "HD": 5,
+              "HDHR": 3,
+              "HR": 2,
+              "DTEZ": 6,
+              "HDDT": 3
+            },
+            "model_error": 0.11000587094632991,
+            "baseline_error": 0.09517764151983771,
+            "baselines": {
+              "constant": 0.09517764151983771,
+              "player_history": 0.15180686979425365
+            },
+            "metric": "brier",
+            "by_pp_bin": {
+              "12000-14000": {
+                "samples": 31,
+                "players": 2,
+                "model_error": 0.059632070810547756
+              },
+              "18000-20000": {
+                "samples": 14,
+                "players": 1,
+                "model_error": 0.1805338509524102
+              },
+              "20000-22000": {
+                "samples": 7,
+                "players": 1,
+                "model_error": 0.26509317999191495
+              },
+              "22000-24000": {
+                "samples": 4,
+                "players": 2,
+                "model_error": 0.004548260382219353
+              },
+              "8000-10000": {
+                "samples": 16,
+                "players": 1,
+                "model_error": 0.19605340329445
+              }
+            }
+          },
+          "test": {
+            "samples": 35,
+            "players": 5,
+            "families": 15,
+            "passes": 5,
+            "fails": 30,
+            "pp_bins": {
+              "14000-16000": 1,
+              "18000-20000": 7,
+              "20000-22000": 27
+            },
+            "mods": {
+              "NM": 2,
+              "DT": 26,
+              "HR": 1,
+              "HDDT": 6
+            },
+            "model_error": 0.10169235181058874,
+            "baseline_error": 0.10000640102343017,
+            "baselines": {
+              "constant": 0.10000640102343017,
+              "player_history": 0.18853516673346157
+            },
+            "metric": "brier",
+            "by_pp_bin": {
+              "14000-16000": {
+                "samples": 1,
+                "players": 1,
+                "model_error": 0.00031374450167019933
+              },
+              "18000-20000": {
+                "samples": 7,
+                "players": 2,
+                "model_error": 0.1776535470785264
+              },
+              "20000-22000": {
+                "samples": 27,
+                "players": 2,
+                "model_error": 0.07642046019711038
+              }
+            }
+          }
+        },
+        "supported_mods": [],
+        "stars_range": [
+          6.95,
+          11.61
+        ],
+        "profile_stars_range": [
+          8.74,
+          10.97
+        ],
+        "accuracy_error_q90": null,
+        "release_reasons": [
+          "validation_not_better_than_baseline",
+          "test_too_few_outcomes",
+          "test_not_better_than_baseline",
+          "no_validated_mods"
+        ]
+      },
+      "accuracy": {
+        "status": "candidate",
+        "accepted": false,
+        "metrics": {
+          "train": {
+            "samples": 180,
+            "players": 29,
+            "families": 117,
+            "passes": 180,
+            "fails": 0,
+            "pp_bins": {
+              "2000-4000": 8,
+              "6000-8000": 6,
+              "8000-10000": 57,
+              "10000-12000": 35,
+              "12000-14000": 7,
+              "14000-16000": 25,
+              "16000-18000": 18,
+              "18000-20000": 10,
+              "20000-22000": 11,
+              "22000-24000": 1,
+              "32000-34000": 2
+            },
+            "mods": {
+              "NM": 79,
+              "HDDT": 45,
+              "HDHR": 4,
+              "HR": 21,
+              "HD": 13,
+              "DT": 11,
+              "HDEZ": 6,
+              "HDDTEZ": 1
+            },
+            "model_error": 0.022631469071870355,
+            "baseline_error": 0.03275239566559365,
+            "baselines": {
+              "constant": 0.03275239566559365,
+              "player_history": 0.051253931603607965
+            },
+            "metric": "mae_fraction",
+            "by_pp_bin": {
+              "10000-12000": {
+                "samples": 35,
+                "players": 4,
+                "model_error": 0.021313395059485207
+              },
+              "12000-14000": {
+                "samples": 7,
+                "players": 3,
+                "model_error": 0.010949286183710041
+              },
+              "14000-16000": {
+                "samples": 25,
+                "players": 5,
+                "model_error": 0.024139914458405253
+              },
+              "16000-18000": {
+                "samples": 18,
+                "players": 4,
+                "model_error": 0.02377261671354864
+              },
+              "18000-20000": {
+                "samples": 10,
+                "players": 2,
+                "model_error": 0.037395799504017065
+              },
+              "2000-4000": {
+                "samples": 8,
+                "players": 1,
+                "model_error": 0.030702755553233152
+              },
+              "20000-22000": {
+                "samples": 11,
+                "players": 3,
+                "model_error": 0.020793501509676116
+              },
+              "22000-24000": {
+                "samples": 1,
+                "players": 1,
+                "model_error": 0.004483663141272576
+              },
+              "32000-34000": {
+                "samples": 2,
+                "players": 1,
+                "model_error": 0.0085050792499477
+              },
+              "6000-8000": {
+                "samples": 6,
+                "players": 1,
+                "model_error": 0.014369363432473858
+              },
+              "8000-10000": {
+                "samples": 57,
+                "players": 4,
+                "model_error": 0.03179704005873968
+              }
+            }
+          },
+          "validation": {
+            "samples": 9,
+            "players": 4,
+            "families": 9,
+            "passes": 9,
+            "fails": 0,
+            "pp_bins": {
+              "8000-10000": 1,
+              "12000-14000": 2,
+              "18000-20000": 4,
+              "20000-22000": 2
+            },
+            "mods": {
+              "NM": 5,
+              "DT": 2,
+              "DTEZ": 2
+            },
+            "model_error": 0.05554957018951741,
+            "baseline_error": 0.04208053611109692,
+            "baselines": {
+              "constant": 0.05838951758423927,
+              "player_history": 0.04208053611109692
+            },
+            "metric": "mae_fraction",
+            "by_pp_bin": {
+              "12000-14000": {
+                "samples": 2,
+                "players": 1,
+                "model_error": 0.04473124920097016
+              },
+              "18000-20000": {
+                "samples": 4,
+                "players": 1,
+                "model_error": 0.07693644276923639
+              },
+              "20000-22000": {
+                "samples": 2,
+                "players": 1,
+                "model_error": 0.02887590693946568
+              },
+              "8000-10000": {
+                "samples": 1,
+                "players": 1,
+                "model_error": 0.0716546818483974
+              }
+            }
+          },
+          "test": {
+            "samples": 5,
+            "players": 2,
+            "families": 5,
+            "passes": 5,
+            "fails": 0,
+            "pp_bins": {
+              "18000-20000": 2,
+              "20000-22000": 3
+            },
+            "mods": {
+              "DT": 5
+            },
+            "model_error": 0.08059480219803271,
+            "baseline_error": 0.03157098967560972,
+            "baselines": {
+              "constant": 0.037521686957419594,
+              "player_history": 0.03157098967560972
+            },
+            "metric": "mae_fraction",
+            "by_pp_bin": {
+              "18000-20000": {
+                "samples": 2,
+                "players": 1,
+                "model_error": 0.10413777290871201
+              },
+              "20000-22000": {
+                "samples": 3,
+                "players": 1,
+                "model_error": 0.05705183148735338
+              }
+            }
+          }
+        },
+        "supported_mods": [],
+        "stars_range": [
+          8.93,
+          9.42
+        ],
+        "profile_stars_range": [
+          9.79,
+          9.11
+        ],
+        "accuracy_error_q90": 0.10944426572833083,
+        "release_reasons": [
+          "validation_too_few_players",
+          "validation_too_few_samples",
+          "validation_not_better_than_baseline",
+          "test_too_few_players",
+          "test_too_few_samples",
+          "test_not_better_than_baseline",
+          "no_validated_mods"
+        ]
+      }
+    },
+    "splits": {
+      "train": {
+        "samples": 1207,
+        "players": 34,
+        "families": 335,
+        "passes": 180,
+        "fails": 1027,
+        "pp_bins": {
+          "2000-4000": 54,
+          "6000-8000": 20,
+          "8000-10000": 169,
+          "10000-12000": 118,
+          "12000-14000": 126,
+          "14000-16000": 225,
+          "16000-18000": 147,
+          "18000-20000": 75,
+          "20000-22000": 117,
+          "22000-24000": 93,
+          "26000-28000": 14,
+          "30000-32000": 38,
+          "32000-34000": 11
+        },
+        "mods": {
+          "NM": 504,
+          "HD": 107,
+          "HDDT": 157,
+          "HR": 169,
+          "HDHR": 85,
+          "DT": 144,
+          "HDEZ": 7,
+          "HDDTEZ": 11,
+          "DTEZ": 4,
+          "HDHRDT": 5,
+          "EZ": 4,
+          "HDNC": 10
+        }
+      },
+      "validation": {
+        "samples": 72,
+        "players": 7,
+        "families": 31,
+        "passes": 9,
+        "fails": 63,
+        "pp_bins": {
+          "8000-10000": 16,
+          "12000-14000": 31,
+          "18000-20000": 14,
+          "20000-22000": 7,
+          "22000-24000": 4
+        },
+        "mods": {
+          "DT": 26,
+          "NM": 27,
+          "HD": 5,
+          "HDHR": 3,
+          "HR": 2,
+          "DTEZ": 6,
+          "HDDT": 3
+        }
+      },
+      "test": {
+        "samples": 35,
+        "players": 5,
+        "families": 15,
+        "passes": 5,
+        "fails": 30,
+        "pp_bins": {
+          "14000-16000": 1,
+          "18000-20000": 7,
+          "20000-22000": 27
+        },
+        "mods": {
+          "NM": 2,
+          "DT": 26,
+          "HR": 1,
+          "HDDT": 6
+        }
+      }
+    },
+    "notes": [
+      "PP is used for recruitment strata only, not as an outcome or historical feature.",
+      "All targets are ordinary recent attempts; curated scores enter only earlier player context.",
+      "This snapshot measures cross-player and cross-song transfer, not future live performance."
+    ],
+    "fingerprint": "64177e90af5745e62b5b8a4e7da70dd5478e3aba8bce72559a5a039afca06dcf"
+  },
+  "code_checks": {
+    "passed": 135,
+    "skipped": 1,
+    "failed": 0
+  }
+}

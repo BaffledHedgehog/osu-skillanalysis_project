@@ -204,7 +204,7 @@ def import_local_scores(store: Store, path: str | None = None, user: str | None 
     stat = db_path.stat()
     if stat.st_size > MAX_DB_BYTES:
         raise ValueError('scores.db превышает 256 МБ.')
-    cache_key = f"local-v2:{root}:{(user or stable['username'] or '').casefold()}:{stat.st_mtime_ns}:{stat.st_size}"
+    cache_key = f"local-raw-v3:{root}:{(user or stable['username'] or '').casefold()}:{stat.st_mtime_ns}:{stat.st_size}"
     if not force:
         cached = store.cached_import(cache_key, ttl=None)
         if cached:
@@ -258,6 +258,9 @@ def import_local_scores(store: Store, path: str | None = None, user: str | None 
     allowed_bits = sum(MOD_BITS[name] for name in allowed_names)
     for row in selected:
         beatmap = maps.get(row['checksum'])
+        raw_key = str(row['online_id']) if row['online_id'] > 0 else hashlib.sha256(repr(row).encode()).hexdigest()
+        store.save_score_payload(requested, 'local_stable', 'local', raw_key,
+                                 beatmap.map_id if beatmap else '', row, 'local_pass_unknown')
         if not beatmap:
             skipped += 1
             continue

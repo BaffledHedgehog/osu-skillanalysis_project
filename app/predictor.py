@@ -15,6 +15,8 @@ from .storage import Store
 from .capabilities import coverage_warnings, practice_distance
 from .recency import sample_weights, progress_summary
 from .sequence_service import predict_cnn
+from .population_ml import predict_population
+from .accuracy_runtime import predict_personal_accuracy
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:
@@ -50,7 +52,7 @@ def _records_cached(database: str, user: str, revision, time_bucket: int) -> lis
         if not analysis:
             continue
         play["analysis"] = analysis
-        source_weight = 0.35 if play["source"] in ("osu_api_best", "hinai_best", "osu_web_best", "osu_api") else 1.0
+        source_weight = 0.35 if play["source"] in BEST_SOURCES else 1.0
         play["weight"] = source_weight * recency_weight
         records.append(play)
     return records
@@ -125,19 +127,38 @@ def predict(store: Store, user: str, target: dict[str, Any],
         distance = float(np.sqrt(np.sum(scaled ** 2)))
         w = r["weight"] * math.exp(-0.5 * distance * distance)
         candidates.append((r, w))
-    pass_candidates = [(r, w) for r, w in candidates if r.get("passed_known", 1)]
+    pass_candidates = [(r, w) for r, w in candidates if r.get("passed_known", 1) and r['source'] not in BEST_SOURCES]
     nearby_weight = sum(w for _, w in candidates)
     p = (3 * prior + sum(w * r["passed"] for r, w in pass_candidates)) / (3 + sum(w for _, w in pass_candidates))
-    mean_acc = sum(r["accuracy"] * r["weight"] for r in records) / sum(weights)
-    baseline_acc = _clamp(mean_acc - (target["stars"] - ability) * 0.042, 0.5, 0.995)
-    acc = (2 * baseline_acc + sum(w * _clamp(
-        r["accuracy"] - (target["stars"] - r["analysis"]["stars"]) * 0.025, 0.3, 1)
-        for r, w in candidates)) / (2 + nearby_weight)
+    # Failed partial accuracy describes only the played fragment, not a completed pass.
+    ordinary_accuracy = [r for r in records if r.get('complete',1) and r.get('passed_known',1)
+                         and r['passed'] and r['source'] not in BEST_SOURCES]
+    local_accuracy = [r for r in records if r.get('complete',1) and not r.get('passed_known',1)]
+    curated_accuracy = [r for r in records if r.get('complete',1) and r.get('passed_known',1)
+                        and r['passed'] and r['source'] in BEST_SOURCES]
+    accuracy_records = ordinary_accuracy or local_accuracy or curated_accuracy
+    accuracy_reference_mode = 'attempts' if ordinary_accuracy else 'local_scores' if local_accuracy else 'best_scores' if curated_accuracy else 'none'
+    eligible_objects = {id(r) for r in accuracy_records}
+    accuracy_candidates = [(r,w) for r,w in candidates if id(r) in eligible_objects]
+    if accuracy_records:
+        mean_acc = sum(r['accuracy']*r['weight'] for r in accuracy_records)/sum(r['weight'] for r in accuracy_records)
+        accuracy_ability = _weighted_quantile([r['analysis']['stars']+(r['accuracy']-.9)*3.5 for r in accuracy_records],
+                                               [r['weight'] for r in accuracy_records],.7)
+        baseline_acc = _clamp(mean_acc - (target['stars'] - accuracy_ability)*.042,.5,.995)
+        acc = (2*baseline_acc + sum(w*_clamp(r['accuracy']-(target['stars']-r['analysis']['stars'])*.025,.3,1)
+                                   for r,w in accuracy_candidates))/(2+sum(w for _,w in accuracy_candidates))
+    else:
+        acc = None
 
-    known_outcomes = [r for r in records if r.get("passed_known", 1)]
+    known_outcomes = [r for r in records if r.get("passed_known", 1) and r['source'] not in BEST_SOURCES]
     failed = sum(not r["passed"] for r in known_outcomes)
     model = "similarity_and_prior"
+    population = predict_population(target, records)
     ml_p, ml_status = predict_pass(store, user, target, ml_context)
+    population_pass_used = ml_p is None and population.get('pass_probability') is not None
+    if population_pass_used:
+        p = population['pass_probability']
+        model = 'validated_population_logistic'
     if ml_p is not None:
         p = ml_p
         model = "validated_personal_logistic"
@@ -156,9 +177,17 @@ def predict(store: Store, user: str, target: dict[str, Any],
         model = 'personal_history_posterior'
     ml_acc, accuracy_status = predict_accuracy(store, user, target, accuracy_context)
     accuracy_model = "similarity_and_prior"
-    if ml_acc is not None:
+    population_accuracy_used = population.get('accuracy') is not None and (ml_acc is None or accuracy_status.get('source_mode') != 'attempts')
+    if population_accuracy_used:
+        acc = population['accuracy']
+        accuracy_model = 'validated_population_ridge'
+    if ml_acc is not None and not population_accuracy_used:
         acc = ml_acc
         accuracy_model = "validated_personal_ridge"
+    accuracy_v2 = predict_personal_accuracy(store,user,target,records)
+    if accuracy_v2.get('accuracy') is not None:
+        acc = accuracy_v2['accuracy']
+        accuracy_model = 'validated_personal_accuracy_v2'
     if cnn.get('accuracy') is not None:
         acc = cnn['accuracy']
         accuracy_model = 'validated_pattern_cnn'
@@ -167,6 +196,10 @@ def predict(store: Store, user: str, target: dict[str, Any],
     half_width = 0.065 if confidence == "medium" else 0.105
     if ml_acc is not None:
         half_width = max(0.005, accuracy_status["metrics"]["holdout_abs_error_q90"])
+    if population_accuracy_used:
+        half_width = max(.005, population['accuracy_error_q90'])
+    if accuracy_v2.get('accuracy') is not None:
+        half_width = max(.005, accuracy_v2['error_q90'])
     if cnn.get('accuracy') is not None:
         half_width = max(.005, cnn['accuracy_error_q90'])
     factors = []
@@ -190,7 +223,7 @@ def predict(store: Store, user: str, target: dict[str, Any],
         factors.append("Общая нагрузка близка к твоим недавним результатам.")
     warnings = coverage_warnings(target, records)
     unsupported = ml_status.get('status') == 'insufficient_mod_data'
-    unknown = bool(warnings) or unsupported or 'NF' in target['mods']
+    unknown = ((bool(warnings) or unsupported) and not population_pass_used) or 'NF' in target['mods']
     if 'NF' in target['mods']:
         factors.insert(0, 'No Fail отключает обычный провал. Вероятность pass без NF по такому результату не определяется.')
     if unknown:
@@ -205,23 +238,36 @@ def predict(store: Store, user: str, target: dict[str, Any],
         "prediction_status": 'unknown_skill_range' if unknown else 'estimated',
         "too_hard": False if unknown else p <= .1,
         "suggest_training": unknown or p <= .1,
-        "expected_accuracy": round(acc * 100, 1),
+        "expected_accuracy": round(acc * 100, 1) if acc is not None else None,
         "accuracy_range": [round(_clamp(acc - half_width, 0, 1) * 100, 1),
-                           round(_clamp(acc + half_width, 0, 1) * 100, 1)],
+                           round(_clamp(acc + half_width, 0, 1) * 100, 1)] if acc is not None else None,
+        'accuracy_reference_mode': accuracy_reference_mode,
+        'pass_observations': len(known_outcomes),
         "confidence": confidence, "model": model, "observations": len(records),
         "ml_status": ml_status,
         "accuracy_ml_status": accuracy_status, "accuracy_model": accuracy_model,
         "cnn_status": cnn,
+        'population_status': population,
+        'accuracy_v2_status': accuracy_v2,
         "message": "Экспериментальная оценка по вашим результатам; вероятность пока не откалибрована на независимой выборке.",
         "factors": factors,
     }
+
+
+def recommendation_bounds(store: Store, user: str, goal='comfort'):
+    comfort = user_summary(store, user).get('comfort_stars')
+    if comfort is None:
+        return 0.0, 5.0
+    factor = {'warmup': .70, 'comfort': .85, 'challenge': .95}.get(goal, .85)
+    return round(comfort * factor, 2), round(comfort + (2.0 if goal == 'challenge' else 1.0), 2)
 
 
 def recommendations(store: Store, user: str, goal: str = "comfort", mods: str = "NM", limit: int = 12) -> list[dict[str, Any]]:
     ranges = {"warmup": (80, 100), "comfort": (55, 85), "challenge": (25, 60)}
     lo, hi = ranges.get(goal, ranges["comfort"])
     records = _records(store, user)
-    played_ids = {r['map_id'] for r in records}
+    played_ids = store.excluded_map_ids(user)
+    min_stars, _ = recommendation_bounds(store, user, goal)
     summary = _summary_from_records(user, records)
     ml_context = model_context(store, user) if len(records) >= 3 else None
     accuracy_context = accuracy_model_context(store, user) if len(records) >= 3 else None
@@ -234,6 +280,8 @@ def recommendations(store: Store, user: str, goal: str = "comfort", mods: str = 
         except (ValueError, RuntimeError):
             continue
         if not analysis:
+            continue
+        if analysis['stars'] < min_stars:
             continue
         prediction = predict(store, user, analysis, records, summary, ml_context, accuracy_context)
         p = prediction["pass_probability"]
@@ -264,7 +312,7 @@ def training_maps(store: Store, user: str, target, limit=6):
         if not analysis or analysis['stars'] >= target['stars']:
             continue
         result = predict(store, user, analysis, records, summary, *contexts)
-        if result['pass_probability'] is None or result['expected_accuracy'] < 95 or result['pass_probability'] < 60:
+        if result['pass_probability'] is None or result['expected_accuracy'] is None or result['expected_accuracy'] < 95 or result['pass_probability'] < 60:
             continue
         distance = practice_distance(target, analysis)
         if distance > 1.5:

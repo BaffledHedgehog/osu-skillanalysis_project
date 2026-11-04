@@ -56,9 +56,13 @@
             <div class="panel-top"><div><div class="step">02 / ИГРОК</div><h2>Профиль игрока</h2></div><span class="panel-icon player-icon">02</span></div>
             <form id="player-form" class="input-row player-input-row">
               <input id="player-input" type="text" autocomplete="off" placeholder="Ссылка на профиль osu! или ник" aria-label="Ссылка на профиль osu! или имя игрока" maxlength="300" required>
-              <button class="secondary-button" type="submit">Загрузить</button>
+              <button class="secondary-button" type="submit">Собрать данные</button>
             </form>
             <div id="player-summary" class="player-summary"><span class="mini-dot"></span> Вставь ссылку на профиль osu! или укажи ник.</div>
+            <div id="dataset-status" class="api-hint" aria-live="polite"></div>
+            <details class="local-options" id="advanced-options">
+            <summary>Доступ и дополнительные настройки</summary>
+            <p class="api-hint">Основная кнопка собирает доступную историю из сети и найденных клиентов stable и lazer. Пароль не нужен. Тяжелые расчеты и обучение можно запустить отдельно.</p>
             <button id="import-button" class="import-button" type="button">Обновить результаты профиля</button>
             <button id="train-model-button" class="import-button" type="button">Обучить и проверить ML</button>
             <button id="cnn-button" class="import-button" type="button">CNN: паттерны карты и обучение</button>
@@ -77,6 +81,8 @@
               <div id="local-clients" class="api-hint"></div>
             </details>
             <div id="api-hint" class="api-hint"></div>
+            <div id="population-model-status" class="api-hint"></div>
+            </details>
           </div>
         </section>
 
@@ -100,6 +106,7 @@
 
         <section id="recommendations" class="recommend-section"><div class="section-heading"><div><div class="eyebrow small">СЛЕДУЮЩИЙ ШАГ</div><h2>Что сыграть дальше</h2></div><div class="goal-tabs" id="goal-tabs"><button data-goal="warmup" type="button">Разминка</button><button data-goal="comfort" type="button" class="selected">В своём темпе</button><button data-goal="challenge" type="button">Вызов</button></div></div><div id="recommendation-list" class="recommendation-list"><div class="empty-state panel">Добавь несколько карт и результатов, чтобы увидеть персональный подбор.</div></div></section>
 
+        <button id="discover-maps-button" type="button" class="outline-link">Найти новые карты</button>
         <section id="catalog" class="catalog-section"><div class="section-heading"><div><div class="eyebrow small">ТВОЯ БИБЛИОТЕКА</div><h2>Добавленные карты <span id="catalog-count" class="count-badge">0</span></h2></div></div><div id="catalog-list" class="catalog-list"><div class="empty-state panel">Каталог пока пуст. Вставь ссылку на карту или загрузи файл .osu.</div></div></section>
         <footer class="footer">pulse! - студенческий проект Университета Иннополис. Не связан с osu! или ppy Pty Ltd.</footer>
       </div>

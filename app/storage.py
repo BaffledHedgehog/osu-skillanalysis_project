@@ -52,6 +52,19 @@ class Store:
                 CREATE TABLE IF NOT EXISTS import_cache (
                     cache_key TEXT PRIMARY KEY, result TEXT NOT NULL, saved_at REAL NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS score_payloads (
+                    user_key TEXT NOT NULL, provider TEXT NOT NULL, score_key TEXT NOT NULL,
+                    map_id TEXT NOT NULL, payload TEXT NOT NULL, sources TEXT NOT NULL,
+                    reason TEXT NOT NULL, saved_at REAL NOT NULL,
+                    PRIMARY KEY(user_key,provider,score_key)
+                );
+                CREATE TABLE IF NOT EXISTS owned_maps (
+                    user_key TEXT NOT NULL, source TEXT NOT NULL, map_id TEXT NOT NULL,
+                    PRIMARY KEY(user_key,source,map_id)
+                );
+                CREATE TABLE IF NOT EXISTS public_profiles (
+                    user_key TEXT PRIMARY KEY, payload TEXT NOT NULL, saved_at REAL NOT NULL
+                );
                 CREATE TABLE IF NOT EXISTS local_files (
                     path TEXT PRIMARY KEY, mtime_ns INTEGER NOT NULL, size INTEGER NOT NULL, checksum TEXT NOT NULL
                 );
@@ -192,10 +205,10 @@ class Store:
                                   AND (passed_known=0 OR ?=1)''',
                                (int(passed), int(passed_known), int(complete), grade, mods, accuracy, misses,
                                 play_id, user.strip().casefold(), int(passed_known)))
-                if source in ("osu_api_recent", "osu_api_best", "hinai_recent", "hinai_best", "osu_web_recent", "osu_web_best"):
+                if source.startswith(('osu_api_', 'hinai_', 'osu_web_')):
                     db.execute("UPDATE plays SET source=?,passed=?,passed_known=1 WHERE id=? "
                                "AND (source='osu_api' OR passed_known=0 OR "
-                               "(source LIKE '%_best' AND ? LIKE '%_recent'))",
+                               "((source LIKE '%_best' OR source LIKE '%_firsts' OR source LIKE '%_pinned') AND ? LIKE '%_recent'))",
                                (source, int(passed), play_id, source))
                 if pp is not None:
                     db.execute("UPDATE plays SET pp=COALESCE(pp, ?) WHERE id=?", (pp, play_id))
@@ -213,6 +226,52 @@ class Store:
         with self._connection() as db:
             row = db.execute("SELECT count(*) n FROM plays WHERE user_key=?", (user.strip().casefold(),)).fetchone()
         return row["n"]
+
+    def save_score_payload(self, user, provider, source, score_key, map_id, payload, reason='pending'):
+        """Retain score fields and list membership, including unusable training rows."""
+        key = user.strip().casefold()
+        with self._connection() as db:
+            old = db.execute('SELECT sources FROM score_payloads WHERE user_key=? AND provider=? AND score_key=?',
+                             (key, provider, str(score_key))).fetchone()
+            sources = set(json.loads(old['sources'])) if old else set()
+            sources.add(source)
+            db.execute('''INSERT INTO score_payloads VALUES(?,?,?,?,?,?,?,?)
+                          ON CONFLICT(user_key,provider,score_key) DO UPDATE SET
+                          map_id=excluded.map_id,payload=excluded.payload,sources=excluded.sources,
+                          reason=excluded.reason,saved_at=excluded.saved_at''',
+                       (key, provider, str(score_key), str(map_id), json.dumps(payload, ensure_ascii=False, allow_nan=False),
+                        json.dumps(sorted(sources)), reason, time.time()))
+
+    def save_public_profile(self, user, profile):
+        allowed = ('id', 'username', 'previous_usernames', 'country_code', 'statistics',
+                   'rank_history', 'monthly_playcounts', 'scores_first_count', 'scores_best_count',
+                   'scores_recent_count', 'playmode', 'join_date')
+        payload = {k: profile[k] for k in allowed if k in profile}
+        with self._connection() as db:
+            db.execute('INSERT OR REPLACE INTO public_profiles VALUES(?,?,?)',
+                       (user.strip().casefold(), json.dumps(payload, ensure_ascii=False), time.time()))
+
+    def score_payloads(self, user):
+        with self._connection() as db:
+            rows = db.execute('SELECT * FROM score_payloads WHERE user_key=?', (user.strip().casefold(),)).fetchall()
+        return [{**dict(row), 'payload': json.loads(row['payload']), 'sources': json.loads(row['sources'])} for row in rows]
+
+    def replace_owned_maps(self, user, source, map_ids):
+        with self._connection() as db:
+            db.execute('DELETE FROM owned_maps WHERE user_key=? AND source=?', (user.strip().casefold(), source))
+            db.executemany('INSERT OR IGNORE INTO owned_maps VALUES(?,?,?)',
+                           ((user.strip().casefold(), source, str(m)) for m in set(map_ids)))
+
+    def excluded_map_ids(self, user):
+        key = user.strip().casefold()
+        with self._connection() as db:
+            rows = db.execute('''SELECT map_id FROM plays WHERE user_key=?
+                                 UNION SELECT map_id FROM score_payloads WHERE user_key=?
+                                 UNION SELECT map_id FROM owned_maps WHERE user_key=?
+                                 UNION SELECT m.id FROM maps m JOIN score_payloads s
+                                 ON m.checksum=json_extract(s.payload,'$.checksum')
+                                 WHERE s.user_key=?''', (key, key, key, key)).fetchall()
+        return {row['map_id'] for row in rows if row['map_id']}
 
     def save_local_replay(self, play_id: str, path: Path, digest: str):
         with self._connection() as db:

@@ -1,11 +1,14 @@
 """Create the test plan and dated demo check record for the course."""
 
 from pathlib import Path
+import json
 from docx import Document
 from docx.shared import Cm, Pt
 
 
 def build():
+    results_file = Path(__file__).parent / 'test-kit/test-results.json'
+    results = json.loads(results_file.read_text(encoding='utf-8')) if results_file.exists() else {}
     doc = Document()
     section = doc.sections[0]
     section.top_margin = section.bottom_margin = Cm(1.6)
@@ -13,7 +16,7 @@ def build():
     doc.styles["Normal"].font.name = "Calibri"
     doc.styles["Normal"].font.size = Pt(10)
     doc.add_heading("Тест-план MVP - pulse!", 0)
-    doc.add_paragraph("Версия от 24.10.2026. Основа - пример тест-плана со слайда курса.")
+    doc.add_paragraph('Версия от ' + results.get('display_date','24.10.2026') + '. Основа - пример тест-плана со слайда курса.')
     table = doc.add_table(rows=1, cols=2)
     table.style = "Table Grid"
     table.rows[0].cells[0].text = "Поле"
@@ -27,12 +30,15 @@ def build():
         ("Условия начала / завершения", "Начало: приложение запускается, /api/health отвечает 200, доступны карта и история. Завершение: обязательные требования проверены, критических ошибок в журнале нет, ограничения и результаты проверки качества записаны. Это условия завершения, их выполнение пока не подтверждено полностью."),
         ("Ответственные", "QA - сценарии, проверки и журнал ошибок; DEV - импорт, интерфейс и исправления; ML - данные и качество моделей; PM - согласование критериев и приемка."),
     ]
+    if results:
+        fields[0] = ('Объект / версия','Локальный MVP pulse!, API 0.1.0. ' + results['version'] + '. Python, FastAPI, SQLite, браузер.')
+        fields[5] = ('Условия начала / завершения', results['completion'])
     for name, text in fields:
         cells = table.add_row().cells
         cells[0].text, cells[1].text = name, text
     doc.add_page_break()
     doc.add_heading("Проверки для демонстрации", 1)
-    doc.add_paragraph("Запись проверки 24.10.2026. Публичная история была сохранена раньше: baffledhedgehog, 97 best-результатов. Повторный живой импорт в этой проверке не выполнялся.")
+    doc.add_paragraph(results.get('summary',"Запись проверки 24.10.2026. Публичная история была сохранена раньше: baffledhedgehog, 97 best-результатов. Повторный живой импорт в этой проверке не выполнялся."))
     table = doc.add_table(rows=1, cols=4)
     table.style = "Table Grid"
     for cell, value in zip(table.rows[0].cells, ["Проверка", "Ожидание", "Факт", "Состояние"]):
@@ -47,10 +53,23 @@ def build():
         ("Путь в браузере", "Открытие сайта, загрузка файла, обучение, переключение DT", "Playwright: все действия выполнены, ошибок JavaScript нет", "Автоматически проверено в браузере"),
         ("AC-02 / AC-03 полностью", "Профиль навыков и отчет качества на будущих попытках", "Качество на реальных будущих играх еще не подтверждено", "Нужно проверить"),
     ]
+    if results:
+        checks = [(r['name'],r['expected'],r['actual'],r['status']) for r in results['checks']]
     for values in checks:
         for cell, value in zip(table.add_row().cells, values):
             cell.text = value
     doc.add_paragraph("Числа прогноза относятся к указанной истории и версии расчета. Эти проверки подтверждают работу кода и API; точность прогноза требует проверки на новых играх.")
+    if results:
+        doc.add_heading('Журнал найденных проблем',1)
+        for issue in results.get('issues',[]):
+            doc.add_paragraph(issue['id'] + '. ' + issue['title'] + '. ' + issue['details'])
+        doc.add_heading('Проверка новой игровой попытки',1)
+        live = results['live']
+        doc.add_paragraph(live['description'])
+        doc.add_paragraph('Фактический результат: ' + live['actual'])
+        doc.add_paragraph('Статус: ' + live['status'])
+        doc.add_heading('Где лежат доказательства',1)
+        doc.add_paragraph('Архив: deliverables/test-kit/Доказательства тестов - pulse!.zip. Исходные логи и JSON: .data/test-evidence/2026-11-04. В архив не включены базы игроков, cookie, ключи, игровые реплеи и другие секреты. Скриншоты контрольных кейсов TC-02/04/05 подписаны как контрольные данные.')
     doc.save(Path(__file__).resolve().parent / "Тест-план MVP - pulse!.docx")
 
 

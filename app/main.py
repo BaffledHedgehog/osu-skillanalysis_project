@@ -6,6 +6,9 @@ import io
 import os
 import re
 import zipfile
+import asyncio
+import threading
+import uuid
 from pathlib import Path
 
 import httpx
@@ -20,7 +23,10 @@ from urllib.parse import urlparse
 from .analyzer import normalize_mods, parse_map
 from .ml import model_status, train_models
 from .osu_api import api_configured, download_beatmap, import_user_scores
-from .predictor import predict, recommendations, training_maps, user_summary
+from .predictor import predict, recommendations, recommendation_bounds, training_maps, user_summary
+from .player_dataset import collect_dataset
+from .map_discovery import discover_maps
+from .population_ml import population_status
 from .replays import import_replay
 from .storage import Store
 from .local_client import discover_clients, import_local_scores
@@ -102,6 +108,8 @@ def create_app(db_path: str | Path | None = None, public_mode: bool | None = Non
     vault = CookieVault()
     oauth_vault = OAuthVault()
     app.state.store = store
+    dataset_jobs = {}
+    dataset_lock = threading.Lock()
     app.state.public_mode = public_mode if public_mode is not None else os.getenv('PULSE_PUBLIC_MODE') == '1'
     app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
@@ -121,6 +129,10 @@ def create_app(db_path: str | Path | None = None, public_mode: bool | None = Non
     def health(request: Request):
         return {"ok": True, "api_configured": bool(oauth_vault.get(request.cookies.get('pulse-oauth'))) or api_configured(), "maps": len(store.list_maps()),
                 "public_mode": app.state.public_mode}
+
+    @app.get('/api/population/model')
+    def shared_model_status():
+        return population_status()
 
     @app.get('/api/maps/{map_id}/training')
     def training(map_id: str, user: str = Query(min_length=1), mods: str = 'NM'):
@@ -404,15 +416,72 @@ def create_app(db_path: str | Path | None = None, public_mode: bool | None = Non
         except httpx.HTTPError as exc:
             raise HTTPException(502, "Не удалось получить результаты игрока.") from exc
 
+    @app.post('/api/dataset/jobs')
+    def start_dataset(body: UserInput, request: Request):
+        from .osu_api import parse_player_reference
+        try:
+            parse_player_reference(body.username)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        try:
+            require_local(request)
+            allow_local = True
+        except HTTPException:
+            allow_local = False
+        cookies = vault.get(request.cookies.get('pulse-session')) if allow_local else None
+        oauth = oauth_vault.get(request.cookies.get('pulse-oauth')) if allow_local else None
+        with dataset_lock:
+            if any(j['status'] == 'running' for j in dataset_jobs.values()):
+                raise HTTPException(409, 'Сбор данных уже идет. Дождитесь его завершения.')
+            token = uuid.uuid4().hex
+            if len(dataset_jobs) >= 16:
+                dataset_jobs.pop(next(iter(dataset_jobs)))
+            dataset_jobs[token] = {'status': 'running', 'phase': 'starting', 'message': 'Начинаем сбор данных.'}
+
+        def report(**values):
+            with dataset_lock:
+                dataset_jobs[token].update(values)
+
+        def worker():
+            try:
+                result = asyncio.run(collect_dataset(store, body.username, allow_local=allow_local,
+                                                      force=body.force, cookies=cookies, oauth=oauth, progress=report))
+                report(status='completed', result=result)
+            except Exception:
+                # Never expose session values, upstream request headers or local paths.
+                report(status='failed', message='Не удалось собрать данные. Проверьте ник и доступ к источникам в дополнительных настройках.')
+
+        threading.Thread(target=worker, name='pulse-dataset', daemon=True).start()
+        return {'job_id': token}
+
+    @app.get('/api/dataset/jobs/{job_id}')
+    def dataset_status(job_id: str):
+        with dataset_lock:
+            if job_id not in dataset_jobs:
+                raise HTTPException(404, 'Сбор данных не найден. После перезапуска сервера запустите его снова.')
+            return dict(dataset_jobs[job_id])
+
     @app.get("/api/recommendations")
     def recommend(user: str, goal: str = Query("comfort", pattern="^(warmup|comfort|challenge)$"),
                   mods: str = "NM"):
         try:
             normalize_mods(mods)
             return {"goal": goal, "maps": recommendations(store, user, goal, mods),
+                    'min_stars': recommendation_bounds(store, user, goal)[0],
+                    'message': 'Сыгранные и найденные в клиенте карты исключены. Нижняя сложность выбрана по истории игрока.',
                     "catalog_size": len(store.list_maps())}
         except ValueError as exc:
             raise HTTPException(400, str(exc)) from exc
+
+    @app.post('/api/recommendations/discover')
+    async def discover(user: str = Query(min_length=1, max_length=50),
+                       goal: str = Query('comfort', pattern='^(warmup|comfort|challenge)$'), mods: str = 'NM'):
+        try:
+            return await discover_maps(store, user, goal, mods)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        except httpx.HTTPError as exc:
+            raise HTTPException(502, 'Не удалось найти новые карты. Уже загруженные карты доступны.') from exc
 
     return app
 

@@ -1,5 +1,6 @@
 """Build the five test cases requested in practice 1."""
 from pathlib import Path
+import json
 
 from docx import Document
 from docx.oxml import OxmlElement
@@ -65,6 +66,8 @@ def table(doc, fields):
 
 
 def build():
+    results_file = Path(__file__).parent / 'test-kit/test-results.json'
+    results = json.loads(results_file.read_text(encoding='utf-8')) if results_file.exists() else {}
     doc = Document()
     section = doc.sections[0]
     section.page_width, section.page_height = Cm(21), Cm(29.7)
@@ -91,13 +94,16 @@ def build():
     doc.core_properties.author = 'Команда проекта pulse!'
     doc.add_heading('Практика 1. Тест-кейсы MVP', 0)
     doc.add_paragraph('pulse! - анализ навыков и персональной сложности карт osu!standard')
-    doc.add_paragraph('Университет Иннополис | Управление ИТ-проектами | 24.10.2026')
+    doc.add_paragraph('Университет Иннополис | Управление ИТ-проектами | ' + results.get('display_date','24.10.2026'))
     doc.add_heading('Требования и критерии приемки', 1)
     doc.add_paragraph('REQ-02, Must. Приложение принимает .osu и .osz карты osu!standard и извлекает данные карты. Приемка: оба формата загружаются, режим, ID и признаки определены верно. Поврежденный файл отклоняется с понятной ошибкой.')
     doc.add_paragraph('REQ-06, Must. Обученная модель прохождения используется только при Brier score ниже базового прогноза на проверочных картах. Приемка: более точная модель применяется; при худшей или равной ошибке показывается предварительный расчет. Brier score - ошибка вероятности; меньше означает лучше.')
-    doc.add_paragraph('Объект проверки: рабочая версия MVP от 24.10.2026. Ответственный за тестирование - Темиров А.М. Исправления импорта - Гайфуллин А.Р.; модели и метрики - Недугов Д.')
+    doc.add_paragraph('Объект проверки: рабочая версия MVP. Ответственный за тестирование - Темиров А.М. Исправления импорта - Гайфуллин А.Р.; модели и метрики - Недугов Д.')
+    if results:
+        doc.add_paragraph('Прогон ' + results['display_date'] + ' выполнен автоматически через API, pytest и браузер. Результаты внесены по сохраненным JSON, XML, логам и скриншотам. Личная игровая история не использовалась для контрольных значений Brier. Версия: ' + results['version'] + '.')
     doc.add_paragraph('Всего 5 кейсов: 2 успешных, 2 негативных, 1 граничный. Значения Brier - контрольные данные автотестов, а не метрики качества на реальных игроках.')
     for index, (tc, req, title, kind, preconditions, steps, expected, evidence) in enumerate(CASES):
+        actual = results.get('cases',{}).get(tc,{})
         if index in (1, 3):
             doc.add_page_break()
         doc.add_heading(f'{tc}. {title}', 2)
@@ -105,8 +111,8 @@ def build():
             ('TC-ID / REQ-ID', f'{tc} / {req}'), ('Тип', kind),
             ('Предусловия', preconditions), ('Шаги', steps),
             ('Ожидаемый результат', expected), ('Ответственный', 'Темиров А.М., тестирование'),
-            ('Evidence', evidence), ('Фактический результат', 'Заполняется после выполнения.'),
-            ('Статус', 'Не выполнен. После проверки: Pass / Fail / Blocked.'),
+            ('Evidence', actual.get('evidence',evidence)), ('Фактический результат', actual.get('actual','Заполняется после выполнения.')),
+            ('Статус', actual.get('status','Не выполнен. После проверки: Pass / Fail / Blocked.')),
         ])
         doc.add_paragraph()
     doc.add_paragraph('При Fail сохраняем описание ошибки и evidence. При Blocked записываем причину, которая помешала выполнить проверку.')

@@ -96,18 +96,27 @@ function renderPrediction(prediction) {
   const ml = prediction.ml_status;
   const accuracyML = prediction.accuracy_ml_status;
   const cnn = prediction.cnn_status;
+  const population = prediction.population_status;
+  const populationPass = prediction.model === 'validated_population_logistic';
+  const populationAccuracy = prediction.accuracy_model === 'validated_population_ridge';
   const cnnAccuracy = prediction.accuracy_model === 'validated_pattern_cnn';
+  const accuracyV2 = prediction.accuracy_v2_status;
+  const accuracyV2Active = prediction.accuracy_model === 'validated_personal_accuracy_v2';
   const accuracyActive = prediction.accuracy_model === 'validated_personal_ridge';
   const mlNote = prediction.model === 'personal_history_posterior'
     ? 'Прогноз уточнен по сохраненным попыткам этой версии карты с теми же модами. Качество такого уточнения еще нужно проверить на следующих играх.'
+    : populationPass
+    ? `Общая ML прохождения проверена на других игроках и семействах песен: ${population.metrics.pass.test.players} игроков, ${population.metrics.pass.test.samples} попыток. Brier ${population.metrics.pass.test.model_error.toFixed(4)}, базовый прогноз ${population.metrics.pass.test.baseline_error.toFixed(4)}. Это проверка сохраненной истории.`
     : ml?.status === 'trained'
     ? `ML прохождения обучена на ${ml.plays} попытках и проверена на других картах (ошибка Brier: ${ml.metrics.brier}, базовый прогноз: ${ml.metrics.baseline_brier}).`
     : ml?.status === 'insufficient_mod_data'
       ? 'Для выбранных модов в обучающей истории недостаточно данных. Используется предварительный расчет.'
     : ml?.status === 'rejected'
-      ? `ML пока не применяется: на отложенных картах её ошибка выше базового прогноза.`
+      ? `ML пока не применяется: на отложенных картах ее ошибка не ниже ошибки базового прогноза.`
       : `Для ML прохождения нужны 40 попыток на 10 картах, минимум 8 успехов и 8 неудач. Сейчас: ${ml?.plays || 0} попыток. Best в обучение прохождения не входят.`;
   const accuracyLabel = cnnAccuracy ? 'CNN: ТОЧНОСТЬ ПО ПАТТЕРНАМ'
+    : accuracyV2Active ? 'ML: ТОЧНОСТЬ ПО ПРЕЖНИМ ИГРАМ'
+    : populationAccuracy ? 'ML: ТОЧНОСТЬ ПО ГРУППЕ ИГРОКОВ'
     : accuracyActive
     ? (accuracyML.source_mode === 'best_scores' ? 'ML: ТОЧНОСТЬ ПО BEST-РЕЗУЛЬТАТАМ' : accuracyML.source_mode === 'local_scores' ? 'ML: ТОЧНОСТЬ ПО ЛОКАЛЬНЫМ РЕЗУЛЬТАТАМ' : 'ML: ТОЧНОСТЬ ПРИ ПРОХОЖДЕНИИ')
     : 'ТОЧНОСТЬ: ПРЕДВАРИТЕЛЬНЫЙ РАСЧЕТ';
@@ -115,6 +124,11 @@ function renderPrediction(prediction) {
   if (cnnAccuracy) {
     const release = cnn.release.accuracy;
     accuracyNote = `CNN проверена на других семействах песен: ${cnn.accuracy_metrics.accuracy_attempts} проходов. Средняя ошибка ${release.test_metric.toFixed(2)} п.п.; у контрольной модели ${release.reference_metric.toFixed(2)} п.п. Это проверка на сохраненной истории, качество будущих игр еще нужно измерить. Диапазон рассчитан по ошибкам проверки.`;
+  } else if (accuracyV2Active) {
+    const m = accuracyV2.metrics;
+    accuracyNote = `Модель выбрана на ранних играх и проверена на ${m.samples} более поздних попытках из ${m.families} семейств карт. Средняя ошибка ${m.mae_pp.toFixed(2)} п.п., у прежней Ridge ${m.ridge_mae_pp.toFixed(2)} п.п. Это проверка сохраненной истории с обновлением профиля только по уже сыгранным играм. Диапазон не является гарантией.`;
+  } else if (populationAccuracy) {
+    accuracyNote = `Общая модель проверена на других игроках и семействах песен. MAE ${(population.metrics.accuracy.test.model_error * 100).toFixed(2)} п.п., базовый прогноз ${(population.metrics.accuracy.test.baseline_error * 100).toFixed(2)} п.п. Диапазон рассчитан по ошибкам validation и не является гарантией.`;
   } else if (accuracyActive) {
     accuracyNote = `ML точности обучена на ${accuracyML.plays} результатах. На ${accuracyML.metrics.holdout_maps} картах вне обучения средняя ошибка ${accuracyML.metrics.mae_pp.toFixed(2)} п.п.; у простого среднего ${accuracyML.metrics.baseline_mae_pp.toFixed(2)} п.п.`;
     if (accuracyML.source_mode === 'best_scores') accuracyNote += ' Используются только best: оценка смещена к удачным играм и не описывает обычную попытку.';
@@ -127,8 +141,11 @@ function renderPrediction(prediction) {
   } else if (accuracyML?.status === 'rejected') {
     accuracyNote = 'ML точности не улучшила среднее значение на отложенных картах. Используется предварительный расчет.';
   }
-  box.innerHTML = `<div class="prediction-row"><div><div class="prediction-label">${prediction.model === 'personal_history_posterior' ? 'ПРОГНОЗ С УЧЕТОМ ИСТОРИИ КАРТЫ' : ml?.status === 'trained' ? 'ML: ШАНС PASS' : 'ПРЕДВАРИТЕЛЬНЫЙ ШАНС PASS'}</div><div class="prediction-number">${prediction.pass_probability}%</div></div><span class="confidence">${prediction.confidence === 'medium' ? 'Средняя уверенность' : 'Мало данных'}</span></div>
-  <div class="prediction-label">${accuracyLabel}</div><div class="accuracy-num">${prediction.expected_accuracy}% <span style="font-size:11px;color:#8995ab;font-weight:400">примерно ${prediction.accuracy_range[0]}-${prediction.accuracy_range[1]}%</span></div>
+  if (prediction.expected_accuracy === null) accuracyNote = 'Нет полных результатов, по которым можно оценить accuracy при прохождении. Точность сорванных попыток в этот расчет не входит.';
+  const accuracyText = prediction.expected_accuracy === null ? 'Нет данных' : `${prediction.expected_accuracy}%`;
+  const accuracyRangeText = prediction.accuracy_range ? `примерно ${prediction.accuracy_range[0]}-${prediction.accuracy_range[1]}%` : '';
+  box.innerHTML = `<div class="prediction-row"><div><div class="prediction-label">${prediction.model === 'personal_history_posterior' ? 'ПРОГНОЗ С УЧЕТОМ ИСТОРИИ КАРТЫ' : populationPass ? 'ML: ШАНС PASS ПО ГРУППЕ ИГРОКОВ' : ml?.status === 'trained' ? 'ML: ШАНС PASS' : 'ПРЕДВАРИТЕЛЬНЫЙ ШАНС PASS'}</div><div class="prediction-number">${prediction.pass_probability}%</div></div><span class="confidence">${prediction.confidence === 'medium' ? 'Средняя уверенность' : 'Мало данных'}</span></div>
+  <div class="prediction-label">${accuracyLabel}</div><div class="accuracy-num">${accuracyText} <span style="font-size:11px;color:#8995ab;font-weight:400">${accuracyRangeText}</span></div>
   <p class="prediction-message">По ${prediction.observations} результатам. ${escapeHtml(prediction.message)}<br>${escapeHtml(mlNote)}<br><br>${escapeHtml(accuracyNote)}</p>
   <div style="margin-top:13px">${prediction.factors.map(factor => `<div class="prediction-factor">${escapeHtml(factor)}</div>`).join('')}</div>`;
 }
@@ -196,7 +213,7 @@ async function loadRecommendations() {
   const data = await api(`/api/recommendations?${query}`);
   const list = $('#recommendation-list');
   if (!data.maps.length) {
-    list.innerHTML = `<div class="empty-state panel">${data.catalog_size ? 'Все добавленные карты уже есть в истории. Добавь ещё карты для подбора.' : 'Добавь карты в каталог, чтобы получить подбор.'}</div>`;
+    list.innerHTML = `<div class="empty-state panel">Подходящих новых карт пока нет.${data.min_stars ? ` По твоей истории ищем от ${data.min_stars}*.` : ''} Нажми "Найти новые карты", чтобы поискать их в сети.</div>`;
     return;
   }
   list.innerHTML = data.maps.map(map => `<article class="rec-card panel" data-id="${escapeHtml(map.id)}" tabindex="0" role="button" aria-label="Разобрать карту ${escapeHtml(map.title)}"><div class="rec-top"><span>osu!standard, +${escapeHtml(map.mods)}</span><span class="rec-stars">${map.stars.toFixed(2)}*</span></div><div class="rec-title">${escapeHtml(map.title)}</div><div class="rec-sub">${escapeHtml(map.artist)} [${escapeHtml(map.version)}]</div><div class="rec-foot"><span>${formatTime(map.duration)}, ${map.bpm} BPM</span><span class="rec-chance">${map.prediction.pass_probability === null ? 'По сложности' : `${map.prediction.pass_probability}% pass`}</span></div></article>`).join('');
@@ -263,10 +280,54 @@ $('#player-form').addEventListener('submit', event => {
   action(async () => {
     const reference = $('#player-input').value.trim();
     if (!reference) throw new Error('Укажи ссылку на профиль или ник игрока.');
-    const result = await importProfile(reference);
-    toast(result.cached ? 'Профиль загружен из кэша.' : `Добавлено новых попыток: ${result.imported}. Уникальных карт: ${result.unique_maps}.`);
+    const result = await collectPlayerDataset(reference);
+    toast(`История дополнена. Новых попыток: ${result.imported}; всего: ${result.total_plays}.`);
   }, $('#player-form button[type="submit"]'));
 });
+
+async function collectPlayerDataset(reference) {
+  const status = $('#dataset-status');
+  const previousUser = state.user;
+  status.textContent = 'Начинаем сбор данных...';
+  const started = await api('/api/dataset/jobs', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: reference})});
+  sessionStorage.setItem('pulse-dataset-job', started.job_id);
+  return await pollPlayerDataset(started.job_id, previousUser);
+}
+
+async function pollPlayerDataset(jobId, previousUser = state.user) {
+  const status = $('#dataset-status');
+  for (;;) {
+    const job = await api(`/api/dataset/jobs/${encodeURIComponent(jobId)}`);
+    status.textContent = job.message;
+    if (job.status === 'failed') {
+      sessionStorage.removeItem('pulse-dataset-job');
+      throw new Error(job.message);
+    }
+    if (job.status === 'completed') {
+      sessionStorage.removeItem('pulse-dataset-job');
+      const result = job.result;
+      state.user = result.username;
+      $('#player-input').value = state.user;
+      localStorage.setItem('pulse-user', state.user);
+      const online = result.sources.find(s => s.received_by_source);
+      const counts = online ? Object.entries(online.received_by_source).map(([name, count]) => `${name}: ${count}`).join(', ') + '. ' : '';
+      const missing = online ? Object.entries(online.source_status || {}).filter(([, status]) => status !== 'available').map(([name]) => name).join(', ') : '';
+      status.textContent = `Новых попыток: ${result.imported}. Всего: ${result.total_plays}. Сохранено исходных результатов: ${result.retained_scores}. ${counts}${missing ? `Недоступные списки: ${missing}. ` : ''}${result.warnings.join(' ')} ${result.limits}`;
+      await refresh();
+      if (result.highlight_map_id && (!state.mapId || previousUser !== state.user)) await selectMap(result.highlight_map_id);
+      return result;
+    }
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  }
+}
+
+$('#discover-maps-button').addEventListener('click', () => action(async () => {
+  if (!state.user) throw new Error('Сначала загрузи профиль игрока.');
+  const query = new URLSearchParams({user: state.user, goal: state.goal, mods: currentMods()});
+  const result = await api(`/api/recommendations/discover?${query}`, {method: 'POST'});
+  await Promise.all([loadCatalog(), loadRecommendations()]);
+  toast(result.available ? 'Подбор обновлен.' : 'Подходящих новых карт не найдено в этой части каталога.');
+}, $('#discover-maps-button')));
 
 async function importProfile(reference, options = {}) {
   const hint = $('#api-hint');
@@ -296,7 +357,17 @@ async function refreshSession() {
   state.cookiesActive = session.active;
   state.apiConfigured = oauth.active || oauth.environment_configured;
   $('#session-status').textContent = state.apiConfigured ? 'Официальный OAuth API подключен. Он используется вместо cookie.' : session.active ? 'Формат cookie принят; сессия проверится при загрузке истории. Cookie только в памяти.' : 'Cookie и OAuth не подключены. Доступен открытый источник и локальный импорт.';
-  $('#api-hint').textContent = state.apiConfigured ? 'Официальный osu! API подключен. Доступна загрузка следующих страниц результатов.' : 'Без входа: открытый API Hinamizawa. Данные профиля передаются этому сервису.';
+  $('#api-hint').textContent = state.apiConfigured ? 'Официальный osu! API подключен. Сбор запрашивает до 10 страниц каждого доступного списка результатов.' : 'Без входа: recent, best и firsts через Hinamizawa. Данные профиля передаются этому сервису. Pinned требует другого источника.';
+}
+
+async function loadPopulationStatus() {
+  const box = $('#population-model-status');
+  try {
+    const model = await api('/api/population/model');
+    if (model.status === 'not_trained') { box.textContent = 'Общая модель пока не обучалась.'; return; }
+    const labels = {accepted: 'подключена для проверенных модов', candidate: 'обучена, проверка не пройдена', insufficient_data: 'мало данных для обучения'};
+    box.textContent = 'Общие модели: ' + Object.entries(model.tasks).map(([task, info]) => `${task}: ${labels[info.status] || info.status}`).join('; ') + '. Личные прогнозы доступны независимо от этого эксперимента.';
+  } catch { box.textContent = ''; }
 }
 
 function openAccessDialog(selector) {
@@ -631,9 +702,12 @@ async function init() {
     for (const selector of ['#cnn-button', '#local-import-button', '#nf-health-button', '#cookies-button', '#more-scores-button', '#local-options']) {
       $(selector).hidden = !!state.publicMode;
     }
-    $('#api-hint').textContent = health.api_configured ? 'Официальный osu! API. До 100 разных карт recent и 100 best.' : 'Без входа: открытый API Hinamizawa. До 100 результатов recent и 100 best. Данные профиля передаются этому сервису.';
+    $('#api-hint').textContent = health.api_configured ? 'Официальный osu! API. До 10 страниц каждого доступного списка результатов.' : 'Без входа: recent, best и firsts через Hinamizawa, до 100 результатов на список. Данные профиля передаются этому сервису.';
     await refresh();
     if (!state.publicMode) await refreshSession();
+    await loadPopulationStatus();
+    const pendingDataset = sessionStorage.getItem('pulse-dataset-job');
+    if (pendingDataset) await action(() => pollPlayerDataset(pendingDataset), $('#player-form button[type="submit"]'));
   } catch (error) { toast(error.message || 'Сервер недоступен.', true); }
 }
 init();

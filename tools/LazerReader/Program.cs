@@ -2,7 +2,7 @@ using Realms;
 using System.Text.Json;
 
 // Open only a caller-created snapshot, never the live client.realm.
-if (args.Length != 1 || !File.Exists(args[0]))
+if (args.Length < 1 || args.Length > 2 || !File.Exists(args[0]))
 {
     Console.Error.WriteLine("Expected path to a client.realm snapshot.");
     return 2;
@@ -46,7 +46,17 @@ try
             });
         }
     }
-    Console.Write(JsonSerializer.Serialize(new { scores = result }));
+    var beatmaps = new List<object>();
+    if (args.Length == 2 && args[1] == "--inventory" && realm.Schema.Any(s => s.Name == "BeatmapInfo"))
+    {
+        foreach (IRealmObjectBase beatmap in realm.DynamicApi.All("BeatmapInfo"))
+        {
+            if (beatmaps.Count >= 200000) break;
+            if (Get<bool>(beatmap, "DeletePending")) continue;
+            beatmaps.Add(new { id = Get<long>(beatmap, "OnlineID"), hash = Get<string>(beatmap, "Hash") });
+        }
+    }
+    Console.Write(JsonSerializer.Serialize(new { scores = result, beatmaps }));
     return 0;
 }
 catch (Exception)

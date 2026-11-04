@@ -1,0 +1,8 @@
+# Normalize generated report text; preserve game fixtures byte for byte.
+/deliverables/accuracy-improvement-summary.json text eol=lf
+/deliverables/population-summary.json text eol=lf
+/deliverables/test-kit/*.json text eol=lf
+/deliverables/test-kit/*.csv text eol=lf
+/deliverables/test-kit/*.ps1 text eol=crlf
+/deliverables/test-kit/inputs/*.osu -text -diff
+/deliverables/test-kit/inputs/*.osz -text -diff

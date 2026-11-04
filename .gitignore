@@ -13,3 +13,9 @@ serverdata.txt
 **/obj/
 **/bin/
 headless/
+
+# Local recruitment records and detailed test evidence.
+/deliverables/dataset-candidates.csv
+/deliverables/dataset-candidates-summary.json
+/deliverables/Кандидаты в датасет - pulse!.xlsx
+/deliverables/test-kit/*.zip

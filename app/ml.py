@@ -34,7 +34,8 @@ MOD_FEATURES = ('hidden', 'hard_rock', 'double_time', 'half_time', 'easy', 'flas
 MIN_PLAYS = 40
 MIN_CLASS = 8
 MIN_MAPS = 10
-BEST_SOURCES = {"osu_api_best", "hinai_best", "osu_web_best", "osu_api"}
+BEST_SOURCES = {'osu_api'} | {f'{provider}_{source}' for provider in ('osu_api', 'hinai', 'osu_web')
+                            for source in ('best', 'firsts', 'pinned')}
 
 
 def vector(analysis: dict[str, Any]) -> list[float]:

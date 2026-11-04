@@ -1,0 +1,100 @@
+﻿TC-ID;REQ-ID;Способ проверки;Фактический результат;Статус;Evidence
+TC-01;REQ-02;"Автотест API и автоматический браузер; без ручной приемки";Оба файла приняты через API и браузер: HTTP 200. Одна карта 4864861, 126 объектов, 5.57 звезд, aim 3.04, speed 2.26. Ошибок JavaScript нет.;Pass;"automated/TC-01/*.json; browser-reference/results.json; TC-01-osu.png; TC-01-osz.png"
+TC-02;REQ-06;"Автотест API и автоматический браузер; без ручной приемки";Контрольные Brier 0.12 и 0.20: модель trained, API использует validated_personal_logistic. Карты обучения и проверки не пересекаются. Браузер показывает ML: ШАНС PASS.;Pass;"automated/TC-02/*.json; practice.xml; browser-reference/TC-02-controlled.png"
+TC-03;REQ-02;"Автотест API и автоматический браузер; без ручной приемки";"API и браузер отклонили broken-map.osu с HTTP 400. Ошибка видна в интерфейсе. Список ID карт до и после совпал; сервер продолжил отвечать.";Pass;"automated/TC-03/*.json; browser-reference/results.json; TC-03-error.png"
+TC-04;REQ-06;"Автотест API и автоматический браузер; без ручной приемки";Контрольные Brier 0.28 и 0.20: rejected. API и браузер используют предварительный расчет и не называют его проверенным ML.;Pass;"automated/TC-04/*.json; practice.xml; browser-reference/TC-04-controlled.png"
+TC-05;REQ-06;"Автотест API и автоматический браузер; без ручной приемки";Контрольные Brier равны: 0.20. Модель rejected, прогноз предварительный. Равенство не приводит к trained. В браузере показан предварительный шанс pass.;Pass;"automated/TC-05/*.json; practice.xml; browser-reference/TC-05-controlled.png"
+Полный набор тестов;;"Автоматически; результат новой игры сообщен игроком";Основной запуск: 106 passed, 1 skipped. Затем пропущенный opt-in тест .NET запущен отдельно: Fail, таймаут 30 секунд.;Fail: NATIVE-01;См. тест-план и архив
+NM / DT;;"Автоматически; результат новой игры сообщен игроком";"{
+  ""nm_stars"": 5.57,
+  ""dt_stars"": 8.05,
+  ""nm_bpm"": 190,
+  ""dt_bpm"": 285
+}";Pass;См. тест-план и архив
+Две контрольные истории;;"Автоматически; результат новой игры сообщен игроком";"{
+  ""QA_Experienced"": {
+    ""pass_probability"": 76.7,
+    ""expected_accuracy"": 94.7,
+    ""model"": ""similarity_and_prior""
+  },
+  ""QA_Beginner"": {
+    ""pass_probability"": 23.3,
+    ""expected_accuracy"": 66.5,
+    ""model"": ""validated_personal_logistic""
+  },
+  ""QA_Empty"": {
+    ""pass_probability"": null,
+    ""expected_accuracy"": null,
+    ""model"": ""insufficient_data""
+  }
+}";Pass;См. тест-план и архив
+Пустая история;;"Автоматически; результат новой игры сообщен игроком";"{
+  ""pass_probability"": null,
+  ""expected_accuracy"": null,
+  ""observations"": 0,
+  ""message"": ""Добавьте хотя бы три результата. До этого персональный прогноз не рассчитывается.""
+}";Pass;См. тест-план и архив
+ML accuracy: реальные данные;;"Автоматически; результат новой игры сообщен игроком";"{
+  ""plays"": 1619,
+  ""maps"": 1178,
+  ""source_mode"": ""attempts"",
+  ""metrics"": {
+    ""holdout_plays"": 456,
+    ""holdout_maps"": 295,
+    ""mae_pp"": 4.7279,
+    ""baseline_mae_pp"": 5.2508,
+    ""validation"": ""unseen_maps"",
+    ""split_seed"": 0,
+    ""holdout_abs_error_q90"": 0.09497740102734875,
+    ""recency_half_life_days"": 60,
+    ""weighted_plays"": 221.62
+  },
+  ""trained_at"": ""2026-11-04T17:52:01.637921+00:00"",
+  ""stars_range"": [
+    1.32,
+    7.26
+  ],
+  ""status"": ""trained"",
+  ""algorithm"": ""ridge_regression""
+}";Pass;См. тест-план и архив
+Живой импорт профиля;;"Автоматически; результат новой игры сообщен игроком";"{
+  ""username"": ""BaffledHedgehog"",
+  ""provider"": ""hinai"",
+  ""received_recent"": 22,
+  ""received_best"": 100,
+  ""recent_unique"": 15,
+  ""best_unique"": 97,
+  ""requested_per_source"": 100,
+  ""imported"": 1
+}";Pass;См. тест-план и архив
+Повтор импорта;;"Автоматически; результат новой игры сообщен игроком";"{
+  ""http_status"": 200,
+  ""body"": {
+    ""username"": ""BaffledHedgehog"",
+    ""user_id"": 19965242,
+    ""provider"": ""hinai"",
+    ""imported"": 0,
+    ""skipped"": 6,
+    ""duplicates"": 4,
+    ""maps_fetched"": 0,
+    ""received_recent"": 22,
+    ""received_best"": 100,
+    ""unique_maps"": 112,
+    ""recent_unique"": 15,
+    ""best_unique"": 97,
+    ""highlight_map_id"": ""5618508"",
+    ""page_limit_hit"": [],
+    ""raw_scores"": 116,
+    ""requested_per_source"": 100,
+    ""source_limits"": ""Recent ограничен историей сайта; cookie не дают полный архив. Hinamizawa возвращает только первую страницу."",
+    ""total_plays"": 1987,
+    ""cached"": true,
+    ""cached_at"": 1793814725.6438901
+  },
+  ""count_before"": 1986,
+  ""count_after_first"": 1987,
+  ""count_after_second"": 1987
+}";Pass;См. тест-план и архив
+Новая попытка: карта 4610937;;"Автоматически; результат новой игры сообщен игроком";"Прогноз pass 92.1%, accuracy 82.3%, диапазон 72.8-91.8%. Игрок сообщил pass с первого раза и 94.01%. Ошибка accuracy 11.71 п.п.; факт вне диапазона. Brier 0.006241 против 0.004699 у базового прогноза. Ошибка базового accuracy 9.6677 п.п.";"Проверено; промах accuracy, QUALITY-01";См. тест-план и архив
+Финальный прогон после изменений;;"Автоматически; результат новой игры сообщен игроком";118 passed, 1 skipped. Пропущен опциональный native-тест, его отдельный Fail сохранен выше. Проверены полный исходный результат, четыре списка, NF, повторы, резервный источник, все клиенты и исключения карт.;"Pass; native Fail не устранен";См. тест-план и архив
+Живой сбор одной кнопкой и новые карты;;"Автоматически; результат новой игры сообщен игроком";"Новых попыток: 134. Всего: 2122. Сохранено исходных результатов: 2210. recent: 25, best: 100, pinned: 0, firsts: 0. Недоступные списки: pinned. Собраны доступные списки и локальные файлы этого игрока. Сайт не хранит в recent весь архив. Реплеи не проигрываются; HP и тяжелое обучение запускаются отдельно. Подбор: 12 карт, 5.67-6.86 звезд. Исключено 1443 известных карт. Нижняя сложность 5.07 звезд. Ошибок JavaScript нет. Локальная проверка на порту 8011, копия базы.";Pass;См. тест-план и архив
