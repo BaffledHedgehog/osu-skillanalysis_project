@@ -76,7 +76,7 @@ def import_lazer_scores(store: Store, root: Path, user=None, force=False):
 
 def _import_lazer_scores(store: Store, root: Path, user=None, force=False):
     info = (root / 'client.realm').stat()
-    key = f'lazer-raw-v4:{root}:{(user or "").casefold()}:{info.st_size}:{info.st_mtime_ns}'
+    key = f'lazer-raw-v5:{root}:{(user or "").casefold()}:{info.st_size}:{info.st_mtime_ns}'
     if not force:
         cached = store.cached_import(key, ttl=None)
         if cached:

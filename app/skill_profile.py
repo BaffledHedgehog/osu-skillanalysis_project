@@ -90,6 +90,31 @@ def build_skill_profile(records, mods='NM', target=None):
         })
     compared = [s for s in skills if s['relative_load'] is not None]
     dominant = max(compared, key=lambda s: s['relative_load']) if len(compared) == len(SKILLS) else None
+    # A descriptive display scale, separate from probabilities and ML labels.
+    # The familiar star anchor is measured on the same selected unique maps.
+    star_maps = {}
+    for row in selected:
+        a = row['analysis']
+        stars = _number(a.get('mechanical_stars', a.get('stars')))
+        if stars is None:
+            continue
+        group = _key(row)
+        weight = float(row.get('weight', 1))
+        if group not in star_maps or weight > star_maps[group][1]:
+            star_maps[group] = (stars, weight)
+    star_reference = _quantile(list(star_maps.values()), .7) if len(star_maps) >= MIN_MAPS else None
+    ratio = dominant['relative_load'] if dominant else None
+    difficulty = {
+        'status': 'available' if ratio is not None else 'insufficient_data',
+        'index': round(ratio * 100, 1) if ratio is not None else None,
+        'reference_index': 100,
+        'estimated_stars': round(star_reference * ratio, 1) if star_reference is not None and ratio is not None else None,
+        'reference_stars': round(star_reference, 2) if star_reference is not None else None,
+        'limiting_skill': dominant['id'] if dominant else None,
+        'scope': 'aim_speed_only',
+        'method': 'maximum_skill_ratio_times_familiar_star_reference',
+        'validated_star_rating': False,
+    }
     return {
         'status': 'available' if all(s['status'] == 'available' for s in skills) else 'insufficient_data',
         'mods': mods, 'skills': skills, 'source_mode': source_mode,
@@ -98,6 +123,7 @@ def build_skill_profile(records, mods='NM', target=None):
         'minimum_maps': MIN_MAPS, 'quantile': .7,
         'target_excluded': bool(target),
         'dominant_demand': dominant['id'] if dominant and dominant['relative_load'] > 1 else None,
+        'personal_difficulty': difficulty,
         'method': 'recency_weighted_unique_map_quantile',
         'note': 'Ориентир по пройденным картам, не физический предел и не вероятность. '
                 'HR и DT учитываются через нагрузку карты, чтение Hidden считается отдельным компонентом. '

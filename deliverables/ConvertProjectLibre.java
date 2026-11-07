@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 import com.projectlibre1.pm.calendar.WorkingCalendar;
 import com.projectlibre1.pm.calendar.WorkDay;
+import com.projectlibre1.pm.calendar.WorkingHours;
 
 public class ConvertProjectLibre {
     private static final Pattern RACI = Pattern.compile(
@@ -84,13 +85,18 @@ public class ConvertProjectLibre {
             calendars.add((WorkingCalendar) ((Task) item).getEffectiveWorkCalendar());
         for (int i = 0; i < exceptions.getLength(); i++) {
             Element exception = (Element) exceptions.item(i);
-            if (!tag(exception, "DayWorking").equals("0")) continue;
+            boolean working = tag(exception, "DayWorking").equals("1");
             long day = LocalDate.parse(tag(exception, "FromDate").substring(0, 10))
                     .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
             for (WorkingCalendar calendar : calendars) {
-                WorkDay nonWorking = new WorkDay(day);
-                nonWorking.getWorkingHours().setNonWorking();
-                calendar.addOrReplaceException(nonWorking);
+                WorkDay changedDay = new WorkDay(day);
+                if (working) {
+                    WorkingHours hours = new WorkingHours();
+                    hours.setInterval(0, WorkingHours.hourTime(9), WorkingHours.hourTime(13));
+                    hours.setInterval(1, WorkingHours.hourTime(14), WorkingHours.hourTime(18));
+                    changedDay.setWorkingHours(hours);
+                } else changedDay.getWorkingHours().setNonWorking();
+                calendar.addOrReplaceException(changedDay);
                 calendar.invalidate();
                 calendar.notifyChanged();
             }

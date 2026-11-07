@@ -1,6 +1,6 @@
 {
   "date": "2026-11-07",
-  "base_commit": "9af41ff0dfe0615ce7203c7331297e4f9cda05d0",
+  "base_commit": "fd6b15e374a1e58eacf2e2e9febf1e994104d857",
   "working_tree_changes": true,
   "source": "https://drive.google.com/drive/folders/1CCK567qfnScRoVaDxbl_W3R7VViKOyd8",
   "human_run_confirmed": false,
@@ -10,163 +10,163 @@
   "files": [
     {
       "file": "00 - Что открыть по всем неделям.docx",
-      "bytes": 39207,
-      "sha256": "6c1b7cf85c6b7d3f6ca54f0496a9f1d82940a9b49e2ea85a236c51bcd0e6a97b"
+      "bytes": 39205,
+      "sha256": "c4c1ecb5113cc3be6901635bbf60d825a2866ff5a0c4647011ab8198e7f37c61"
     },
     {
       "file": "00 - Что открыть по всем неделям.pdf",
-      "bytes": 90722,
-      "sha256": "caf92c96e96de88909bc0f2d56647f0898286acf72f6e8489df413980cd6d1a0"
+      "bytes": 90715,
+      "sha256": "8ac0e8895b646b7cb9f85a3e7070866d451d9c2208918f56defd0bad99328f72"
     },
     {
       "file": "01 - Риски.docx",
       "bytes": 38270,
-      "sha256": "910803d49c983f2661a55dca37cda63f9f192760bd05ecbe5c7a6498c28eeb1a"
+      "sha256": "ec80287bb8b57609fb172e357495258943cb0bb4d4d4d2c10d3671c2734fff6c"
     },
     {
       "file": "01 - Риски.pdf",
       "bytes": 87013,
-      "sha256": "3c7dc5ab50c3f60803a353e598c1fc6033c305e2311cebbd908be7d1384f216e"
+      "sha256": "e97c781950d958583ec5d2f53f9a5908c87c94f021a4c54d30ca267b35b11531"
     },
     {
       "file": "02 - Backlog и правила работы.docx",
       "bytes": 38855,
-      "sha256": "f5fbfb1e239cffc2bdace815f7b92ee52312d4e534024e494be2eef092022336"
+      "sha256": "18fed56f3a546517b5f0eb2e86326e3fe7d871442af1bb0cac494f0c124fcbcf"
     },
     {
       "file": "02 - Backlog и правила работы.pdf",
       "bytes": 90877,
-      "sha256": "cc6e90715e31f6e406c6a179d57091349136106c2ba3d7973aedc0ba80a9bee3"
+      "sha256": "770255ed3684c0f7e3e72a090138a18dd0a25cfcdeca117e99c1bd34ffec4064"
     },
     {
       "file": "03 - Решения и изменения.docx",
       "bytes": 38411,
-      "sha256": "2b742b48e02f7ac6597b375f92bcac02eb7d1156c1a0ebf258b67b43287cc728"
+      "sha256": "a16c683f961d45ecab774fb54dbd8242dfc5cd4773adbfe948fe1eef98771049"
     },
     {
       "file": "03 - Решения и изменения.pdf",
       "bytes": 86973,
-      "sha256": "a345c4ffaa9fd3bcce4da7d71190a77c90ef0c9f3add8d40b00f639e3435a12d"
+      "sha256": "30d0e2548288a0bac03ecc27dd1fac5f1aace0e985ead142513593143581709b"
     },
     {
       "file": "04 - Данные и эксперименты.docx",
       "bytes": 38725,
-      "sha256": "a4216a9b8d5644dacf834b9a078e89d160c699a799057e3cd929414debcdc9d0"
+      "sha256": "1969e6e442923a939eb12b6e68b8feca755105e04ef52fad69784135374f19fe"
     },
     {
       "file": "04 - Данные и эксперименты.pdf",
       "bytes": 89100,
-      "sha256": "9b36c20e1d69b33443683db84dd09849904cf86d67cfe1d2961cf79419fa5e75"
+      "sha256": "a126381babdb056076292b483e682841cc988becf301c948c8d99722429d1ad5"
     },
     {
       "file": "05 - Демо за 5 минут.docx",
       "bytes": 37975,
-      "sha256": "8b645b52f8cf451a447a69ff2add2a7eae4fc0c94a6978602b0e3ac400c8e1d1"
+      "sha256": "096144ce0e6ec3657e77ce4d9277f96ea76e7829e3e84e148a4e09ca85af85a8"
     },
     {
       "file": "05 - Демо за 5 минут.pdf",
       "bytes": 85783,
-      "sha256": "dafebb946466725eb68fcf958dfaa1ecb30050f885b115512240730d45f32401"
+      "sha256": "fcf975113ad0c35a560fb2ab0f9d9769db486d0643724558cfe0fec2e673bcb2"
     },
     {
       "file": "06 - Рабочее обсуждение.docx",
       "bytes": 37903,
-      "sha256": "dffb938846288f4bccdebc184eb84ef7a3fd539b11fd84f2f60a4924fc3ee73a"
+      "sha256": "e6d6289c901ae8d7248e5f8890a9ed6027ceffe97fece874d03c47209fbf6a70"
     },
     {
       "file": "06 - Рабочее обсуждение.pdf",
       "bytes": 88647,
-      "sha256": "cb5e8d5023552df5cbab5b7c1c3a88cd0b19150cec076fd0be3fb273e4d2fc13"
+      "sha256": "9a8170f717205dcf25fc1d01e3579a812e29472d416d7e0fd38de2ea6bc4adc9"
     },
     {
       "file": "07 - ОПЭ и журнал наблюдений.docx",
       "bytes": 38703,
-      "sha256": "d72cd4fa486602d35b442b3d79678d1e2de060fe34ec28cd378b48f7ce9afcf6"
+      "sha256": "b675e6808ab8adfdc6a4a6c6d004a0c55b6ca52d91b73b6583c1f7758d542574"
     },
     {
       "file": "07 - ОПЭ и журнал наблюдений.pdf",
       "bytes": 90342,
-      "sha256": "6f7f4ebee18b2cea5d49940cb9d752ca0c43c8a59ec6c69ffd58e9da7304e8de"
+      "sha256": "45800cb0f545fc26292415ec08ec5490b0094a50e6bcdf3e92af262cb4b593ef"
     },
     {
       "file": "08 - ПМИ и протокол приемки.docx",
       "bytes": 38147,
-      "sha256": "61262667842b23d552ba2b1b33a5a5302ad5f34531052145a7833ce7e75ee276"
+      "sha256": "34556990d77b2fff8d7fc9a580752e5875f6e7c3c351f8aa5940cdf804cf3fe3"
     },
     {
       "file": "08 - ПМИ и протокол приемки.pdf",
       "bytes": 87595,
-      "sha256": "d88cbc0a312c9fe94707aa07acdaa7d29351255e9fd5a27e90b835af82677b0c"
+      "sha256": "6f533e1e4dfacfeae5f6ccc9000f68db05b29cab0bef52d3a25907db337d8d0f"
     },
     {
       "file": "09 - Итоги и ретроспектива.docx",
       "bytes": 38408,
-      "sha256": "cbc59655ff797221f4314ddb4c9b7e9b093a268411bd1456239307f5eb23e90d"
+      "sha256": "67f22a348955632625e1e2be8aa38f4ac1d6870efde3a7fd37d06dd744e2d83a"
     },
     {
       "file": "09 - Итоги и ретроспектива.pdf",
       "bytes": 88767,
-      "sha256": "f3cacdd69fd929e3f114964a59ad0ba1f2b2067e9ee25618c6189dd4f24468a5"
+      "sha256": "30db7dfbe5ed199c76c801ba2c2658023e2ae6ba3f0aeff60aeec61f396c760a"
     },
     {
       "file": "10 - Актуальные требования.docx",
       "bytes": 38722,
-      "sha256": "58890fb3096e0ed77ae242f9fe5dd421438e0513f5585fe62085f030377f7c35"
+      "sha256": "439f096d1986c2f73488628b31f864038b0e4bbec03e506899fd7feba3119746"
     },
     {
       "file": "10 - Актуальные требования.pdf",
       "bytes": 89902,
-      "sha256": "85c227795534de9da4763f184e184db7243cef8f2b99205d655f4abb705094a5"
+      "sha256": "9b6511503e3a83d1e4c4c6f3a6c4559b0307c55efde700ab778d07bf36d0dac7"
     },
     {
       "file": "11 - Комплект передачи.docx",
-      "bytes": 45070,
-      "sha256": "f36af6195ddfe45ea62b5b028888e03e04824b1ea2bf9cddf2b1a57cd2787164"
+      "bytes": 45659,
+      "sha256": "060109d61ce105d56f14b38a2210fd962a64ecefce7b4f542cef3903aaa42a4b"
     },
     {
       "file": "11 - Комплект передачи.pdf",
-      "bytes": 103545,
-      "sha256": "b31df9dca1f685ca5d904512a1f22e88eca9ea22af41a71384040990514e99fe"
+      "bytes": 105295,
+      "sha256": "27a7cf19259b9a0784f754afc97b5626911da02e98718052c17ec8ecc151383e"
     },
     {
       "file": "12 - План и досрочная сдача.docx",
-      "bytes": 37977,
-      "sha256": "ceed7b4d9fce128ea6a861daacb778eb38832b9db011167d45b95ccb73c7e995"
+      "bytes": 38157,
+      "sha256": "b794ece4e74c029ef71337cb0899fc8a48da0823e10f281d5e0c85d74f4cd780"
     },
     {
       "file": "12 - План и досрочная сдача.pdf",
-      "bytes": 88715,
-      "sha256": "818693fed6d547275f08f602387a349cc9e70ffafb380f2414eea6b16ac70919"
+      "bytes": 88368,
+      "sha256": "ceab4fe4c07b7fb7e2f05ce7d4366b4b8e639384b5de45c05a28fefa82f0c5e1"
     },
     {
       "file": "13 - Регламент и текст показа.docx",
       "bytes": 37687,
-      "sha256": "aa63364cccd04408a5d5fa42411d55724f1b81aa7b88d8c1462a526d620be799"
+      "sha256": "073c0a2b2a6e3cb70a4bc44175d50d87799f82ffe634dc09ce11acca1cb0ed15"
     },
     {
       "file": "13 - Регламент и текст показа.pdf",
       "bytes": 86516,
-      "sha256": "6f683215e193a06be2652b14266b2866c512cae52ef8dd1a6ca3f01c5dd94c27"
+      "sha256": "695982c5d8b78eba994619f1892914bc94c579b31bdf301c8f117f1db1f4f6a0"
     },
     {
       "file": "14 - Актуальный паспорт.docx",
       "bytes": 38469,
-      "sha256": "865082d3483a1b556cd96e1295d69b700f61d559d4a6d3a30a0108da421b7b81"
+      "sha256": "d210c26c3812bddfee16b2d3cd97095dcbc002c45abb2b20c568032b8b7e305f"
     },
     {
       "file": "14 - Актуальный паспорт.pdf",
       "bytes": 89100,
-      "sha256": "df18846466e0dc5869bf64d80a2546f433b062fbbf691b24f6e4b149d2ecab47"
+      "sha256": "f37efcddf2c4fa1f5125b23b68c95ec010a018fa3afdf9d0185131a663b0c2df"
     },
     {
       "file": "15 - Стейкхолдеры и интервью.docx",
       "bytes": 38785,
-      "sha256": "18b63f97d2cec66ffe9a5ec51967308e0374bcb9e74124530fc0b4b52749b266"
+      "sha256": "8eb70fe1b8296d637d93b7ff79dec7fadb12e2e990f4a974e2dfab9a6b9f326b"
     },
     {
       "file": "15 - Стейкхолдеры и интервью.pdf",
       "bytes": 89225,
-      "sha256": "228bdfc50cf28758833b16bf438adf4931f07bc30031fb657357a5e652dc136b"
+      "sha256": "6f11ce428d1d31d0efb83bda918fac339938f6af01244218ccd74d6a332cfd70"
     },
     {
       "file": "acceptance/evidence/TC-01/valid-map.osu-analysis.json",
@@ -409,6 +409,21 @@
       "sha256": "8fdac2fdf8d0ec541df3d9300474202199f14c1f67d1bb29864cfa3693b2e0ed"
     },
     {
+      "file": "calendar/Календарный план - pulse!.pod",
+      "bytes": 253073,
+      "sha256": "a8f41a8e96fc81353961b425a050c1fb0c2cdccaf5368daa1d402d58dec8f114"
+    },
+    {
+      "file": "calendar/Календарный план - pulse!.xlsx",
+      "bytes": 10383,
+      "sha256": "67ad7857bf368218d037f744943f695c8a02b268d77a9ef553f142e17ebc9afd"
+    },
+    {
+      "file": "calendar/Календарный план - pulse!.xml",
+      "bytes": 43066,
+      "sha256": "eb09a87cea9382b374903719b59a18dff409fe55f74bcb67c80bdf71e54cbf5e"
+    },
+    {
       "file": "defense/Презентация - pulse!.pdf",
       "bytes": 425792,
       "sha256": "131cd8c7bad86b88578b9f2a6be736c94be6f5235f057f30b121f9a928c4737c"
@@ -445,8 +460,8 @@
     },
     {
       "file": "docs/known_issues.md",
-      "bytes": 4112,
-      "sha256": "4ca8be38731e6a04acb33313caeba39ae26297795891efff4571f6c88710b455"
+      "bytes": 5082,
+      "sha256": "b36920c1c17b1ca2703298d09d928a1b314fb2d9f8b1f1940a7446ad93c15644"
     },
     {
       "file": "docs/model_data_note.md",
@@ -465,8 +480,8 @@
     },
     {
       "file": "docs/user_guide.md",
-      "bytes": 4807,
-      "sha256": "c97b3ca37826b80d104439761b6b9c8bbb6fc72b0237fcc1b6d185a6962a47e2"
+      "bytes": 5940,
+      "sha256": "d76421d5796126c93fe3b164ee1a4f1f337d8ad75454fee2b3cf94d27c66c60a"
     },
     {
       "file": "evidence/accuracy-v3-summary.json",

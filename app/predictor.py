@@ -19,6 +19,7 @@ from .population_ml import predict_population
 from .accuracy_runtime import predict_personal_accuracy
 from .skill_profile import build_skill_profile
 from .accuracy_transfer import predict_transfer
+from .accuracy_feedback import predict_feedback
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:
@@ -216,6 +217,14 @@ def predict(store: Store, user: str, target: dict[str, Any],
         half_width=max(.005,transfer['error_q90'],transfer['metrics'].get('error_q90',0))
     if cnn.get('accuracy') is not None:
         half_width = max(.005, cnn['accuracy_error_q90'])
+    raw_accuracy=acc
+    base_accuracy_model=accuracy_model
+    reading_adjustment=(transfer.get('reading_adjustment_pp',0)/100
+                        if accuracy_model in ('validated_effective_accuracy','transferred_effective_accuracy') else 0.)
+    feedback=predict_feedback(store,user,target,acc,reading_adjustment)
+    if feedback.get('accuracy') is not None:
+        acc=feedback['accuracy']
+        accuracy_model='preview_feedback_accuracy'
     factors = []
     if same_chart:
         factors.append(f'В сохраненной истории этой версии карты с теми же модами: {len(same_chart)} попыток, проходов {same_chart_passes}, провалов {len(same_chart) - same_chart_passes}. Это не полный счетчик всех запусков карты.')
@@ -253,8 +262,11 @@ def predict(store: Store, user: str, target: dict[str, Any],
         "too_hard": False if unknown else p <= .1,
         "suggest_training": unknown or p <= .1,
         "expected_accuracy": round(acc * 100, 1) if acc is not None else None,
-        "accuracy_range": [round(_clamp(acc - half_width, 0, 1) * 100, 1),
-                           round(_clamp(acc + half_width, 0, 1) * 100, 1)] if acc is not None else None,
+        "accuracy_range": [round(_clamp(min(acc,raw_accuracy) - half_width, 0, 1) * 100, 1),
+                           round(_clamp(max(acc,raw_accuracy) + half_width, 0, 1) * 100, 1)] if acc is not None else None,
+        'uncalibrated_expected_accuracy':round(raw_accuracy*100,1) if raw_accuracy is not None else None,
+        'accuracy_base_model':base_accuracy_model,
+        'accuracy_feedback_status':feedback,
         'accuracy_reference_mode': accuracy_reference_mode,
         'pass_observations': len(known_outcomes),
         "confidence": confidence, "model": model, "observations": len(records),

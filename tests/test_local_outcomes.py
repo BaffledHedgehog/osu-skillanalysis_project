@@ -12,6 +12,31 @@ from test_app import chart
 from test_capabilities import records_for
 
 
+def test_lazer_accuracy_replaces_mirror_legacy_accuracy_for_same_score(tmp_path):
+    store=Store(tmp_path/'accuracy.db');store.save_map(parse_map(chart(500)))
+    store.save_play('Player','500','NM',.9773531493,True,4,source='hinai_recent',play_id='osu-123')
+    before=store.cache_token('Player')
+    assert not store.save_play('Player','500','NM',.9820396251,True,4,source='local_lazer',play_id='osu-123',grade='A')
+    row=store.plays('Player')[0]
+    assert store.play_count('Player')==1
+    assert row['accuracy']==pytest.approx(.9820396251) and row['source']=='local_lazer'
+    assert store.cache_token('Player')!=before
+    store.save_play('Player','500','NM',.9773531493,True,4,source='hinai_recent',play_id='osu-123')
+    assert store.plays('Player')[0]['accuracy']==pytest.approx(.9820396251)
+
+
+def test_lazer_duplicate_cannot_overwrite_another_player_or_chart(tmp_path):
+    store=Store(tmp_path/'accuracy.db')
+    for mid in ('500','501'):store.save_map(parse_map(chart(int(mid))))
+    store.save_play('Player','500','NM',.97,True,source='hinai_recent',play_id='osu-123')
+    store.save_play('Other','500','NM',.99,True,source='local_lazer',play_id='osu-123')
+    store.save_play('Player','501','NM',.99,True,source='local_lazer',play_id='osu-123')
+    assert store.plays('Player')[0]['accuracy']==.97
+    store.save_play('Player','500','NM',.982,True,source='local_lazer',play_id='osu-123')
+    store.save_play('Player','501','NM',.99,True,source='local_lazer',play_id='osu-123')
+    assert store.plays('Player')[0]['accuracy']==.982
+
+
 def test_rank_restores_pass_and_partial_failure_without_duplicates(tmp_path, monkeypatch):
     from app import lazer_client
     root = tmp_path / 'lazer'

@@ -3,9 +3,10 @@
   <SaveVersion>14</SaveVersion>
   <Name>pulse! - MVP</Name>
   <Title>pulse! - календарный план</Title>
+  <Notes>План уточнен 07.11.2026 под досрочную защиту. 7 ноября - рабочий день проекта. Старый вариант сохранен как baseline. Проценты выполнения не заменяют решение по приемке.</Notes>
   <ScheduleFromStart>1</ScheduleFromStart>
   <StartDate>2026-10-19T09:00:00</StartDate>
-  <FinishDate>2026-11-11T18:00:00</FinishDate>
+  <FinishDate>2026-11-07T18:00:00</FinishDate>
   <MinutesPerDay>480</MinutesPerDay>
   <MinutesPerWeek>2400</MinutesPerWeek>
   <DaysPerMonth>20</DaysPerMonth>
@@ -15,7 +16,7 @@
   <Calendars>
     <Calendar>
       <UID>1</UID>
-      <Name>Пн-Пт</Name>
+      <Name>Пн-Пт и защита 07.11</Name>
       <IsBaseCalendar>1</IsBaseCalendar>
       <BaseCalendarUID>-1</BaseCalendarUID>
       <WeekDays>
@@ -109,6 +110,27 @@
           <Name>Нерабочий день 4 ноября</Name>
           <Type>1</Type>
           <DayWorking>0</DayWorking>
+        </Exception>
+        <Exception>
+          <EnteredByOccurrences>0</EnteredByOccurrences>
+          <TimePeriod>
+            <FromDate>2026-11-07T00:00:00</FromDate>
+            <ToDate>2026-11-07T23:59:00</ToDate>
+          </TimePeriod>
+          <Occurrences>1</Occurrences>
+          <Name>Дополнительный рабочий день защиты</Name>
+          <Type>1</Type>
+          <DayWorking>1</DayWorking>
+          <WorkingTimes>
+            <WorkingTime>
+              <FromTime>09:00:00</FromTime>
+              <ToTime>13:00:00</ToTime>
+            </WorkingTime>
+            <WorkingTime>
+              <FromTime>14:00:00</FromTime>
+              <ToTime>18:00:00</ToTime>
+            </WorkingTime>
+          </WorkingTimes>
         </Exception>
       </Exceptions>
     </Calendar>
@@ -327,8 +349,8 @@
       <OutlineNumber>2.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
       <Start>2026-10-23T09:00:00</Start>
-      <Finish>2026-10-26T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Finish>2026-10-23T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
@@ -370,8 +392,8 @@
       <WBS>2.5</WBS>
       <OutlineNumber>2.5</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-27T09:00:00</Start>
-      <Finish>2026-10-27T18:00:00</Finish>
+      <Start>2026-10-26T09:00:00</Start>
+      <Finish>2026-10-26T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -400,8 +422,8 @@
       <WBS>2.6</WBS>
       <OutlineNumber>2.6</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-27T18:00:00</Start>
-      <Finish>2026-10-27T18:00:00</Finish>
+      <Start>2026-10-26T18:00:00</Start>
+      <Finish>2026-10-26T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
@@ -460,8 +482,8 @@
       <WBS>3.2</WBS>
       <OutlineNumber>3.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-28T09:00:00</Start>
-      <Finish>2026-10-28T18:00:00</Finish>
+      <Start>2026-10-27T09:00:00</Start>
+      <Finish>2026-10-27T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -497,8 +519,8 @@
       <WBS>3.3</WBS>
       <OutlineNumber>3.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-29T09:00:00</Start>
-      <Finish>2026-10-29T18:00:00</Finish>
+      <Start>2026-10-28T09:00:00</Start>
+      <Finish>2026-10-28T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -527,8 +549,8 @@
       <WBS>3.4</WBS>
       <OutlineNumber>3.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-28T09:00:00</Start>
-      <Finish>2026-10-29T18:00:00</Finish>
+      <Start>2026-10-27T09:00:00</Start>
+      <Finish>2026-10-28T18:00:00</Finish>
       <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -564,9 +586,9 @@
       <WBS>3.5</WBS>
       <OutlineNumber>3.5</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-10-30T09:00:00</Start>
-      <Finish>2026-11-02T18:00:00</Finish>
-      <Duration>PT16H0M0S</Duration>
+      <Start>2026-10-29T09:00:00</Start>
+      <Finish>2026-10-29T18:00:00</Finish>
+      <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
       <Summary>0</Summary>
@@ -638,8 +660,8 @@
       <WBS>4.2</WBS>
       <OutlineNumber>4.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-03T09:00:00</Start>
-      <Finish>2026-11-03T18:00:00</Finish>
+      <Start>2026-10-30T09:00:00</Start>
+      <Finish>2026-10-30T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -689,8 +711,8 @@
       <WBS>4.3</WBS>
       <OutlineNumber>4.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-03T18:00:00</Start>
-      <Finish>2026-11-03T18:00:00</Finish>
+      <Start>2026-10-30T18:00:00</Start>
+      <Finish>2026-10-30T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
@@ -719,8 +741,8 @@
       <WBS>5.1</WBS>
       <OutlineNumber>5.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-05T09:00:00</Start>
-      <Finish>2026-11-05T18:00:00</Finish>
+      <Start>2026-11-02T09:00:00</Start>
+      <Finish>2026-11-02T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -749,8 +771,8 @@
       <WBS>5.2</WBS>
       <OutlineNumber>5.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-06T09:00:00</Start>
-      <Finish>2026-11-09T18:00:00</Finish>
+      <Start>2026-11-03T09:00:00</Start>
+      <Finish>2026-11-05T18:00:00</Finish>
       <Duration>PT16H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -779,8 +801,8 @@
       <WBS>5.3</WBS>
       <OutlineNumber>5.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-10T09:00:00</Start>
-      <Finish>2026-11-10T18:00:00</Finish>
+      <Start>2026-11-06T09:00:00</Start>
+      <Finish>2026-11-06T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -809,8 +831,8 @@
       <WBS>5.4</WBS>
       <OutlineNumber>5.4</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-10T18:00:00</Start>
-      <Finish>2026-11-10T18:00:00</Finish>
+      <Start>2026-11-06T18:00:00</Start>
+      <Finish>2026-11-06T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>
@@ -839,8 +861,8 @@
       <WBS>6.1</WBS>
       <OutlineNumber>6.1</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-10T09:00:00</Start>
-      <Finish>2026-11-10T18:00:00</Finish>
+      <Start>2026-11-06T09:00:00</Start>
+      <Finish>2026-11-06T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -869,8 +891,8 @@
       <WBS>6.2</WBS>
       <OutlineNumber>6.2</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-11T09:00:00</Start>
-      <Finish>2026-11-11T18:00:00</Finish>
+      <Start>2026-11-07T09:00:00</Start>
+      <Finish>2026-11-07T18:00:00</Finish>
       <Duration>PT8H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>0</Milestone>
@@ -900,14 +922,14 @@
     <Task>
       <UID>25</UID>
       <ID>25</ID>
-      <Name>6.3 Веха: проект передан</Name>
+      <Name>6.3 Веха: защита и передача 07.11</Name>
       <Type>1</Type>
       <IsNull>0</IsNull>
       <WBS>6.3</WBS>
       <OutlineNumber>6.3</OutlineNumber>
       <OutlineLevel>1</OutlineLevel>
-      <Start>2026-11-11T18:00:00</Start>
-      <Finish>2026-11-11T18:00:00</Finish>
+      <Start>2026-11-07T18:00:00</Start>
+      <Finish>2026-11-07T18:00:00</Finish>
       <Duration>PT0H0M0S</Duration>
       <DurationFormat>7</DurationFormat>
       <Milestone>1</Milestone>

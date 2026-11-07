@@ -99,13 +99,16 @@ function renderPrediction(prediction) {
   const cnn = prediction.cnn_status;
   const population = prediction.population_status;
   const populationPass = prediction.model === 'validated_population_logistic';
-  const populationAccuracy = prediction.accuracy_model === 'validated_population_ridge';
-  const cnnAccuracy = prediction.accuracy_model === 'validated_pattern_cnn';
+  const baseAccuracyModel = prediction.accuracy_base_model || prediction.accuracy_model;
+  const populationAccuracy = baseAccuracyModel === 'validated_population_ridge';
+  const feedback = prediction.accuracy_feedback_status;
+  const feedbackActive = prediction.accuracy_model === 'preview_feedback_accuracy';
+  const cnnAccuracy = baseAccuracyModel === 'validated_pattern_cnn';
   const accuracyV2 = prediction.accuracy_v2_status;
-  const accuracyV2Active = prediction.accuracy_model === 'validated_personal_accuracy_v2';
+  const accuracyV2Active = baseAccuracyModel === 'validated_personal_accuracy_v2';
   const transfer = prediction.accuracy_transfer_status;
-  const transferActive = ['validated_effective_accuracy','transferred_effective_accuracy'].includes(prediction.accuracy_model);
-  const accuracyActive = prediction.accuracy_model === 'validated_personal_ridge';
+  const transferActive = ['validated_effective_accuracy','transferred_effective_accuracy'].includes(baseAccuracyModel);
+  const accuracyActive = baseAccuracyModel === 'validated_personal_ridge';
   const mlNote = prediction.model === 'personal_history_posterior'
     ? 'Прогноз уточнен по сохраненным попыткам этой версии карты с теми же модами. Качество такого уточнения еще нужно проверить на следующих играх.'
     : populationPass
@@ -117,7 +120,8 @@ function renderPrediction(prediction) {
     : ml?.status === 'rejected'
       ? `ML пока не применяется: на отложенных картах ее ошибка не ниже ошибки базового прогноза.`
       : `Для ML прохождения нужны 40 попыток на 10 картах, минимум 8 успехов и 8 неудач. Сейчас: ${ml?.plays || 0} попыток. Best в обучение прохождения не входят.`;
-  const accuracyLabel = cnnAccuracy ? 'CNN: ТОЧНОСТЬ ПО ПАТТЕРНАМ'
+  const accuracyLabel = feedbackActive ? 'ЛИЧНЫЙ ПРОГНОЗ С УТОЧНЕНИЕМ'
+    : cnnAccuracy ? 'CNN: ТОЧНОСТЬ ПО ПАТТЕРНАМ'
     : transferActive ? (transfer.mechanical_transfer ? 'ML: ПЕРЕНОС ПО УСЛОВИЯМ КАРТЫ' : 'ML: НАГРУЗКА КАРТЫ И ИСТОРИЯ')
     : accuracyV2Active ? 'ML: ТОЧНОСТЬ ПО ПРЕЖНИМ ИГРАМ'
     : populationAccuracy ? 'ML: ТОЧНОСТЬ ПО ГРУППЕ ИГРОКОВ'
@@ -152,6 +156,12 @@ function renderPrediction(prediction) {
     accuracyNote = 'ML точности не улучшила среднее значение на отложенных картах. Используется предварительный расчет.';
   }
   if (prediction.expected_accuracy === null) accuracyNote = 'Нет полных результатов, по которым можно оценить accuracy при прохождении. Точность сорванных попыток в этот расчет не входит.';
+  if (feedbackActive) {
+    accuracyNote = 'Базовая модель: ' + accuracyNote;
+    accuracyNote += ` Уточнение по ${feedback.samples} переданным тобой результатам. До уточнения: ${prediction.uncalibrated_expected_accuracy}%. Новые независимые игры для проверки поправки еще не собраны.`;
+    if (feedback.target_in_feedback) accuracyNote += ' Эта карта участвовала в уточнении, ее текущая оценка не является независимой проверкой.';
+    accuracyNote += ' Диапазон расширен с учетом исходной оценки.';
+  }
   const accuracyText = prediction.expected_accuracy === null ? 'Нет данных' : `${prediction.expected_accuracy}%`;
   const accuracyRangeText = prediction.accuracy_range ? `примерно ${prediction.accuracy_range[0]}-${prediction.accuracy_range[1]}%` : '';
   box.innerHTML = `<div class="prediction-row"><div><div class="prediction-label">${prediction.model === 'personal_history_posterior' ? 'ПРОГНОЗ С УЧЕТОМ ИСТОРИИ КАРТЫ' : populationPass ? 'ML: ШАНС PASS ПО ГРУППЕ ИГРОКОВ' : ml?.status === 'trained' ? 'ML: ШАНС PASS' : 'ПРЕДВАРИТЕЛЬНЫЙ ШАНС PASS'}</div><div class="prediction-number">${prediction.pass_probability}%</div></div><span class="confidence">${prediction.confidence === 'medium' ? 'Средняя уверенность' : 'Мало данных'}</span></div>
@@ -187,7 +197,18 @@ function renderSkills(profile) {
   const source = profile.source_mode === 'best_scores' ? 'По лучшим достижениям. Они не описывают обычную попытку.'
     : profile.source_mode === 'mixed_achievements' ? 'По проходам и лучшим достижениям: обычных попыток пока мало.'
     : 'По полным пройденным попыткам.';
-  box.innerHTML = '<div class="skills-grid">' + profile.skills.map(skill => {
+  const comparedSkills = profile.skills.filter(skill => Number.isFinite(skill.relative_load));
+  const fallbackIndex = comparedSkills.length === profile.skills.length && comparedSkills.length
+    ? Math.max(...comparedSkills.map(skill => skill.relative_load)) * 100 : null;
+  const difficulty = profile.personal_difficulty;
+  const index = difficulty?.index ?? fallbackIndex;
+  const stars = difficulty?.estimated_stars;
+  const limiting = profile.skills.find(skill => skill.id === difficulty?.limiting_skill)
+    || comparedSkills.reduce((best, skill) => !best || skill.relative_load > best.relative_load ? skill : best, null);
+  const difficultyHtml = Number.isFinite(index)
+    ? `<div class="personal-difficulty" aria-label="Базовая персональная сложность"><div class="personal-difficulty-main"><span class="personal-difficulty-label">ПЕРСОНАЛЬНАЯ СЛОЖНОСТЬ ПО AIM / SPEED</span><div class="personal-difficulty-number">${index.toFixed(1)}% <span>от твоего ориентира</span></div><p>100% = освоенная нагрузка. ${limiting ? `Больше относительной нагрузки: ${escapeHtml(limiting.label)}.` : ''}</p></div>${Number.isFinite(stars) ? `<div class="personal-stars"><span>Условный звездный эквивалент</span><strong>${stars.toFixed(1)}*</strong><small>Ориентир твоей истории: ${difficulty.reference_stars.toFixed(2)}*</small></div>` : ''}<p class="personal-difficulty-note">Это сравнение освоенной нагрузки по двум базовым навыкам. Чтение, ритм и пики оцениваются отдельно. ${Number.isFinite(stars) ? 'Личные звезды - ориентир истории, умноженный на индекс нагрузки. Это предварительная шкала, не официальный Star Rating osu!.' : ''}</p></div>`
+    : '<div class="personal-difficulty"><p>Для персональной сложности нужны три разные пройденные карты и нагрузка выбранной карты по aim и speed.</p></div>';
+  box.innerHTML = difficultyHtml + '<div class="skills-grid">' + profile.skills.map(skill => {
     const available = skill.level !== null;
     const compared = skill.relative_load !== null;
     const extent = Math.max(skill.level || 0, skill.target_load || 0, .01) * 1.15;

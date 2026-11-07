@@ -1,0 +1,187 @@
+{
+  "date": "2026-11-07",
+  "experiments": {
+    "capability": {
+      "selected": "patterns_hgb_residual",
+      "test": {
+        "all": {
+          "candidate": {
+            "samples": 433,
+            "families": 254,
+            "mae_pp": 4.127215803712563,
+            "bias_pp": -1.1310174261038681,
+            "error_q90": 0.09216157569585523
+          },
+          "deployed_v3": {
+            "samples": 433,
+            "families": 254,
+            "mae_pp": 3.900055088692532,
+            "bias_pp": -0.49230725447342166,
+            "error_q90": 0.08646983003135948
+          }
+        },
+        "NM": {
+          "candidate": {
+            "samples": 403,
+            "families": 239,
+            "mae_pp": 4.1243232720759595,
+            "bias_pp": -1.3822011504708827,
+            "error_q90": 0.09216157569585523
+          },
+          "deployed_v3": {
+            "samples": 403,
+            "families": 239,
+            "mae_pp": 3.872761266073696,
+            "bias_pp": -0.8384140960751476,
+            "error_q90": 0.0868496476814858
+          }
+        },
+        "NM_4_5_stars": {
+          "candidate": {
+            "samples": 27,
+            "families": 23,
+            "mae_pp": 4.257404287311939,
+            "bias_pp": -1.40715833314492,
+            "error_q90": 0.0714538920396054
+          },
+          "deployed_v3": {
+            "samples": 27,
+            "families": 23,
+            "mae_pp": 3.515403692745807,
+            "bias_pp": -1.126047134501954,
+            "error_q90": 0.059217824172699454
+          }
+        }
+      },
+      "accepted": false,
+      "retrospective_recheck": true,
+      "deployed": false
+    },
+    "progress": {
+      "selected": "patterns_hgb_absolute",
+      "test": {
+        "all": {
+          "candidate": {
+            "samples": 433,
+            "families": 254,
+            "mae_pp": 4.037238405163937,
+            "bias_pp": -0.5945974773243884,
+            "error_q90": 0.08621369734726066
+          },
+          "deployed_v3": {
+            "samples": 433,
+            "families": 254,
+            "mae_pp": 3.900055088692532,
+            "bias_pp": -0.49230725447342166,
+            "error_q90": 0.08646983003135948
+          }
+        },
+        "NM": {
+          "candidate": {
+            "samples": 403,
+            "families": 239,
+            "mae_pp": 4.023968909395103,
+            "bias_pp": -0.8251939838291064,
+            "error_q90": 0.08695605479783106
+          },
+          "deployed_v3": {
+            "samples": 403,
+            "families": 239,
+            "mae_pp": 3.872761266073696,
+            "bias_pp": -0.8384140960751476,
+            "error_q90": 0.0868496476814858
+          }
+        },
+        "NM_4_5_stars": {
+          "candidate": {
+            "samples": 27,
+            "families": 23,
+            "mae_pp": 4.703153854836434,
+            "bias_pp": -1.8418250872380204,
+            "error_q90": 0.07204636337809354
+          },
+          "deployed_v3": {
+            "samples": 27,
+            "families": 23,
+            "mae_pp": 3.515403692745807,
+            "bias_pp": -1.126047134501954,
+            "error_q90": 0.059217824172699454
+          }
+        }
+      },
+      "accepted": false,
+      "retrospective_recheck": true,
+      "deployed": false
+    },
+    "monotone_relative_curve": {
+      "selected": "control_v3",
+      "test": {
+        "all": {
+          "candidate": {
+            "samples": 433,
+            "families": 254,
+            "mae_pp": 3.900055088692532,
+            "bias_pp": -0.49230725447342166,
+            "error_q90": 0.08646983003135948
+          },
+          "deployed_v3": {
+            "samples": 433,
+            "families": 254,
+            "mae_pp": 3.900055088692532,
+            "bias_pp": -0.49230725447342166,
+            "error_q90": 0.08646983003135948
+          }
+        },
+        "NM": {
+          "candidate": {
+            "samples": 403,
+            "families": 239,
+            "mae_pp": 3.872761266073696,
+            "bias_pp": -0.8384140960751476,
+            "error_q90": 0.0868496476814858
+          },
+          "deployed_v3": {
+            "samples": 403,
+            "families": 239,
+            "mae_pp": 3.872761266073696,
+            "bias_pp": -0.8384140960751476,
+            "error_q90": 0.0868496476814858
+          }
+        },
+        "NM_4_5_stars": {
+          "candidate": {
+            "samples": 27,
+            "families": 23,
+            "mae_pp": 3.515403692745807,
+            "bias_pp": -1.126047134501954,
+            "error_q90": 0.059217824172699454
+          },
+          "deployed_v3": {
+            "samples": 27,
+            "families": 23,
+            "mae_pp": 3.515403692745807,
+            "bias_pp": -1.126047134501954,
+            "error_q90": 0.059217824172699454
+          }
+        }
+      },
+      "accepted": false,
+      "retrospective_recheck": true,
+      "deployed": false
+    }
+  },
+  "tests": {
+    "tests": 177,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "preview_feedback": {
+    "samples": 2,
+    "source": "verified_local_lazer",
+    "prospective_validation": false,
+    "enabled_on_port": 8012
+  },
+  "live_port_8011_unchanged": true,
+  "score_import_fix": "lazer accuracy preferred over legacy mirror accuracy for same score ID"
+}

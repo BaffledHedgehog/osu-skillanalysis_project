@@ -16,11 +16,12 @@ from docx.shared import Cm, Pt
 
 ROOT = Path(__file__).resolve().parent
 START = date(2026, 10, 19)
-DEADLINE = date(2026, 11, 14)
-RESERVE_DAYS = 2
+DEADLINE = date(2026, 11, 7)
+RESERVE_DAYS = 0
 NON_WORKING_DATES = {date(2026, 11, 4)}
-VERSION = "0.2"
-VERSION_DATE = "17.10.2026"
+EXTRA_WORKING_DATES = {date(2026, 11, 7)}
+VERSION = "0.3"
+VERSION_DATE = "07.11.2026"
 TEAM = {
     "PM": "Ляхов Я.П.",
     "ML": "Недугов Д.",
@@ -68,14 +69,14 @@ TASKS = [
     ("T04", "2", "2.1", "Добавить хранение сырых попыток", 1, ["M01"], "DEV", "Таблица попыток"),
     ("T05", "2", "2.2", "Проверить импорт профиля и карт", 1, ["M01"], "QA", "Протокол импорта"),
     ("T06", "2", "2.3", "Подготовить сбор данных добровольцев", 1, ["M01"], "PM", "Форма согласия и схема"),
-    ("T07", "2", "2.4", "Собрать пилотные попытки", 2, ["T04", "T05", "T06"], "QA", "Пилотный набор"),
+    ("T07", "2", "2.4", "Собрать пилотные попытки", 1, ["T04", "T05", "T06"], "QA", "Пилотный набор"),
     ("T08", "2", "2.5", "Очистить данные и проверить утечки", 1, ["T07"], "ML", "Проверенный датасет"),
     ("M02", "2", "2.6", "Веха: данные готовы", 0, ["T08"], "ML", "Отчет по данным"),
     ("T09", "3", "3.1", "Определить скиллсеты и признаки", 2, ["M01"], "ML", "Список признаков"),
     ("T10", "3", "3.2", "Построить начальную оценку навыков", 1, ["M02", "T09"], "ML", "Профиль навыков"),
     ("T11", "3", "3.3", "Рассчитать сложность карты по навыкам", 1, ["T10"], "ML", "Оценки по скиллсетам"),
     ("T12", "3", "3.4", "Обучить и проверить прогноз прохождения", 2, ["M02", "T09"], "DEV", "Brier score и сравнение"),
-    ("T13", "3", "3.5", "Обучить и проверить прогноз точности", 2, ["T11"], "ML", "MAE и сравнение"),
+    ("T13", "3", "3.5", "Обучить и проверить прогноз точности", 1, ["T11"], "ML", "MAE и сравнение"),
     ("T14", "4", "4.1", "Обновить экран профиля и карты", 2, ["T04", "T05", "T09"], "DEV", "Интерфейс MVP"),
     ("T15", "4", "4.2", "Связать оценки и модели с приложением", 1, ["T11", "T12", "T13", "T14"], "DEV", "Рабочий сценарий MVP"),
     ("M03", "4", "4.3", "Веха: MVP готов к показу", 0, ["T15"], "DEV", "Демо"),
@@ -85,7 +86,7 @@ TASKS = [
     ("M04", "5", "5.4", "Веха: проверка завершена", 0, ["T18"], "QA", "Решение по качеству"),
     ("T19", "6", "6.1", "Обновить инструкцию и документы", 1, ["T17"], "QA", "Комплект передачи"),
     ("T20", "6", "6.2", "Исправить критичные дефекты и принять", 1, ["T19", "M04"], "PM", "Протокол приемки"),
-    ("M05", "6", "6.3", "Веха: проект передан", 0, ["T20"], "PM", "Защита и передача"),
+    ("M05", "6", "6.3", "Веха: защита и передача 07.11", 0, ["T20"], "PM", "Защита и передача"),
 ]
 
 # id, type, requirement, source, priority, verification, implementation status
@@ -120,7 +121,7 @@ def workday(index):
     count = 0
     while count < index:
         current += timedelta(days=1)
-        if current.weekday() < 5 and current not in NON_WORKING_DATES:
+        if (current.weekday() < 5 and current not in NON_WORKING_DATES) or current in EXTRA_WORKING_DATES:
             count += 1
     return current
 
@@ -529,7 +530,7 @@ def build_calendar(entries, duration):
     title = wb.add_format({"bold": True, "font_size": 15})
     text_fmt = wb.add_format({"text_wrap": True, "valign": "top"})
     ws.merge_range(0, 0, 0, 9, "Календарный план - pulse!", title)
-    ws.merge_range(1, 0, 1, 9, "Старт 19.10.2026, сдача 14.11.2026. Рабочие дни: понедельник-пятница, кроме 4 ноября. Дорабатываем существующий прототип.", text_fmt)
+    ws.merge_range(1, 0, 1, 9, f"Старт {START:%d.%m.%Y}, защита {DEADLINE:%d.%m.%Y}. Пн-Пт, кроме 4 ноября; 7 ноября - дополнительный рабочий день.", text_fmt)
     ws.merge_range(2, 0, 2, 9, f"20 работ, 5 вех, {duration} рабочих дней; окончание {workday(duration - 1):%d.%m.%Y}; резерв {RESERVE_DAYS} рабочих дня до {workday(duration + RESERVE_DAYS - 1):%d.%m.%Y}.", text_fmt)
     headers = ["ID", "WBS", "Блок", "Задача / веха", "Дней", "Начало", "Конец", "Предшественники", "Исполнитель", "Резерв, дн."]
     for col, value in enumerate(headers):
@@ -578,7 +579,8 @@ def build_calendar(entries, duration):
         ("Расчетный финиш", workday(duration - 1).strftime("%d.%m.%Y")),
         ("Внутренний резерв", f"{RESERVE_DAYS} рабочих дня до {workday(duration + RESERVE_DAYS - 1):%d.%m.%Y}"),
         ("Официальная дата сдачи", DEADLINE.strftime("%d.%m.%Y")),
-        ("Календарь", "Понедельник-пятница. 4 ноября нерабочий день. Сдача 14 ноября в субботу, работы заканчиваем заранее."),
+        ("Календарь", "Понедельник-пятница. 4 ноября нерабочий день. 7 ноября - дополнительный рабочий день защиты."),
+        ("Изменение от 07.11", "Досрочная сдача. Оценки сбора пилотных данных и прогноза accuracy сокращены с двух до одного дня за счет готового прототипа и имеющейся истории. Это текущий план, не табель фактических трудозатрат."),
         ("Критический путь", "Красные строки плана имеют полный резерв 0 по текущим зависимостям."),
         ("Ресурсы", "Проверить, не назначено ли одному участнику несколько одновременных задач."),
         ("Связи", "Все связи Finish-to-Start. Если меняется объем или длительность, пересчитать критический путь."),
@@ -608,6 +610,7 @@ def build_projectlibre_xml(entries, duration):
     tag(project, "SaveVersion", 14)
     tag(project, "Name", "pulse! - MVP")
     tag(project, "Title", "pulse! - календарный план")
+    tag(project, "Notes", "План уточнен 07.11.2026 под досрочную защиту. 7 ноября - рабочий день проекта. Старый вариант сохранен как baseline. Проценты выполнения не заменяют решение по приемке.")
     tag(project, "ScheduleFromStart", 1)
     tag(project, "StartDate", f"{START.isoformat()}T09:00:00")
     tag(project, "FinishDate", f"{workday(duration - 1).isoformat()}T18:00:00")
@@ -619,7 +622,7 @@ def build_projectlibre_xml(entries, duration):
     tag(project, "CalendarUID", 1)
     calendars = ET.SubElement(project, q("Calendars"))
     calendar = ET.SubElement(calendars, q("Calendar"))
-    for key, value in (("UID", 1), ("Name", "Пн-Пт"), ("IsBaseCalendar", 1), ("BaseCalendarUID", -1)):
+    for key, value in (("UID", 1), ("Name", "Пн-Пт и защита 07.11"), ("IsBaseCalendar", 1), ("BaseCalendarUID", -1)):
         tag(calendar, key, value)
     weekdays = ET.SubElement(calendar, q("WeekDays"))
     for day_type in range(1, 8):
@@ -644,6 +647,21 @@ def build_projectlibre_xml(entries, duration):
         tag(exception, "Name", "Нерабочий день 4 ноября")
         tag(exception, "Type", 1)
         tag(exception, "DayWorking", 0)
+    for working in sorted(EXTRA_WORKING_DATES):
+        exception = ET.SubElement(exceptions, q("Exception"))
+        tag(exception, "EnteredByOccurrences", 0)
+        period = ET.SubElement(exception, q("TimePeriod"))
+        tag(period, "FromDate", f"{working.isoformat()}T00:00:00")
+        tag(period, "ToDate", f"{working.isoformat()}T23:59:00")
+        tag(exception, "Occurrences", 1)
+        tag(exception, "Name", "Дополнительный рабочий день защиты")
+        tag(exception, "Type", 1)
+        tag(exception, "DayWorking", 1)
+        times = ET.SubElement(exception, q("WorkingTimes"))
+        for start, end in (("09:00:00", "13:00:00"), ("14:00:00", "18:00:00")):
+            wt = ET.SubElement(times, q("WorkingTime"))
+            tag(wt, "FromTime", start)
+            tag(wt, "ToTime", end)
     tasks = ET.SubElement(project, q("Tasks"))
     uid_by_id = {row["id"]: index for index, row in enumerate(entries, 1)}
     for index, row in enumerate(entries, 1):
@@ -682,7 +700,7 @@ def main():
     assert len(GROUPS) == 6
     assert sum(len(r["predecessors"]) for r in entries) >= 8
     assert all(r["float"] >= 0 for r in entries)
-    assert workday(duration + RESERVE_DAYS - 1) < DEADLINE
+    assert workday(duration + RESERVE_DAYS - 1) <= DEADLINE
     assert all(sum("A" in cell for cell in row[2:]) == 1 and any("R" in cell for cell in row[2:]) for row in RACI_ROWS)
     for owner in TEAM:
         owned = sorted((r for r in entries if r["owner"] == owner and r["duration"]), key=lambda r: r["es"])

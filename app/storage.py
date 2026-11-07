@@ -199,12 +199,23 @@ class Store:
                 (play_id, user.strip().casefold(), map_id, mods, accuracy, int(passed), misses, played_at, source, pp, int(passed_known), int(complete), grade),
             )
             if cursor.rowcount == 0:
+                if source == 'local_lazer':
+                    # A mirror may expose legacy/head-only accuracy for this
+                    # same score ID. Realm holds the accuracy shown by lazer,
+                    # including its slider judgements. Keep one attempt while
+                    # preserving that local scoring value and the raw payloads.
+                    db.execute('''UPDATE plays SET passed=?,passed_known=?,complete=?,grade=?,mods=?,
+                                  accuracy=?,misses=?,played_at=?,source='local_lazer'
+                                  WHERE id=? AND user_key=? AND map_id=?
+                                  AND (passed_known=0 OR ?=1)''',
+                               (int(passed),int(passed_known),int(complete),grade,mods,accuracy,misses,played_at,
+                                play_id,user.strip().casefold(),map_id,int(passed_known)))
                 if source.startswith('local_'):
                     db.execute('''UPDATE plays SET passed=?,passed_known=?,complete=?,grade=?,mods=?,accuracy=?,misses=?
-                                  WHERE id=? AND user_key=? AND source LIKE 'local_%'
+                                  WHERE id=? AND user_key=? AND map_id=? AND source LIKE 'local_%'
                                   AND (passed_known=0 OR ?=1)''',
                                (int(passed), int(passed_known), int(complete), grade, mods, accuracy, misses,
-                                play_id, user.strip().casefold(), int(passed_known)))
+                                play_id, user.strip().casefold(), map_id, int(passed_known)))
                 if source.startswith(('osu_api_', 'hinai_', 'osu_web_')):
                     db.execute("UPDATE plays SET source=?,passed=?,passed_known=1 WHERE id=? "
                                "AND (source='osu_api' OR passed_known=0 OR "

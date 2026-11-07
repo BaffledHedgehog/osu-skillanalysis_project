@@ -88,3 +88,28 @@ def test_api_exposes_profile_counts_and_target_relative_load(tmp_path):
     empty=client.get('/api/maps/503/analysis',params={'user':'Unknown'}).json()
     assert empty['personal_skills']['attempts']==0
     assert client.get('/api/maps/503/analysis').json()['personal_skills'] is None
+
+
+def test_personal_difficulty_has_explicit_relative_and_descriptive_star_scales():
+    history=rows(aim=4.,speed=2.)
+    for row in history:row['analysis']['stars']=6.
+    target={'id':'target','mods':'NM','aim':3.,'speed':3.}
+    p=build_skill_profile(history,target=target)['personal_difficulty']
+    assert p['index']==150 and p['limiting_skill']=='speed'
+    assert p['estimated_stars']==9. and p['reference_stars']==6.
+    assert p['validated_star_rating'] is False and p['scope']=='aim_speed_only'
+    for row in history:row['analysis']['speed']=4.
+    q=build_skill_profile(history,target=target)['personal_difficulty']
+    assert q['index']==75 and q['estimated_stars']==4.5
+    insufficient=build_skill_profile(history[:2],target=target)['personal_difficulty']
+    assert insufficient['index'] is None and insufficient['estimated_stars'] is None
+
+
+def test_star_reference_excludes_target_repeats_and_hidden_only_bonuses():
+    history=rows(aim=3.,speed=2.)
+    for row in history:row['analysis'].update(stars=99.,mechanical_stars=6.)
+    target={'id':'target','mods':'NM','aim':3.,'speed':2.}
+    target_row=deepcopy(history[0]);target_row['map_id']='target'
+    target_row['analysis'].update(id='target',checksum='target',mechanical_stars=999.)
+    p=build_skill_profile(history+[target_row],target=target)['personal_difficulty']
+    assert p['reference_stars']==6. and p['estimated_stars']==6.
