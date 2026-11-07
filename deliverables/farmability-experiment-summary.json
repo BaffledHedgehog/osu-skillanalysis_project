@@ -1,0 +1,154 @@
+{
+  "date": "2026-11-07T14:33:17.707685+00:00",
+  "candidates": [
+    "control_v3",
+    "patterns_ridge_residual_100",
+    "patterns_ridge_absolute_100",
+    "patterns_hgb_absolute",
+    "patterns_hgb_residual",
+    "patterns_log_error_10",
+    "patterns_log_error_100",
+    "control_log_error_100"
+  ],
+  "selection": "3-fold early family-purged CV; half overall MAE and half NM difficulty-bin MAE",
+  "retrospective_recheck": true,
+  "external_result_is_label": false,
+  "features": [
+    "rhythm_repeat_3",
+    "motif_repeat_3",
+    "motif_repeat_5",
+    "rhythm_longest_run",
+    "rhythm_local_entropy_mean",
+    "rhythm_local_entropy_max",
+    "spacing_entropy",
+    "angle_entropy",
+    "strain_variation",
+    "strain_high_fraction",
+    "reading_density_squared_log",
+    "reaction_pressure",
+    "reaction_pressure_squared",
+    "slider_length_variation"
+  ],
+  "deployment": false,
+  "selected": "patterns_log_error_10",
+  "cv": {
+    "control_v3": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.8247998274772197,
+      "bias_pp": 0.0448825810207118,
+      "error_q90": 0.07679684504715123,
+      "selection_score": 3.9556788647119268
+    },
+    "patterns_ridge_residual_100": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.6875604045639694,
+      "bias_pp": 0.14814621847651324,
+      "error_q90": 0.07783252532375635,
+      "selection_score": 3.8344180629690214
+    },
+    "patterns_ridge_absolute_100": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.7300029092341784,
+      "bias_pp": 0.1702073876356817,
+      "error_q90": 0.0804640444178981,
+      "selection_score": 3.8840776172358256
+    },
+    "patterns_hgb_absolute": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.7688133899648535,
+      "bias_pp": 0.5944138790820281,
+      "error_q90": 0.07647214961589177,
+      "selection_score": 3.9039259292423054
+    },
+    "patterns_hgb_residual": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.7422136586774353,
+      "bias_pp": 0.42723004482600296,
+      "error_q90": 0.0811844987312349,
+      "selection_score": 3.816967420989631
+    },
+    "patterns_log_error_10": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.6758654693880106,
+      "bias_pp": 0.7920183350652078,
+      "error_q90": 0.08057766825519123,
+      "selection_score": 3.750343590771704
+    },
+    "patterns_log_error_100": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.6333264956840567,
+      "bias_pp": 0.9117400349517455,
+      "error_q90": 0.07808741014172811,
+      "selection_score": 3.7507069594046953
+    },
+    "control_log_error_100": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.7552769668921813,
+      "bias_pp": 0.9059064661682881,
+      "error_q90": 0.07737542764706283,
+      "selection_score": 3.867438735931076
+    }
+  },
+  "test": {
+    "all": {
+      "candidate": {
+        "samples": 433,
+        "families": 254,
+        "mae_pp": 4.291058468671068,
+        "bias_pp": -0.28710450347937094,
+        "error_q90": 0.10214701379674451
+      },
+      "deployed_v3": {
+        "samples": 433,
+        "families": 254,
+        "mae_pp": 3.900055088692532,
+        "bias_pp": -0.49230725447342166,
+        "error_q90": 0.08646983003135948
+      }
+    },
+    "NM": {
+      "candidate": {
+        "samples": 403,
+        "families": 239,
+        "mae_pp": 4.231463972524666,
+        "bias_pp": -0.6733160755160544,
+        "error_q90": 0.10269581906179227
+      },
+      "deployed_v3": {
+        "samples": 403,
+        "families": 239,
+        "mae_pp": 3.872761266073696,
+        "bias_pp": -0.8384140960751476,
+        "error_q90": 0.0868496476814858
+      }
+    },
+    "NM_4_5_stars": {
+      "candidate": {
+        "samples": 27,
+        "families": 23,
+        "mae_pp": 3.9894692181308478,
+        "bias_pp": -0.41549263641598216,
+        "error_q90": 0.0801084717479852
+      },
+      "deployed_v3": {
+        "samples": 27,
+        "families": 23,
+        "mae_pp": 3.515403692745807,
+        "bias_pp": -1.126047134501954,
+        "error_q90": 0.059217824172699454
+      }
+    }
+  },
+  "improves_release_criteria": false,
+  "notes": "Candidate selected before reading historical test; known historical test reused, no prospective claim. No deployment.",
+  "source_run": ".data/farmability-2026-11-07-run2",
+  "feature_tests_passed": 4
+}
