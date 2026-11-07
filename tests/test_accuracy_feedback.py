@@ -74,3 +74,12 @@ def test_opt_in_feedback_reaches_api_and_preserves_base_and_uncertainty(tmp_path
     assert after['accuracy_range'][0]<=before['accuracy_range'][0]
     assert after['accuracy_range'][1]>=before['accuracy_range'][1]
     assert after['pass_probability']==before['pass_probability']
+
+
+@pytest.mark.parametrize('regularization',[float('nan'),float('inf'),0.,-1.])
+def test_corrupt_feedback_falls_back_instead_of_returning_invalid_json(tmp_path,regularization):
+    store=Store(tmp_path/'corrupt.db');m,a=model(store.path)
+    m['regularization']=regularization
+    path=artifact_path(store.path,'Player');path.parent.mkdir()
+    path.write_text(json.dumps(m),encoding='utf-8')
+    assert predict_feedback(store,'Player',a,.9)['status']=='disabled'

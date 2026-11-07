@@ -10,6 +10,9 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => 
 }[char]));
 const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 let toastTimer;
+let analysisRequest = 0;
+let recommendationRequest = 0;
+let summaryRequest = 0;
 
 function toast(message, error = false) {
   const element = $('#toast');
@@ -55,6 +58,8 @@ async function loadCatalog() {
 }
 
 async function loadSummary() {
+  const request = ++summaryRequest;
+  const user = state.user;
   const box = $('#player-summary');
   if (!state.user) {
     box.innerHTML = '<span class="mini-dot"></span> Вставь ссылку на профиль osu! или укажи ник.';
@@ -63,6 +68,7 @@ async function loadSummary() {
   }
   $('#avatar').textContent = state.user[0].toUpperCase();
   const summary = await api(`/api/users/${encodeURIComponent(state.user)}/summary`);
+  if (request !== summaryRequest || user !== state.user) return;
   if (!summary.plays) {
     box.innerHTML = `<span class="mini-dot"></span><strong>${escapeHtml(state.user)}</strong>. Пока нет результатов.`;
   } else {
@@ -257,29 +263,42 @@ function renderAnalysis(analysis) {
 }
 
 async function selectMap(id, scroll = true) {
+  const request = ++analysisRequest;
+  const user = state.user;
+  const mods = currentMods();
+  const isCurrent = () => request === analysisRequest && state.mapId === id && state.user === user && currentMods() === mods;
   state.mapId = id;
   localStorage.setItem('pulse-map', id);
-  const query = new URLSearchParams({ user: state.user, mods: currentMods() });
-  const analysis = await api(`/api/maps/${encodeURIComponent(id)}/analysis?${query}`);
+  const query = new URLSearchParams({ user, mods });
+  let analysis;
+  try { analysis = await api(`/api/maps/${encodeURIComponent(id)}/analysis?${query}`); }
+  catch (error) { if (!isCurrent()) return; throw error; }
+  if (!isCurrent()) return;
   renderAnalysis(analysis);
   if (analysis.prediction?.suggest_training || analysis.prediction?.too_hard) {
     $('#prediction-content').insertAdjacentHTML('beforeend', '<div id="training-maps"><h3>Похожие карты для тренировки</h3><p>Ищем похожие карты с прогнозом от 95% accuracy...</p></div>');
     try {
       const training = await api(`/api/maps/${encodeURIComponent(id)}/training?${query}`);
       const box = $('#training-maps');
-      if (state.mapId === id && currentMods() === analysis.mods && box) {
+      if (isCurrent() && box) {
         box.innerHTML = `<h3>Похожие карты для тренировки</h3><p>${escapeHtml(training.message)}</p>` + training.maps.map(map =>
           `<button class="import-button" type="button" data-training-map="${escapeHtml(map.id)}">${escapeHtml(map.artist)} - ${escapeHtml(map.title)} [${escapeHtml(map.version)}], ${map.stars}*, около ${map.prediction.expected_accuracy}% accuracy</button>`).join('');
         box.querySelectorAll('[data-training-map]').forEach(button => button.addEventListener('click', () => action(() => selectMap(button.dataset.trainingMap))));
       }
-    } catch (error) { if ($('#training-maps')) $('#training-maps').textContent = error.message; }
+    } catch (error) { if (isCurrent() && $('#training-maps')) $('#training-maps').textContent = error.message; }
   }
-  if (scroll) $('#result-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (scroll && isCurrent()) $('#result-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 async function loadRecommendations() {
-  const query = new URLSearchParams({ user: state.user, goal: state.goal, mods: currentMods() });
-  const data = await api(`/api/recommendations?${query}`);
+  const request = ++recommendationRequest;
+  const user = state.user, goal = state.goal, mods = currentMods();
+  const isCurrent = () => request === recommendationRequest && state.user === user && state.goal === goal && currentMods() === mods;
+  const query = new URLSearchParams({ user, goal, mods });
+  let data;
+  try { data = await api(`/api/recommendations?${query}`); }
+  catch (error) { if (!isCurrent()) return; throw error; }
+  if (!isCurrent()) return;
   const list = $('#recommendation-list');
   if (!data.maps.length) {
     list.innerHTML = `<div class="empty-state panel">Подходящих новых карт пока нет.${data.min_stars ? ` По твоей истории ищем от ${data.min_stars}*.` : ''} Нажми "Найти новые карты", чтобы поискать их в сети.</div>`;

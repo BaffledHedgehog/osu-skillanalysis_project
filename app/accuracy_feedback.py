@@ -66,6 +66,11 @@ def infer(model,a,estimate,reading_adjustment=0.,now=None):
     age=max(0.,(now-created).total_seconds()/86400)
     freshness=2**(-age/30)
     if age>90:return None
+    regularization=float(model['regularization'])
+    if not math.isfinite(regularization) or regularization<=0:
+        raise ValueError('Invalid feedback regularization')
+    if not math.isfinite(estimate) or not 0<=estimate<=1 or not math.isfinite(reading_adjustment):
+        raise ValueError('Invalid base accuracy')
     # CL changes scoring; parameter mods transfer through effective attributes.
     compatible=np.asarray([('CL' in p['mods'])==('CL' in a.get('mods','')) for p in model['observations']])
     x=np.asarray(model['x'],dtype=float)[compatible]
@@ -75,13 +80,14 @@ def infer(model,a,estimate,reading_adjustment=0.,now=None):
     if x.shape[1]!=len(point) or not np.isfinite(x).all() or not np.isfinite(y).all():raise ValueError('Invalid feedback model')
     kernel=np.exp(-.5*np.square(x[:,None,:]-x[None,:,:]).sum(axis=2))
     k=np.exp(-.5*np.square(x-point).sum(axis=1))
-    coef=np.linalg.solve(kernel+float(model['regularization'])*np.eye(len(x)),y)
+    coef=np.linalg.solve(kernel+regularization*np.eye(len(x)),y)
     correction=float(k@coef)*freshness
+    if not math.isfinite(correction):raise ValueError('Nonfinite feedback correction')
     base=min(1.,max(0.,estimate-reading_adjustment))
     corrected=min(1.,max(0.,1-max(0.,1-base)*math.exp(max(-8.,min(8.,correction)))+reading_adjustment))
     return {'status':'preview_feedback','accuracy':corrected,'base_accuracy':estimate,
             'adjustment_pp':(corrected-estimate)*100,'samples':int(len(x)),
-            'max_similarity':float(k.max()),'error_multiplier':math.exp(correction),
+            'max_similarity':float(k.max()),'error_multiplier':math.exp(max(-8.,min(8.,correction))),
             'target_in_feedback':any(p['checksum']==a['checksum'] and p['mods']==a.get('mods','NM') for p in model['observations']),
             'unverified_feedback':any(not p.get('score_id') for p in model['observations']),
             'prospective_validation':False,'method':'kernel_regression_of_log_accuracy_error'}

@@ -12,10 +12,10 @@ SKILLS = (('aim', 'Aim', 'Наведение на объекты'),
           ('speed', 'Speed', 'Скорость нажатий'))
 
 
-def _number(value):
+def _number(value, allow_zero=False):
     try:
         result = float(value)
-        return result if math.isfinite(result) and result > 0 else None
+        return result if math.isfinite(result) and (result >= 0 if allow_zero else result > 0) else None
     except (TypeError, ValueError):
         return None
 
@@ -77,7 +77,7 @@ def build_skill_profile(records, mods='NM', target=None):
             if group not in by_map or weight > by_map[group][1]:
                 by_map[group] = (value, weight)
         reference = _quantile(list(by_map.values()), .7) if len(by_map) >= MIN_MAPS else None
-        demand = _number(target.get('mechanical_'+key,target.get(key)))
+        demand = _number(target.get('mechanical_'+key,target.get(key)),allow_zero=True)
         ratio = demand / reference if reference is not None and demand is not None else None
         skills.append({
             'id': key, 'label': label, 'description': explanation,

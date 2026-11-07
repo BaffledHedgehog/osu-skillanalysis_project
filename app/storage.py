@@ -213,9 +213,10 @@ class Store:
                 if source.startswith('local_'):
                     db.execute('''UPDATE plays SET passed=?,passed_known=?,complete=?,grade=?,mods=?,accuracy=?,misses=?
                                   WHERE id=? AND user_key=? AND map_id=? AND source LIKE 'local_%'
+                                  AND (source!='local_lazer' OR ?='local_lazer')
                                   AND (passed_known=0 OR ?=1)''',
                                (int(passed), int(passed_known), int(complete), grade, mods, accuracy, misses,
-                                play_id, user.strip().casefold(), map_id, int(passed_known)))
+                                play_id, user.strip().casefold(), map_id, source, int(passed_known)))
                 if source.startswith(('osu_api_', 'hinai_', 'osu_web_')):
                     db.execute("UPDATE plays SET source=?,passed=?,passed_known=1 WHERE id=? "
                                "AND (source='osu_api' OR passed_known=0 OR "

@@ -1,0 +1,21 @@
+{
+  "status": "rejected",
+  "plays": 60,
+  "passes": 30,
+  "fails": 30,
+  "maps": 12,
+  "required_plays": 40,
+  "required_per_class": 8,
+  "required_maps": 10,
+  "metrics": {
+    "holdout_plays": 15,
+    "holdout_maps": 3,
+    "brier": 0.28,
+    "baseline_brier": 0.2,
+    "log_loss": 0.2629,
+    "baseline_log_loss": 0.7365,
+    "recency_half_life_days": 60,
+    "weighted_plays": 30.0
+  },
+  "message": "Модель не улучшила простой базовый прогноз на отложенных картах."
+}

@@ -1,0 +1,82 @@
+{
+  "cases": [
+    {
+      "category": "easy",
+      "map_id": "5634345",
+      "mods": "NM",
+      "stars": 4.02,
+      "ar": 8.5,
+      "accuracy": 96.4,
+      "base_accuracy": 94.2,
+      "target_in_feedback": false,
+      "checks": "finite range, interval, physical HD/NM invariance",
+      "status": "Passed"
+    },
+    {
+      "category": "easy",
+      "map_id": "5634345",
+      "mods": "HD",
+      "stars": 4.2,
+      "ar": 8.5,
+      "accuracy": 95.0,
+      "base_accuracy": 92.7,
+      "target_in_feedback": false,
+      "checks": "finite range, interval, physical HD/NM invariance",
+      "status": "Passed"
+    },
+    {
+      "category": "low_ar",
+      "map_id": "local-bb0a4db93adc",
+      "mods": "NM",
+      "stars": 3.91,
+      "ar": 6.0,
+      "accuracy": 90.5,
+      "base_accuracy": 90.2,
+      "target_in_feedback": false,
+      "checks": "finite range, interval, physical HD/NM invariance",
+      "status": "Passed"
+    },
+    {
+      "category": "low_ar",
+      "map_id": "local-bb0a4db93adc",
+      "mods": "HD",
+      "stars": 4.18,
+      "ar": 6.0,
+      "accuracy": 88.7,
+      "base_accuracy": 88.5,
+      "target_in_feedback": false,
+      "checks": "finite range, interval, physical HD/NM invariance",
+      "status": "Passed"
+    },
+    {
+      "category": "hard",
+      "map_id": "2701095",
+      "mods": "NM",
+      "stars": 8.03,
+      "ar": 9.7,
+      "accuracy": 74.6,
+      "base_accuracy": 74.4,
+      "target_in_feedback": false,
+      "checks": "finite range, interval, physical HD/NM invariance",
+      "status": "Passed"
+    },
+    {
+      "category": "hard",
+      "map_id": "2701095",
+      "mods": "HD",
+      "stars": 8.27,
+      "ar": 9.7,
+      "accuracy": 74.0,
+      "base_accuracy": 73.7,
+      "target_in_feedback": false,
+      "checks": "finite range, interval, physical HD/NM invariance",
+      "status": "Passed"
+    }
+  ],
+  "health": {
+    "8011": 200,
+    "8012": 200
+  },
+  "quality_validation": false,
+  "actual_new_attempt_labels": 0
+}

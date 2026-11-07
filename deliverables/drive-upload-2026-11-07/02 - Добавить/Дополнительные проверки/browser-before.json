@@ -1,0 +1,16 @@
+{
+  "mods": {
+    "selected": "NM",
+    "rendered": "HD"
+  },
+  "maps": {
+    "selected": "4934415",
+    "rendered": "4610937"
+  },
+  "recommendations": {
+    "selected": "challenge",
+    "rendered": "warmup sentinel"
+  },
+  "browser_errors": [],
+  "passed": false
+}

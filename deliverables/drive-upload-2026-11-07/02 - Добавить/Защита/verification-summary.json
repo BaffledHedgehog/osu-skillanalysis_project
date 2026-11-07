@@ -1,0 +1,29 @@
+{
+  "date": "07.11.2026",
+  "basis_commit": "3bfd0ca",
+  "main_slides": 11,
+  "backup_slides": 5,
+  "presentation_minutes": 9,
+  "tests": {
+    "passed": 149,
+    "skipped": 1
+  },
+  "demo_url": "http://127.0.0.1:8011/?user=BaffledHedgehog&map=4610937",
+  "course_sources": {
+    "4": "https://drive.google.com/file/d/1GFWqP0PaKKxUEqsraXWDtrBXHeGtyCKg/view",
+    "5": "https://drive.google.com/file/d/1kziIv7DTdeVkrQdYPza9egt-qMDVcbGv/view",
+    "6": "https://drive.google.com/file/d/1msDIp5aumHvk652IRzX22rqHkmIxVKa2/view"
+  },
+  "current_stage": "final_mvp_submission",
+  "formal_acceptance_complete": false,
+  "personal_mae_pp": 4.350042610635219,
+  "ridge_mae_pp": 4.672037833561907,
+  "holdout_nm_passes": 403,
+  "holdout_families": 239,
+  "population_model_active": false,
+  "original_new_files_unchanged": true,
+  "local_skill_report_patch": true,
+  "fresh_install_smoke_passed": true,
+  "sqlite_restore_smoke_passed": true,
+  "independent_human_run": false
+}

@@ -113,3 +113,12 @@ def test_star_reference_excludes_target_repeats_and_hidden_only_bonuses():
     target_row['analysis'].update(id='target',checksum='target',mechanical_stars=999.)
     p=build_skill_profile(history+[target_row],target=target)['personal_difficulty']
     assert p['reference_stars']==6. and p['estimated_stars']==6.
+
+
+def test_zero_target_demand_is_not_missing_data():
+    history=rows(aim=3.,speed=2.)
+    for row in history:row['analysis']['stars']=6.
+    p=build_skill_profile(history,target={'id':'target','mods':'NM','aim':0.,'speed':1.})
+    assert p['skills'][0]['target_load']==0.
+    assert p['skills'][0]['relative_load']==0.
+    assert p['personal_difficulty']['index']==50.

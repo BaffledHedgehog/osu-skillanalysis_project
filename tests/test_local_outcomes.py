@@ -37,6 +37,15 @@ def test_lazer_duplicate_cannot_overwrite_another_player_or_chart(tmp_path):
     assert store.plays('Player')[0]['accuracy']==.982
 
 
+def test_later_stable_import_keeps_lazer_scoring_accuracy(tmp_path):
+    store=Store(tmp_path/'order.db');store.save_map(parse_map(chart(500)))
+    store.save_play('Player','500','NM',.9820396251,True,4,source='local_lazer',play_id='osu-123')
+    store.save_play('Player','500','NM',.9773531493,True,4,source='local_stable',play_id='osu-123')
+    row=store.plays('Player')[0]
+    assert row['accuracy']==pytest.approx(.9820396251)
+    assert row['source']=='local_lazer' and store.play_count('Player')==1
+
+
 def test_rank_restores_pass_and_partial_failure_without_duplicates(tmp_path, monkeypatch):
     from app import lazer_client
     root = tmp_path / 'lazer'

@@ -1,0 +1,18 @@
+{
+  "status": "trained",
+  "plays": 60,
+  "passes": 30,
+  "fails": 30,
+  "maps": 12,
+  "metrics": {
+    "holdout_plays": 15,
+    "holdout_maps": 3,
+    "brier": 0.12,
+    "baseline_brier": 0.2,
+    "log_loss": 0.2629,
+    "baseline_log_loss": 0.7365,
+    "recency_half_life_days": 60,
+    "weighted_plays": 30.0
+  },
+  "trained_at": "2026-11-07T10:45:49.022740+00:00"
+}
