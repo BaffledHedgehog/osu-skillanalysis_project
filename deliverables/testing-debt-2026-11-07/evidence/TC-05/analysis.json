@@ -1,0 +1,181 @@
+{
+  "id": "899999",
+  "checksum": "71cb949084c0887f055bf4ef00e48b6d",
+  "artist": "Test Artist",
+  "title": "Test Song",
+  "version": "Test 899999",
+  "creator": "Tester",
+  "ar": 9.0,
+  "od": 7.0,
+  "cs": 4.0,
+  "hp": 5.0,
+  "object_count": 24,
+  "duration": 4,
+  "density": [
+    24
+  ],
+  "first_object_ms": 1000,
+  "mods": "NM",
+  "stars": 4.02,
+  "aim": 2.29,
+  "speed": 1.37,
+  "bpm": 120,
+  "preempt_ms": 600.0,
+  "clock_rate": 1.0,
+  "stream_bpm": 78.9,
+  "burst_bpm": 78.9,
+  "slider_fraction": 0.0,
+  "rhythm_variation": 0.0,
+  "peak_aim": 218.47113258881592,
+  "peak_speed": 67.75382920375843,
+  "peak_load": 283.09749112535536,
+  "peak_to_mean": 1.3037583017116492,
+  "ending_peak_load": 276.10018332610105,
+  "ending_peak_fraction": 0.9752830455281007,
+  "max_combo": 24,
+  "windows": [
+    {
+      "start": 0.0,
+      "end": 3.2,
+      "aim": 218.47,
+      "speed": 65.9,
+      "load": 284.38
+    },
+    {
+      "start": 3.2,
+      "end": 6.4,
+      "aim": 214.06,
+      "speed": 67.75,
+      "load": 281.82
+    }
+  ],
+  "peaks": [
+    {
+      "start": 0.0,
+      "end": 3.2,
+      "aim": 218.47,
+      "speed": 65.9,
+      "load": 284.38
+    },
+    {
+      "start": 3.2,
+      "end": 6.4,
+      "aim": 214.06,
+      "speed": 67.75,
+      "load": 281.82
+    }
+  ],
+  "prediction": {
+    "pass_probability": 65.8,
+    "coverage_warnings": [],
+    "same_chart_history": {
+      "attempts": 0,
+      "passes": 0,
+      "fails": 0
+    },
+    "prediction_status": "estimated",
+    "too_hard": false,
+    "suggest_training": false,
+    "expected_accuracy": 94.4,
+    "accuracy_range": [
+      87.9,
+      100
+    ],
+    "accuracy_reference_mode": "attempts",
+    "pass_observations": 60,
+    "confidence": "medium",
+    "model": "similarity_and_prior",
+    "observations": 60,
+    "ml_status": {
+      "status": "rejected",
+      "plays": 60,
+      "passes": 30,
+      "fails": 30,
+      "maps": 12,
+      "required_plays": 40,
+      "required_per_class": 8,
+      "required_maps": 10,
+      "metrics": {
+        "holdout_plays": 15,
+        "holdout_maps": 3,
+        "brier": 0.2,
+        "baseline_brier": 0.2,
+        "log_loss": 0.2629,
+        "baseline_log_loss": 0.7365,
+        "recency_half_life_days": 60,
+        "weighted_plays": 30.0
+      },
+      "message": "Модель не улучшила простой базовый прогноз на отложенных картах."
+    },
+    "accuracy_ml_status": {
+      "status": "insufficient_data",
+      "plays": 30,
+      "maps": 6,
+      "source_mode": "attempts",
+      "required_plays": 40,
+      "required_maps": 10
+    },
+    "accuracy_model": "similarity_and_prior",
+    "cnn_status": {
+      "status": "not_trained",
+      "pass_probability": null,
+      "accuracy": null
+    },
+    "population_status": {
+      "status": "not_trained"
+    },
+    "accuracy_v2_status": {
+      "status": "not_trained"
+    },
+    "message": "Экспериментальная оценка по вашим результатам; вероятность пока не откалибрована на независимой выборке.",
+    "factors": [
+      "Пик нагрузки в 1.3 раза выше средней нагрузки. Короткий сложный участок учитывается отдельными признаками модели."
+    ]
+  },
+  "personal_skills": {
+    "status": "available",
+    "mods": "NM",
+    "skills": [
+      {
+        "id": "aim",
+        "label": "Aim",
+        "description": "Наведение на объекты",
+        "status": "available",
+        "level": 2.16,
+        "target_load": 2.29,
+        "relative_load": 1.06,
+        "difference_percent": 6.0,
+        "attempts": 30,
+        "maps": 6
+      },
+      {
+        "id": "speed",
+        "label": "Speed",
+        "description": "Скорость нажатий",
+        "status": "available",
+        "level": 1.29,
+        "target_load": 1.37,
+        "relative_load": 1.062,
+        "difference_percent": 6.2,
+        "attempts": 30,
+        "maps": 6
+      }
+    ],
+    "source_mode": "ordinary_passes",
+    "attempts": 30,
+    "maps": 6,
+    "sources": {
+      "manual": 30
+    },
+    "minimum_maps": 3,
+    "quantile": 0.7,
+    "target_excluded": true,
+    "dominant_demand": "speed",
+    "method": "recency_weighted_unique_map_quantile",
+    "note": "Ориентир по пройденным картам, не физический предел и не вероятность. Моды сравниваются отдельно, давность учитывается, повторы одной карты не добавляют ей голосов."
+  },
+  "local_prediction": {
+    "status": "not_trained",
+    "windows": []
+  }
+}

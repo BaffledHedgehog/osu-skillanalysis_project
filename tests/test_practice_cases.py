@@ -1,4 +1,4 @@
-"""The five cases from deliverables/Practice 1, with optional saved evidence.
+"""The course cases, including the sixth case required by testing homework.
 
 Brier numbers in TC-02/04/05 are deliberately controlled test inputs, not
 measurements of player prediction quality. The real training/acceptance/API
@@ -133,4 +133,31 @@ def test_controlled_pass_model_gate(tmp_path, monkeypatch, case, model_brier, ba
         'model_brier': model_brier, 'baseline_brier': baseline_brier,
         'training_maps': sorted(fit_maps), 'validation_maps': sorted(test_maps),
         'map_overlap': sorted(fit_maps & test_maps), 'probe_id': probe.map_id,
+    })
+
+
+def test_tc06_two_results_do_not_invent_a_personal_prediction(tmp_path):
+    """The product requires three results; two must not produce fake numbers."""
+    app = create_app(tmp_path / 'tc06.db', public_mode=False)
+    store = app.state.store
+    store.save_map(parse_map(chart(600001)))
+    store.save_map(parse_map(chart(600002)))
+    for i in range(2):
+        store.save_play('QA_TwoResults', '600001', 'NM', .96, True,
+                        play_id=f'tc06-{i}', source='manual')
+    client = TestClient(app)
+    response = client.get('/api/maps/600002/analysis', params={'user': 'QA_TwoResults'})
+    assert response.status_code == 200
+    analysis = response.json()
+    p = analysis['prediction']
+    assert p['observations'] == 2
+    assert p['pass_probability'] is None and p['expected_accuracy'] is None
+    assert p['accuracy_range'] is None and p['model'] == 'insufficient_data'
+    assert p['message'] and analysis['stars'] > 0
+    assert client.get('/api/health').status_code == 200
+    save_evidence(tmp_path, 'TC-06', 'analysis.json', analysis)
+    save_evidence(tmp_path, 'TC-06', 'conditions.json', {
+        'synthetic_user': True, 'observations': 2, 'minimum_results': 3,
+        'expected_pass_probability': None, 'expected_accuracy': None,
+        'expected_model': 'insufficient_data', 'http_status': response.status_code,
     })

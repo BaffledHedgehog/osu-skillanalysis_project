@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="30.593" timestamp="2026-11-04T20:50:08.496877+03:00" hostname="DESKTOP-JU602CM"><testcase classname="tests.test_native_audio" name="test_native_replay_host_is_silent_and_cannot_restore_volume" time="30.263"><failure message="ValueError: Не удалось проверить отключение звука. Обработка реплеев не запущена.">dotnet = 'E:\\osu!skillanalysis\\.data\\tools\\dotnet\\dotnet.exe'
+binary = 'E:\\osu!skillanalysis\\tools\\HealthReplayEngine\\bin\\Release\\net10.0\\HealthReplayEngine.dll'
+stamp = 1792860792806517800
+
+    @lru_cache(maxsize=8)
+    def _verify_silent_engine(dotnet, binary, stamp):
+        """Fail closed before loading any replay if native audio guards do not work."""
+        base = ROOT / '.data/audio-checks'
+        base.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='check-', dir=base) as temp:
+            output = Path(temp) / 'audio.json'
+            try:
+&gt;               result = subprocess.run([dotnet, binary, '--audio-check', str(output)], cwd=temp,
+                    capture_output=True, timeout=30,
+                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+
+app\replay_health.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\yarik_temp\AppData\Local\Programs\Python\Python313\Lib\subprocess.py:556: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\yarik_temp\AppData\Local\Programs\Python\Python313\Lib\subprocess.py:1222: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;Popen: returncode: 1 args: ['E:\\osu!skillanalysis\\.data\\tools\\dotnet\\d...&gt;
+input = None, endtime = 1407905.3793295, orig_timeout = 30
+
+    def _communicate(self, input, endtime, orig_timeout):
+        # Start reader threads feeding into a list hanging off of this
+        # object, unless they've already been started.
+        if self.stdout and not hasattr(self, "_stdout_buff"):
+            self._stdout_buff = []
+            self.stdout_thread = \
+                    threading.Thread(target=self._readerthread,
+                                     args=(self.stdout, self._stdout_buff))
+            self.stdout_thread.daemon = True
+            self.stdout_thread.start()
+        if self.stderr and not hasattr(self, "_stderr_buff"):
+            self._stderr_buff = []
+            self.stderr_thread = \
+                    threading.Thread(target=self._readerthread,
+                                     args=(self.stderr, self._stderr_buff))
+            self.stderr_thread.daemon = True
+            self.stderr_thread.start()
+    
+        if self.stdin:
+            self._stdin_write(input)
+    
+        # Wait for the reader threads, or time out.  If we time out, the
+        # threads remain reading and the fds left open in case the user
+        # calls communicate again.
+        if self.stdout is not None:
+            self.stdout_thread.join(self._remaining_time(endtime))
+            if self.stdout_thread.is_alive():
+&gt;               raise TimeoutExpired(self.args, orig_timeout)
+E               subprocess.TimeoutExpired: Command '['E:\\osu!skillanalysis\\.data\\tools\\dotnet\\dotnet.exe', 'E:\\osu!skillanalysis\\tools\\HealthReplayEngine\\bin\\Release\\net10.0\\HealthReplayEngine.dll', '--audio-check', 'E:\\osu!skillanalysis\\.data\\audio-checks\\check-tgif820e\\audio.json']' timed out after 30 seconds
+
+C:\Users\yarik_temp\AppData\Local\Programs\Python\Python313\Lib\subprocess.py:1646: TimeoutExpired
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('C:/Users/yarik_temp/AppData/Local/Temp/pytest-of-yarik_temp/pytest-107/test_native_replay_host_is_sil0')
+
+&gt;   ???
+
+C:\Users\yarik_temp\Desktop\osu!skillanalysis\tests\test_native_audio.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+app\replay_health.py:34: in _engine
+    _verify_silent_engine(dotnet, str(binary), binary.stat().st_mtime_ns)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dotnet = 'E:\\osu!skillanalysis\\.data\\tools\\dotnet\\dotnet.exe'
+binary = 'E:\\osu!skillanalysis\\tools\\HealthReplayEngine\\bin\\Release\\net10.0\\HealthReplayEngine.dll'
+stamp = 1792860792806517800
+
+    @lru_cache(maxsize=8)
+    def _verify_silent_engine(dotnet, binary, stamp):
+        """Fail closed before loading any replay if native audio guards do not work."""
+        base = ROOT / '.data/audio-checks'
+        base.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='check-', dir=base) as temp:
+            output = Path(temp) / 'audio.json'
+            try:
+                result = subprocess.run([dotnet, binary, '--audio-check', str(output)], cwd=temp,
+                    capture_output=True, timeout=30,
+                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+                check = json.loads(output.read_text(encoding='utf-8-sig')) if output.is_file() else {}
+            except (subprocess.TimeoutExpired, OSError, ValueError) as exc:
+&gt;               raise ValueError('Не удалось проверить отключение звука. Обработка реплеев не запущена.') from exc
+E               ValueError: Не удалось проверить отключение звука. Обработка реплеев не запущена.
+
+app\replay_health.py:51: ValueError</failure></testcase></testsuite></testsuites>

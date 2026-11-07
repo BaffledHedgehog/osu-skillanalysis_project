@@ -1,0 +1,9 @@
+{
+  "synthetic_user": true,
+  "observations": 2,
+  "minimum_results": 3,
+  "expected_pass_probability": null,
+  "expected_accuracy": null,
+  "expected_model": "insufficient_data",
+  "http_status": 200
+}
