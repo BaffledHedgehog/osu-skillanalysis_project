@@ -1,0 +1,24 @@
+{
+  "maps": [
+    {
+      "id": "4864861",
+      "artist": "Turbo",
+      "title": "PADORU / PADORU",
+      "version": "Ren's Extra",
+      "creator": "KeyWee",
+      "ar": 9.3,
+      "od": 9.0,
+      "cs": 3.6,
+      "hp": 5.0,
+      "object_count": 126,
+      "duration": 31,
+      "density": [
+        15,
+        53,
+        56,
+        2
+      ],
+      "first_object_ms": 1011
+    }
+  ]
+}
