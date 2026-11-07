@@ -1,0 +1,124 @@
+{
+  "id": "600002",
+  "checksum": "1979615d6c0a113d3fc67beaf3b11e98",
+  "artist": "Test Artist",
+  "title": "Test Song",
+  "version": "Test 600002",
+  "creator": "Tester",
+  "ar": 9.0,
+  "od": 7.0,
+  "cs": 4.0,
+  "hp": 5.0,
+  "object_count": 24,
+  "duration": 4,
+  "density": [
+    24
+  ],
+  "first_object_ms": 1000,
+  "mods": "NM",
+  "stars": 4.02,
+  "aim": 2.29,
+  "speed": 1.37,
+  "bpm": 120,
+  "preempt_ms": 600.0,
+  "clock_rate": 1.0,
+  "stream_bpm": 78.9,
+  "burst_bpm": 78.9,
+  "slider_fraction": 0.0,
+  "rhythm_variation": 0.0,
+  "peak_aim": 218.47113258881592,
+  "peak_speed": 67.75382920375843,
+  "peak_load": 283.09749112535536,
+  "peak_to_mean": 1.3037583017116492,
+  "ending_peak_load": 276.10018332610105,
+  "ending_peak_fraction": 0.9752830455281007,
+  "max_combo": 24,
+  "windows": [
+    {
+      "start": 0.0,
+      "end": 3.2,
+      "aim": 218.47,
+      "speed": 65.9,
+      "load": 284.38
+    },
+    {
+      "start": 3.2,
+      "end": 6.4,
+      "aim": 214.06,
+      "speed": 67.75,
+      "load": 281.82
+    }
+  ],
+  "peaks": [
+    {
+      "start": 0.0,
+      "end": 3.2,
+      "aim": 218.47,
+      "speed": 65.9,
+      "load": 284.38
+    },
+    {
+      "start": 3.2,
+      "end": 6.4,
+      "aim": 214.06,
+      "speed": 67.75,
+      "load": 281.82
+    }
+  ],
+  "prediction": {
+    "pass_probability": null,
+    "expected_accuracy": null,
+    "accuracy_range": null,
+    "confidence": "none",
+    "model": "insufficient_data",
+    "observations": 2,
+    "message": "Добавьте хотя бы три результата. До этого персональный прогноз не рассчитывается.",
+    "factors": []
+  },
+  "personal_skills": {
+    "status": "insufficient_data",
+    "mods": "NM",
+    "skills": [
+      {
+        "id": "aim",
+        "label": "Aim",
+        "description": "Наведение на объекты",
+        "status": "insufficient_data",
+        "level": null,
+        "target_load": 2.29,
+        "relative_load": null,
+        "difference_percent": null,
+        "attempts": 2,
+        "maps": 1
+      },
+      {
+        "id": "speed",
+        "label": "Speed",
+        "description": "Скорость нажатий",
+        "status": "insufficient_data",
+        "level": null,
+        "target_load": 1.37,
+        "relative_load": null,
+        "difference_percent": null,
+        "attempts": 2,
+        "maps": 1
+      }
+    ],
+    "source_mode": "ordinary_passes",
+    "attempts": 2,
+    "maps": 1,
+    "sources": {
+      "manual": 2
+    },
+    "minimum_maps": 3,
+    "quantile": 0.7,
+    "target_excluded": true,
+    "dominant_demand": null,
+    "method": "recency_weighted_unique_map_quantile",
+    "note": "Ориентир по пройденным картам, не физический предел и не вероятность. Моды сравниваются отдельно, давность учитывается, повторы одной карты не добавляют ей голосов."
+  },
+  "local_prediction": {
+    "status": "not_trained",
+    "windows": []
+  }
+}

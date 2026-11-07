@@ -1,0 +1,727 @@
+{
+  "date": "2026-11-07",
+  "base_commit": "9af41ff0dfe0615ce7203c7331297e4f9cda05d0",
+  "working_tree_changes": true,
+  "source": "https://drive.google.com/drive/folders/1CCK567qfnScRoVaDxbl_W3R7VViKOyd8",
+  "human_run_confirmed": false,
+  "facilitated_meeting_confirmed": false,
+  "acceptance_signed": false,
+  "youtrack_verified": false,
+  "files": [
+    {
+      "file": "00 - Что открыть по всем неделям.docx",
+      "bytes": 39207,
+      "sha256": "6c1b7cf85c6b7d3f6ca54f0496a9f1d82940a9b49e2ea85a236c51bcd0e6a97b"
+    },
+    {
+      "file": "00 - Что открыть по всем неделям.pdf",
+      "bytes": 90722,
+      "sha256": "caf92c96e96de88909bc0f2d56647f0898286acf72f6e8489df413980cd6d1a0"
+    },
+    {
+      "file": "01 - Риски.docx",
+      "bytes": 38270,
+      "sha256": "910803d49c983f2661a55dca37cda63f9f192760bd05ecbe5c7a6498c28eeb1a"
+    },
+    {
+      "file": "01 - Риски.pdf",
+      "bytes": 87013,
+      "sha256": "3c7dc5ab50c3f60803a353e598c1fc6033c305e2311cebbd908be7d1384f216e"
+    },
+    {
+      "file": "02 - Backlog и правила работы.docx",
+      "bytes": 38855,
+      "sha256": "f5fbfb1e239cffc2bdace815f7b92ee52312d4e534024e494be2eef092022336"
+    },
+    {
+      "file": "02 - Backlog и правила работы.pdf",
+      "bytes": 90877,
+      "sha256": "cc6e90715e31f6e406c6a179d57091349136106c2ba3d7973aedc0ba80a9bee3"
+    },
+    {
+      "file": "03 - Решения и изменения.docx",
+      "bytes": 38411,
+      "sha256": "2b742b48e02f7ac6597b375f92bcac02eb7d1156c1a0ebf258b67b43287cc728"
+    },
+    {
+      "file": "03 - Решения и изменения.pdf",
+      "bytes": 86973,
+      "sha256": "a345c4ffaa9fd3bcce4da7d71190a77c90ef0c9f3add8d40b00f639e3435a12d"
+    },
+    {
+      "file": "04 - Данные и эксперименты.docx",
+      "bytes": 38725,
+      "sha256": "a4216a9b8d5644dacf834b9a078e89d160c699a799057e3cd929414debcdc9d0"
+    },
+    {
+      "file": "04 - Данные и эксперименты.pdf",
+      "bytes": 89100,
+      "sha256": "9b36c20e1d69b33443683db84dd09849904cf86d67cfe1d2961cf79419fa5e75"
+    },
+    {
+      "file": "05 - Демо за 5 минут.docx",
+      "bytes": 37975,
+      "sha256": "8b645b52f8cf451a447a69ff2add2a7eae4fc0c94a6978602b0e3ac400c8e1d1"
+    },
+    {
+      "file": "05 - Демо за 5 минут.pdf",
+      "bytes": 85783,
+      "sha256": "dafebb946466725eb68fcf958dfaa1ecb30050f885b115512240730d45f32401"
+    },
+    {
+      "file": "06 - Рабочее обсуждение.docx",
+      "bytes": 37903,
+      "sha256": "dffb938846288f4bccdebc184eb84ef7a3fd539b11fd84f2f60a4924fc3ee73a"
+    },
+    {
+      "file": "06 - Рабочее обсуждение.pdf",
+      "bytes": 88647,
+      "sha256": "cb5e8d5023552df5cbab5b7c1c3a88cd0b19150cec076fd0be3fb273e4d2fc13"
+    },
+    {
+      "file": "07 - ОПЭ и журнал наблюдений.docx",
+      "bytes": 38703,
+      "sha256": "d72cd4fa486602d35b442b3d79678d1e2de060fe34ec28cd378b48f7ce9afcf6"
+    },
+    {
+      "file": "07 - ОПЭ и журнал наблюдений.pdf",
+      "bytes": 90342,
+      "sha256": "6f7f4ebee18b2cea5d49940cb9d752ca0c43c8a59ec6c69ffd58e9da7304e8de"
+    },
+    {
+      "file": "08 - ПМИ и протокол приемки.docx",
+      "bytes": 38147,
+      "sha256": "61262667842b23d552ba2b1b33a5a5302ad5f34531052145a7833ce7e75ee276"
+    },
+    {
+      "file": "08 - ПМИ и протокол приемки.pdf",
+      "bytes": 87595,
+      "sha256": "d88cbc0a312c9fe94707aa07acdaa7d29351255e9fd5a27e90b835af82677b0c"
+    },
+    {
+      "file": "09 - Итоги и ретроспектива.docx",
+      "bytes": 38408,
+      "sha256": "cbc59655ff797221f4314ddb4c9b7e9b093a268411bd1456239307f5eb23e90d"
+    },
+    {
+      "file": "09 - Итоги и ретроспектива.pdf",
+      "bytes": 88767,
+      "sha256": "f3cacdd69fd929e3f114964a59ad0ba1f2b2067e9ee25618c6189dd4f24468a5"
+    },
+    {
+      "file": "10 - Актуальные требования.docx",
+      "bytes": 38722,
+      "sha256": "58890fb3096e0ed77ae242f9fe5dd421438e0513f5585fe62085f030377f7c35"
+    },
+    {
+      "file": "10 - Актуальные требования.pdf",
+      "bytes": 89902,
+      "sha256": "85c227795534de9da4763f184e184db7243cef8f2b99205d655f4abb705094a5"
+    },
+    {
+      "file": "11 - Комплект передачи.docx",
+      "bytes": 45070,
+      "sha256": "f36af6195ddfe45ea62b5b028888e03e04824b1ea2bf9cddf2b1a57cd2787164"
+    },
+    {
+      "file": "11 - Комплект передачи.pdf",
+      "bytes": 103545,
+      "sha256": "b31df9dca1f685ca5d904512a1f22e88eca9ea22af41a71384040990514e99fe"
+    },
+    {
+      "file": "12 - План и досрочная сдача.docx",
+      "bytes": 37977,
+      "sha256": "ceed7b4d9fce128ea6a861daacb778eb38832b9db011167d45b95ccb73c7e995"
+    },
+    {
+      "file": "12 - План и досрочная сдача.pdf",
+      "bytes": 88715,
+      "sha256": "818693fed6d547275f08f602387a349cc9e70ffafb380f2414eea6b16ac70919"
+    },
+    {
+      "file": "13 - Регламент и текст показа.docx",
+      "bytes": 37687,
+      "sha256": "aa63364cccd04408a5d5fa42411d55724f1b81aa7b88d8c1462a526d620be799"
+    },
+    {
+      "file": "13 - Регламент и текст показа.pdf",
+      "bytes": 86516,
+      "sha256": "6f683215e193a06be2652b14266b2866c512cae52ef8dd1a6ca3f01c5dd94c27"
+    },
+    {
+      "file": "14 - Актуальный паспорт.docx",
+      "bytes": 38469,
+      "sha256": "865082d3483a1b556cd96e1295d69b700f61d559d4a6d3a30a0108da421b7b81"
+    },
+    {
+      "file": "14 - Актуальный паспорт.pdf",
+      "bytes": 89100,
+      "sha256": "df18846466e0dc5869bf64d80a2546f433b062fbbf691b24f6e4b149d2ecab47"
+    },
+    {
+      "file": "15 - Стейкхолдеры и интервью.docx",
+      "bytes": 38785,
+      "sha256": "18b63f97d2cec66ffe9a5ec51967308e0374bcb9e74124530fc0b4b52749b266"
+    },
+    {
+      "file": "15 - Стейкхолдеры и интервью.pdf",
+      "bytes": 89225,
+      "sha256": "228bdfc50cf28758833b16bf438adf4931f07bc30031fb657357a5e652dc136b"
+    },
+    {
+      "file": "acceptance/evidence/TC-01/valid-map.osu-analysis.json",
+      "bytes": 3142,
+      "sha256": "7d6ca6c85bcc43b2b889fd3900e815b7b94458fd5f443044cb07dec9df2947fe"
+    },
+    {
+      "file": "acceptance/evidence/TC-01/valid-map.osu-upload.json",
+      "bytes": 416,
+      "sha256": "ac2f7a59eb2e21facd5c25719ab67b21d83c4868a7dadc7b03bf3149c6d3020c"
+    },
+    {
+      "file": "acceptance/evidence/TC-01/valid-map.osz-analysis.json",
+      "bytes": 3142,
+      "sha256": "7d6ca6c85bcc43b2b889fd3900e815b7b94458fd5f443044cb07dec9df2947fe"
+    },
+    {
+      "file": "acceptance/evidence/TC-01/valid-map.osz-upload.json",
+      "bytes": 416,
+      "sha256": "ac2f7a59eb2e21facd5c25719ab67b21d83c4868a7dadc7b03bf3149c6d3020c"
+    },
+    {
+      "file": "acceptance/evidence/TC-02/analysis.json",
+      "bytes": 5380,
+      "sha256": "a7893980377abbfe75233bdd91d7c1889f6bedb2230948f479c3b5451808a79d"
+    },
+    {
+      "file": "acceptance/evidence/TC-02/conditions.json",
+      "bytes": 410,
+      "sha256": "71d2b76da328cec2a1d7285e719aae25772406a6a88c6b4db9e37522807af1fb"
+    },
+    {
+      "file": "acceptance/evidence/TC-02/prediction.json",
+      "bytes": 1860,
+      "sha256": "ddca435db95b3caa6d72621fc268dac77bcba72677bab49f84f0ecdc6068768c"
+    },
+    {
+      "file": "acceptance/evidence/TC-02/training.json",
+      "bytes": 386,
+      "sha256": "719c73dca790bc6c2859bff97fea2f1dd128b592bda0000c905119d719b674c1"
+    },
+    {
+      "file": "acceptance/evidence/TC-03/catalog.json",
+      "bytes": 66,
+      "sha256": "a31470ae0c488ee5034ff521da50f52313a69646a60bf1e7b002dde42c720282"
+    },
+    {
+      "file": "acceptance/evidence/TC-03/error.json",
+      "bytes": 80,
+      "sha256": "a76fa0c0f2284e96a0832d94d80ac732d8ddc647f37d0d022315b84377a2d59e"
+    },
+    {
+      "file": "acceptance/evidence/TC-04/analysis.json",
+      "bytes": 5588,
+      "sha256": "0ca199300998e314e5a157dd8d82fbf78015c0a78af26fa74d8ba39f9d024057"
+    },
+    {
+      "file": "acceptance/evidence/TC-04/conditions.json",
+      "bytes": 410,
+      "sha256": "58f5fdb1cb142709eac0d9ec54603a24e46334cf5920a5fd496cf3061336e380"
+    },
+    {
+      "file": "acceptance/evidence/TC-04/prediction.json",
+      "bytes": 2058,
+      "sha256": "1c62913e167dac4d596470593f7c8e95f07cfee8dcc3a565a28fb24bcba6851b"
+    },
+    {
+      "file": "acceptance/evidence/TC-04/training.json",
+      "bytes": 548,
+      "sha256": "b8a9727585326a8f3a66bbd151b1c22bf5f4f329eea7b20747c66ca964a740db"
+    },
+    {
+      "file": "acceptance/evidence/TC-05/analysis.json",
+      "bytes": 5587,
+      "sha256": "babd95b80bd9f90b0cbc87222c4d342ebcb12c970e7750f1b8d257d668669171"
+    },
+    {
+      "file": "acceptance/evidence/TC-05/conditions.json",
+      "bytes": 409,
+      "sha256": "605d29d7849aa5fc288cb45eef55b5c0d7ed6d97ff2111541995698c58d8cf5c"
+    },
+    {
+      "file": "acceptance/evidence/TC-05/prediction.json",
+      "bytes": 2057,
+      "sha256": "b3a5d578320347a2df5a9312da6675f8d12f3a0e543fa5a814ad1b01622fa5c2"
+    },
+    {
+      "file": "acceptance/evidence/TC-05/training.json",
+      "bytes": 547,
+      "sha256": "ec51e7b658add074311147525dce2c7abafb5feb5b6a0622e702a8872ba5dcd4"
+    },
+    {
+      "file": "acceptance/evidence/TC-06/analysis.json",
+      "bytes": 3783,
+      "sha256": "13c7c48bc2ca31c5c8974e497495cf9509f3b3b462f94aacf0ea26f5929e900b"
+    },
+    {
+      "file": "acceptance/evidence/TC-06/conditions.json",
+      "bytes": 210,
+      "sha256": "8f809ee0bb7902e11932308d7f0578fdd5d045823b39ac79a69cf29e0044cecc"
+    },
+    {
+      "file": "acceptance/inputs/broken-map.osu",
+      "bytes": 29,
+      "sha256": "5b7560a09b78c58c25f8f831c383b0e8880165dc73d9ad7fa963c008ac66afcd"
+    },
+    {
+      "file": "acceptance/inputs/valid-map.osu",
+      "bytes": 7273,
+      "sha256": "0e88c67fac1ba53456d03bbe75b4f317695d58e822dcf0d1a6ac0bf9bc4ae1ad"
+    },
+    {
+      "file": "acceptance/inputs/valid-map.osz",
+      "bytes": 2765,
+      "sha256": "951945616f9de10d67e3ea1960926c8b0040408cbd45bb5de587d8d8c36424ed"
+    },
+    {
+      "file": "acceptance/tests.xml",
+      "bytes": 942,
+      "sha256": "8de1e8226f19f2e8af5875b33892916e8e5bdb7316c840ac7b7a42c684699f2e"
+    },
+    {
+      "file": "acceptance/Приемочные проверки - pulse!.docx",
+      "bytes": 39885,
+      "sha256": "6bebf02c369617b626245213626568fef047c33ce66c100f28a53a23395ec030"
+    },
+    {
+      "file": "acceptance/Приемочные проверки - pulse!.pdf",
+      "bytes": 94059,
+      "sha256": "ca994876949442e7b67417628b00b1fc06b4fbbdef84774fec13a1b47857c399"
+    },
+    {
+      "file": "acceptance/Что говорить.txt",
+      "bytes": 1835,
+      "sha256": "e57e2a84e31338f869a188a61130df52b17dc02425359a315a647574988be863"
+    },
+    {
+      "file": "Backlog - импорт.csv",
+      "bytes": 2328,
+      "sha256": "11ce97f4a7bef426d106c65b2d024c4b2456e97b3dd7c9e5dc53781c40c4fcc6"
+    },
+    {
+      "file": "baseline/MVP Canvas - pulse!.docx",
+      "bytes": 39606,
+      "sha256": "6240957aedb9459aaa6ea9e27d35ecfbe3a9e02ac526c4267818bfcbb423b5b2"
+    },
+    {
+      "file": "baseline/MVP Canvas - pulse!.pdf",
+      "bytes": 89429,
+      "sha256": "10c41bc6e0f42b9e1b4176bed015e8a04c75e573a1a72a7cfa644503fef51572"
+    },
+    {
+      "file": "baseline/RACI - pulse!.xlsx",
+      "bytes": 8356,
+      "sha256": "14972a1e25ec6793f7712b65a10a56b3b3c85f087f193193b4c4dab08e0e684a"
+    },
+    {
+      "file": "baseline/Границы WBS и решения - pulse!.docx",
+      "bytes": 43208,
+      "sha256": "3078734f16be904de7a9586e1778331f76d1d9cc825038e8d500f72efd5d8bc5"
+    },
+    {
+      "file": "baseline/Датасет и общая модель - pulse!.docx",
+      "bytes": 39691,
+      "sha256": "46d775ab0592ad40eb3fb5401c8e648c1cef526773b81afd3f03effe083e9733"
+    },
+    {
+      "file": "baseline/Датасет и общая модель - pulse!.xlsx",
+      "bytes": 7409,
+      "sha256": "cf9ba5cf8d2c450414de94537caf0225a809172891edd511260d7f1924e6dc5f"
+    },
+    {
+      "file": "baseline/Интервью и требования - pulse!.docx",
+      "bytes": 40765,
+      "sha256": "3019ab6b75a0e7227dc2f31798c123db9a834bb3fb2d26f5c77f4deb71ecce7a"
+    },
+    {
+      "file": "baseline/Календарный план - pulse!.pod",
+      "bytes": 251384,
+      "sha256": "a3b48e4521a389cc34ae48494b799416ba9c97b58a6f5cd27060f1b6384578bb"
+    },
+    {
+      "file": "baseline/Календарный план - pulse!.xlsx",
+      "bytes": 10370,
+      "sha256": "6183b57bd7bddf304f323b3d557cbcd43917cc018dc23c4d48a2f8f6086bcc7c"
+    },
+    {
+      "file": "baseline/Календарный план - pulse!.xml",
+      "bytes": 41944,
+      "sha256": "0ce45bb6b8911acb900ab697f5b683a1384c53d7f795e2bdf6df05eee6ca2948"
+    },
+    {
+      "file": "baseline/Карточка проектного кейса - pulse!.docx",
+      "bytes": 18200,
+      "sha256": "1577bd4bb7c13a3c252a661b2391749cd25d9b821db98d9734d8b56d4835a0a0"
+    },
+    {
+      "file": "baseline/Матрица стейкхолдеров - pulse!.docx",
+      "bytes": 39873,
+      "sha256": "9b7cb068082874cdc93b7fb59dc7858b8c80e2e63466c87d6283675eecb17c59"
+    },
+    {
+      "file": "baseline/Паспорт проекта - pulse!.docx",
+      "bytes": 41477,
+      "sha256": "51e58979c2a3900b796cab5bad5d776b26445f4a5906739c629b2a57eaebb521"
+    },
+    {
+      "file": "baseline/Практика 1 - Тест-кейсы MVP - pulse!.docx",
+      "bytes": 40745,
+      "sha256": "f1b4f796a1137476bc9d46466299a171e0425f887c7f577c199657502061b2df"
+    },
+    {
+      "file": "baseline/Реестр требований - pulse!.docx",
+      "bytes": 40605,
+      "sha256": "4d043eac8094c78277875ad52b8d02bc863323c4c1f5aab34075cf08f70f68ca"
+    },
+    {
+      "file": "baseline/Тест-план MVP - pulse!.docx",
+      "bytes": 41743,
+      "sha256": "0f2cc9e4700bb6b06621ded152d1805386a3febd880ea277a6e9671fc9aaa269"
+    },
+    {
+      "file": "baseline/Техническое задание - pulse!.docx",
+      "bytes": 43582,
+      "sha256": "6715ca27679e7a92328f0b9f5f2d39d65437857de36427938319747efd24d5f3"
+    },
+    {
+      "file": "baseline/Улучшение accuracy - pulse!.docx",
+      "bytes": 39631,
+      "sha256": "e8b0cd8164f02fdb5bbd143cf7bbf8e06b12b5b8df6334bcefb75035b8c34592"
+    },
+    {
+      "file": "baseline/Улучшение accuracy - pulse!.xlsx",
+      "bytes": 6547,
+      "sha256": "c8c7f03ed6536b985f04cb890225887ac04837e2da4d9907a46fd8adea36cc3c"
+    },
+    {
+      "file": "baseline/Учебный_мини-паспорт - pulse!.docx",
+      "bytes": 95192,
+      "sha256": "8fdac2fdf8d0ec541df3d9300474202199f14c1f67d1bb29864cfa3693b2e0ed"
+    },
+    {
+      "file": "defense/Презентация - pulse!.pdf",
+      "bytes": 425792,
+      "sha256": "131cd8c7bad86b88578b9f2a6be736c94be6f5235f057f30b121f9a928c4737c"
+    },
+    {
+      "file": "defense/Презентация - pulse!.pptx",
+      "bytes": 481936,
+      "sha256": "32d445c82d08b6949acfbed6f38a48c06e57d8376bbf2209a05f87dd1d3c834b"
+    },
+    {
+      "file": "defense/Проверка MVP - 07.11.docx",
+      "bytes": 38790,
+      "sha256": "e592dac919e0b84a835dd37f3268e5a66b3eef4bce345335d53cbb889cbc8c98"
+    },
+    {
+      "file": "defense/Речь по участникам - pulse!.txt",
+      "bytes": 18218,
+      "sha256": "535d1055714995c15480a3e346b49b570332d51848a9e85920747e6808ba3906"
+    },
+    {
+      "file": "defense/Сначала прочитай - 1 страница.pdf",
+      "bytes": 86032,
+      "sha256": "6862a69d7607fd2ff7935882dcd7d40a4c3d6395e69af0afb1646b1c8b798aa8"
+    },
+    {
+      "file": "defense/Что говорить и показывать.docx",
+      "bytes": 44072,
+      "sha256": "0459d621af04932eaae06c437f798e850a6d1a2fece28765631d91e7f6f85da1"
+    },
+    {
+      "file": "docs/handover_checklist.md",
+      "bytes": 3207,
+      "sha256": "93c4911861bb8ae97babc3e9d9391911a36000f941e1ccb624c24113d085f672"
+    },
+    {
+      "file": "docs/known_issues.md",
+      "bytes": 4112,
+      "sha256": "4ca8be38731e6a04acb33313caeba39ae26297795891efff4571f6c88710b455"
+    },
+    {
+      "file": "docs/model_data_note.md",
+      "bytes": 5038,
+      "sha256": "e2f6d249fdc1500eb2481421ff94e50f102dbdb2081834323eed4235c48a78f5"
+    },
+    {
+      "file": "docs/quick_start.md",
+      "bytes": 3123,
+      "sha256": "532dfba58be77a6997103af6d100125a70df95b81b21087d218c83fe0fecaa53"
+    },
+    {
+      "file": "docs/runbook.md",
+      "bytes": 5584,
+      "sha256": "9d2f6357a4b9b6613987b8a8f3c75481283089ddee1b69d450edba42f6464eb8"
+    },
+    {
+      "file": "docs/user_guide.md",
+      "bytes": 4807,
+      "sha256": "c97b3ca37826b80d104439761b6b9c8bbb6fc72b0237fcc1b6d185a6962a47e2"
+    },
+    {
+      "file": "evidence/accuracy-v3-summary.json",
+      "bytes": 4956,
+      "sha256": "3acf572fc7a1f03f69ef8ece8f888fac8f881babd43e50d9376f534865f93ca8"
+    },
+    {
+      "file": "evidence/clean-install.json",
+      "bytes": 511,
+      "sha256": "68237b71d73eb6045adf822f4b7fc8dbfcf397590a1adc65da90141629680a36"
+    },
+    {
+      "file": "evidence/full-tests.xml",
+      "bytes": 21895,
+      "sha256": "79168c80fcc0cc9757fcd285245819b9c13a25ff5fef4457b4947aee9641b121"
+    },
+    {
+      "file": "testing/01 - Тест-план.docx",
+      "bytes": 38124,
+      "sha256": "c9cb3d432e97881baf1d5eeac1cbbec5469da0290353e35ab204d627939eeda2"
+    },
+    {
+      "file": "testing/02 - Шесть тест-кейсов.docx",
+      "bytes": 39643,
+      "sha256": "ddf2d8073ba3eb307a956f19ffa6d4363317c95a2ce95eadaee1603de1dbeaca"
+    },
+    {
+      "file": "testing/03 - Журнал дефектов.docx",
+      "bytes": 38956,
+      "sha256": "41c54cb7b0fbed7e631ca6312260647a280056f8bbda1918738305a1277db5cb"
+    },
+    {
+      "file": "testing/04 - Отчет о тестировании.docx",
+      "bytes": 38796,
+      "sha256": "fb6890709c37d5607d45f0bcdfc311a94ddbcdf5be961b6c7719474b3fc4fdcd"
+    },
+    {
+      "file": "testing/05 - Требования и решения.docx",
+      "bytes": 38495,
+      "sha256": "15ac8e7f899f8e50bcbfc7595644b9f93bfeda63ade86fbe3ee201360691ea34"
+    },
+    {
+      "file": "testing/06 - Подробные результаты тестов.pdf",
+      "bytes": 103613,
+      "sha256": "4716767f573dcd1d64728799c784680a40cc6bc271aa0bf382915890f0474260"
+    },
+    {
+      "file": "testing/evidence/TC-01/valid-map.osu-analysis.json",
+      "bytes": 2596,
+      "sha256": "78135d4401b67951a0890d299ccb0b0b85f10fafe00ad53e43041b35e87a22f5"
+    },
+    {
+      "file": "testing/evidence/TC-01/valid-map.osu-upload.json",
+      "bytes": 416,
+      "sha256": "ac2f7a59eb2e21facd5c25719ab67b21d83c4868a7dadc7b03bf3149c6d3020c"
+    },
+    {
+      "file": "testing/evidence/TC-01/valid-map.osz-analysis.json",
+      "bytes": 2596,
+      "sha256": "78135d4401b67951a0890d299ccb0b0b85f10fafe00ad53e43041b35e87a22f5"
+    },
+    {
+      "file": "testing/evidence/TC-01/valid-map.osz-upload.json",
+      "bytes": 416,
+      "sha256": "ac2f7a59eb2e21facd5c25719ab67b21d83c4868a7dadc7b03bf3149c6d3020c"
+    },
+    {
+      "file": "testing/evidence/TC-02/analysis.json",
+      "bytes": 4722,
+      "sha256": "32a83eaaab99c7c98a0e34e875362234395d94c11d03d529a5b8cc5599e294d8"
+    },
+    {
+      "file": "testing/evidence/TC-02/conditions.json",
+      "bytes": 410,
+      "sha256": "71d2b76da328cec2a1d7285e719aae25772406a6a88c6b4db9e37522807af1fb"
+    },
+    {
+      "file": "testing/evidence/TC-02/prediction.json",
+      "bytes": 1792,
+      "sha256": "042978167189829675f009b8b63782ce1ea3dab56ed5ff3d55b4884c4e42d8f9"
+    },
+    {
+      "file": "testing/evidence/TC-02/training.json",
+      "bytes": 386,
+      "sha256": "eab8a04d29a6c1ab60f4f8a929026b1a06addfa528bf998be92da11c96374c80"
+    },
+    {
+      "file": "testing/evidence/TC-03/catalog.json",
+      "bytes": 66,
+      "sha256": "a31470ae0c488ee5034ff521da50f52313a69646a60bf1e7b002dde42c720282"
+    },
+    {
+      "file": "testing/evidence/TC-03/error.json",
+      "bytes": 80,
+      "sha256": "a76fa0c0f2284e96a0832d94d80ac732d8ddc647f37d0d022315b84377a2d59e"
+    },
+    {
+      "file": "testing/evidence/TC-04/analysis.json",
+      "bytes": 4930,
+      "sha256": "60e44254dd6687c44e9c02079e2fbfaa0ff6bf99dee68124fe49796f66ed99be"
+    },
+    {
+      "file": "testing/evidence/TC-04/conditions.json",
+      "bytes": 410,
+      "sha256": "58f5fdb1cb142709eac0d9ec54603a24e46334cf5920a5fd496cf3061336e380"
+    },
+    {
+      "file": "testing/evidence/TC-04/prediction.json",
+      "bytes": 1990,
+      "sha256": "50ca50b07612b421ae30b203fea7767695a6a1aded5804ff8aa90c8e2f265539"
+    },
+    {
+      "file": "testing/evidence/TC-04/training.json",
+      "bytes": 548,
+      "sha256": "b8a9727585326a8f3a66bbd151b1c22bf5f4f329eea7b20747c66ca964a740db"
+    },
+    {
+      "file": "testing/evidence/TC-05/analysis.json",
+      "bytes": 4929,
+      "sha256": "3c885922bf6393baad40a5955b723df054cc12cd44fdd636214cf24091974f5e"
+    },
+    {
+      "file": "testing/evidence/TC-05/conditions.json",
+      "bytes": 409,
+      "sha256": "605d29d7849aa5fc288cb45eef55b5c0d7ed6d97ff2111541995698c58d8cf5c"
+    },
+    {
+      "file": "testing/evidence/TC-05/prediction.json",
+      "bytes": 1989,
+      "sha256": "3d3ff95f3b8df890ef004bc2a3de5fa1fe432472425fc6fae84c1a6d2f4d91e6"
+    },
+    {
+      "file": "testing/evidence/TC-05/training.json",
+      "bytes": 547,
+      "sha256": "ec51e7b658add074311147525dce2c7abafb5feb5b6a0622e702a8872ba5dcd4"
+    },
+    {
+      "file": "testing/evidence/TC-06/analysis.json",
+      "bytes": 3199,
+      "sha256": "7ec4525da8b7a8faa192440b4bb2b0ec6e74963db56f53a67b3cc1b263f922c2"
+    },
+    {
+      "file": "testing/evidence/TC-06/conditions.json",
+      "bytes": 210,
+      "sha256": "8f809ee0bb7902e11932308d7f0578fdd5d045823b39ac79a69cf29e0044cecc"
+    },
+    {
+      "file": "testing/historical/native-audio.txt",
+      "bytes": 12856,
+      "sha256": "f82bdcca2d380201bd6a736edd45970f95b0508ef727095775604b78e80ebc2a"
+    },
+    {
+      "file": "testing/historical/native-audio.xml",
+      "bytes": 6032,
+      "sha256": "35051ed13a68cdea80a58a3355129ad56a7447ad052eec65bf4cf8e00c71df0f"
+    },
+    {
+      "file": "testing/historical/TC-05_1.png",
+      "bytes": 108289,
+      "sha256": "04e502dbd194ae622153a023b0610810a1fd6eaf0a213701d0439ad5120380f2"
+    },
+    {
+      "file": "testing/historical/TC-05_2.png",
+      "bytes": 76767,
+      "sha256": "2917828377761f5881a0541595a34258f99c052a566d65940c7891f26ad2183f"
+    },
+    {
+      "file": "testing/historical/test-results-2026-11-04.json",
+      "bytes": 13196,
+      "sha256": "59d4db53848a69f11c6c236ffac8240beafc213c60d35f588e1643670699b4d7"
+    },
+    {
+      "file": "testing/inputs/broken-map.osu",
+      "bytes": 29,
+      "sha256": "5b7560a09b78c58c25f8f831c383b0e8880165dc73d9ad7fa963c008ac66afcd"
+    },
+    {
+      "file": "testing/inputs/valid-map.osu",
+      "bytes": 7273,
+      "sha256": "0e88c67fac1ba53456d03bbe75b4f317695d58e822dcf0d1a6ac0bf9bc4ae1ad"
+    },
+    {
+      "file": "testing/inputs/valid-map.osz",
+      "bytes": 2765,
+      "sha256": "4ca1fe23e99642374dac12f25aba2b10f2010998c88b4b1c0fe99457e0d1bb2d"
+    },
+    {
+      "file": "testing/practice.xml",
+      "bytes": 942,
+      "sha256": "f9371542c786a2914088ebe0e5471b273acd72b44d837e11579f14478a7d479f"
+    },
+    {
+      "file": "testing/pytest.txt",
+      "bytes": 3474,
+      "sha256": "485f665700622f181a2121e1f58698084c1f97a7bd09ee90ead429f5b5019e6b"
+    },
+    {
+      "file": "testing/Quick Start.md",
+      "bytes": 3123,
+      "sha256": "532dfba58be77a6997103af6d100125a70df95b81b21087d218c83fe0fecaa53"
+    },
+    {
+      "file": "testing/README.md",
+      "bytes": 682,
+      "sha256": "71c7ff3d5dc7747fdc55a82dd594c46801b67bcf53f0073fdfc21166c0723de9"
+    },
+    {
+      "file": "testing/run-manifest.json",
+      "bytes": 926,
+      "sha256": "335affd851cfbe820fa7e830db8d03142949ee4ca5e81b3d8b4d9cace6a75818"
+    },
+    {
+      "file": "testing/run-six-cases.ps1",
+      "bytes": 795,
+      "sha256": "e5dda604564f76d193bfa051f9d41568bb2c7506d34c045c3d2a3a932395f80d"
+    },
+    {
+      "file": "testing/tests/conftest.py",
+      "bytes": 282,
+      "sha256": "7748acad999a43b36980ac1cb5b8229a6769ce2781452b160fb9ef5c27f07f14"
+    },
+    {
+      "file": "testing/tests/test_app.py",
+      "bytes": 16920,
+      "sha256": "6cc603b91dc93c403d37c0d1af24cf21f284ca5a421b6e6b6e321ca91bdb8127"
+    },
+    {
+      "file": "testing/tests/test_practice_cases.py",
+      "bytes": 7916,
+      "sha256": "e79bd501814df4b3938974ec670f432168adc8ea8b6bbd49f5c3a28a3cc86d98"
+    },
+    {
+      "file": "testing/Запуск другим участником.md",
+      "bytes": 705,
+      "sha256": "370c73222c24b18cbda4e8e51bf7e2de54c45c65b5bea13b62652fb36aa1018a"
+    },
+    {
+      "file": "testing/Сверка материалов команды.docx",
+      "bytes": 38416,
+      "sha256": "c1bfede410d15f4c00d7db48cdf781df524338ba028c1d5582302085c39b0ec6"
+    },
+    {
+      "file": "testing/Что сдать и говорить.docx",
+      "bytes": 39313,
+      "sha256": "2d3c67b3da086f505913eb587bf9e25643eb384e4d684f2a3dface2d2cb5fb9e"
+    },
+    {
+      "file": "testing/Что сдать и говорить.md",
+      "bytes": 6469,
+      "sha256": "43f95339e2d0eaf071a85c8938bc768f0bc1a55238cd6fad1da6652794e3287a"
+    },
+    {
+      "file": "Сначала прочитай.txt",
+      "bytes": 740,
+      "sha256": "856e251eafe521b3a3a1f0feb55f4b96d632733291ed79ec39e31bb9e13bcef0"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "pass_probability": 65.8,
+  "coverage_warnings": [],
+  "same_chart_history": {
+    "attempts": 0,
+    "passes": 0,
+    "fails": 0
+  },
+  "prediction_status": "estimated",
+  "too_hard": false,
+  "suggest_training": false,
+  "expected_accuracy": 94.4,
+  "accuracy_range": [
+    87.9,
+    100
+  ],
+  "accuracy_reference_mode": "attempts",
+  "pass_observations": 60,
+  "confidence": "medium",
+  "model": "similarity_and_prior",
+  "observations": 60,
+  "ml_status": {
+    "status": "rejected",
+    "plays": 60,
+    "passes": 30,
+    "fails": 30,
+    "maps": 12,
+    "required_plays": 40,
+    "required_per_class": 8,
+    "required_maps": 10,
+    "metrics": {
+      "holdout_plays": 15,
+      "holdout_maps": 3,
+      "brier": 0.28,
+      "baseline_brier": 0.2,
+      "log_loss": 0.2629,
+      "baseline_log_loss": 0.7365,
+      "recency_half_life_days": 60,
+      "weighted_plays": 30.0
+    },
+    "message": "Модель не улучшила простой базовый прогноз на отложенных картах."
+  },
+  "accuracy_ml_status": {
+    "status": "insufficient_data",
+    "plays": 30,
+    "maps": 6,
+    "source_mode": "attempts",
+    "required_plays": 40,
+    "required_maps": 10
+  },
+  "accuracy_model": "similarity_and_prior",
+  "cnn_status": {
+    "status": "not_trained",
+    "pass_probability": null,
+    "accuracy": null
+  },
+  "population_status": {
+    "status": "not_trained"
+  },
+  "accuracy_v2_status": {
+    "status": "not_trained"
+  },
+  "accuracy_transfer_status": {
+    "status": "not_trained"
+  },
+  "message": "Экспериментальная оценка по вашим результатам; вероятность пока не откалибрована на независимой выборке.",
+  "factors": [
+    "Пик нагрузки в 1.3 раза выше средней нагрузки. Короткий сложный участок учитывается отдельными признаками модели."
+  ]
+}

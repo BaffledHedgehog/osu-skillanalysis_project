@@ -126,6 +126,21 @@ def make_report():
              ('Дефекты','NATIVE-01 открыт вне текущего scope. TEST-01 разобран, корректный TC-05 Pass. PERF-01 и QUALITY-01 требуют отдельной проверки.'),
              ('README другим участником','Файлы new/ подтверждают ручной запуск копии у коллег. Полный новый Quick Start с точной версией другим человеком не зафиксирован. Перед сдачей повторить и сохранить результат.'),
              ('Рекомендация','Работу по этим 6 кейсам представить к проверке с журналом ограничений. Решение о зачете долга принимает преподаватель; автоматическая приемка не объявлена.')])
+    d.add_heading('Таблица проведенных тестов',1)
+    results=d.add_table(rows=1,cols=5)
+    results.style='Table Grid'
+    for cell,value in zip(results.rows[0].cells,['Тест','Требование','Проверка','Фактический результат','Статус']):cell.text=value
+    rows=[
+        ('TC-01','REQ-02','.osu и .osz','Оба формата приняты, ID и признаки совпадают. Дубликат карты не создан.','Pass'),
+        ('TC-02','REQ-06','Brier 0.12 < 0.20','trained; источник прогноза validated_personal_logistic.','Pass'),
+        ('TC-03','REQ-02','Поврежденная карта','HTTP 400; каталог не изменен; health 200.','Pass'),
+        ('TC-04','REQ-06','Brier 0.28 > 0.20','rejected; используется similarity_and_prior.','Pass'),
+        ('TC-05','REQ-06','Brier 0.20 == 0.20','rejected; равенство не считается улучшением.','Pass'),
+        ('TC-06','REQ-05, REQ-09','Только 2 результата','pass_probability и expected_accuracy: null; model: insufficient_data.','Pass'),
+    ]
+    for row in rows:
+        for cell,value in zip(results.add_row().cells,row):cell.text=value
+    d.add_paragraph('Прогон 07.11.2026: 6 passed, 0 failed, 0 blocked. Значения Brier в TC-02/04/05 - контрольные данные теста. Доказательства каждого кейса: evidence/TC-XX/, общий лог pytest.txt и practice.xml.')
     d.add_heading('Что показать на занятии',1)
     for text in ['Тест-план: выбранный scope и критерии завершения.',
                  'Кейсы: TC-01, TC-03 и TC-05; затем лог 6 passed.',
@@ -291,6 +306,8 @@ def main():
 Автоматически: 6 passed / 0 failed / 0 blocked. Еще требуется запись реального повторного запуска по инструкции другим участником.
 Это не презентация итоговой защиты. Итоговая досрочная сдача проекта - 07.11.2026; ее материалы лежат отдельно в ../defense-2026-11-07/.
 ''',encoding='utf-8')
+    from build_testing_results_pdf import build_pdf
+    build_pdf(OUT)
     archive=ROOT/'deliverables/pulse-testing-debt-2026-11-07.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
         for file in OUT.rglob('*'):

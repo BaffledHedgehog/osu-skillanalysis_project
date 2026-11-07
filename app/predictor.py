@@ -18,6 +18,7 @@ from .sequence_service import predict_cnn
 from .population_ml import predict_population
 from .accuracy_runtime import predict_personal_accuracy
 from .skill_profile import build_skill_profile
+from .accuracy_transfer import predict_transfer
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:
@@ -194,6 +195,11 @@ def predict(store: Store, user: str, target: dict[str, Any],
     if accuracy_v2.get('accuracy') is not None:
         acc = accuracy_v2['accuracy']
         accuracy_model = 'validated_personal_accuracy_v2'
+    transfer = predict_transfer(store,user,target)
+    if transfer.get('accuracy') is not None:
+        acc = transfer['accuracy']
+        accuracy_model = ('validated_effective_accuracy' if transfer['status']=='trained'
+                          else 'transferred_effective_accuracy')
     if cnn.get('accuracy') is not None:
         acc = cnn['accuracy']
         accuracy_model = 'validated_pattern_cnn'
@@ -206,6 +212,8 @@ def predict(store: Store, user: str, target: dict[str, Any],
         half_width = max(.005, population['accuracy_error_q90'])
     if accuracy_v2.get('accuracy') is not None:
         half_width = max(.005, accuracy_v2['error_q90'])
+    if transfer.get('accuracy') is not None:
+        half_width=max(.005,transfer['error_q90'],transfer['metrics'].get('error_q90',0))
     if cnn.get('accuracy') is not None:
         half_width = max(.005, cnn['accuracy_error_q90'])
     factors = []
@@ -255,6 +263,7 @@ def predict(store: Store, user: str, target: dict[str, Any],
         "cnn_status": cnn,
         'population_status': population,
         'accuracy_v2_status': accuracy_v2,
+        'accuracy_transfer_status': transfer,
         "message": "Экспериментальная оценка по вашим результатам; вероятность пока не откалибрована на независимой выборке.",
         "factors": factors,
     }

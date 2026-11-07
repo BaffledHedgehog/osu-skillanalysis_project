@@ -16,7 +16,7 @@ from typing import Any
 from .analyzer import ParsedMap, analyze_map
 
 
-ANALYZER_VERSION = 4
+ANALYZER_VERSION = 6
 
 
 class Store:

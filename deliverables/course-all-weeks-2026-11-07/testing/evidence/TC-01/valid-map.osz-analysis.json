@@ -1,0 +1,137 @@
+{
+  "id": "4864861",
+  "checksum": "3be9ad22e6b7e1c14d925d4dbeba0e53",
+  "artist": "Turbo",
+  "title": "PADORU / PADORU",
+  "version": "Ren's Extra",
+  "creator": "KeyWee",
+  "ar": 9.3,
+  "od": 9.0,
+  "cs": 3.6,
+  "hp": 5.0,
+  "object_count": 126,
+  "duration": 31,
+  "density": [
+    15,
+    53,
+    56,
+    2
+  ],
+  "first_object_ms": 1011,
+  "mods": "NM",
+  "stars": 5.57,
+  "aim": 3.04,
+  "speed": 2.26,
+  "bpm": 190,
+  "preempt_ms": 554.9999713897705,
+  "clock_rate": 1.0,
+  "stream_bpm": 94.9,
+  "burst_bpm": 189.9,
+  "slider_fraction": 0.2698412698412698,
+  "rhythm_variation": 1.1068985122798989,
+  "peak_aim": 265.2350146330536,
+  "peak_speed": 137.1821414093537,
+  "peak_load": 397.83059861186666,
+  "peak_to_mean": 2.1468876743779677,
+  "ending_peak_load": 397.83059861186666,
+  "ending_peak_fraction": 1.0,
+  "max_combo": 168,
+  "windows": [
+    {
+      "start": 0.0,
+      "end": 3.2,
+      "aim": 0.07,
+      "speed": 5.69,
+      "load": 5.76
+    },
+    {
+      "start": 3.2,
+      "end": 6.4,
+      "aim": 27.58,
+      "speed": 12.88,
+      "load": 40.46
+    },
+    {
+      "start": 6.4,
+      "end": 9.6,
+      "aim": 56.44,
+      "speed": 23.2,
+      "load": 79.65
+    },
+    {
+      "start": 9.6,
+      "end": 12.8,
+      "aim": 180.23,
+      "speed": 87.4,
+      "load": 267.64
+    },
+    {
+      "start": 12.8,
+      "end": 16.0,
+      "aim": 206.94,
+      "speed": 110.8,
+      "load": 317.75
+    },
+    {
+      "start": 16.0,
+      "end": 19.2,
+      "aim": 223.15,
+      "speed": 110.83,
+      "load": 333.98
+    },
+    {
+      "start": 19.2,
+      "end": 22.4,
+      "aim": 190.88,
+      "speed": 90.53,
+      "load": 281.41
+    },
+    {
+      "start": 22.4,
+      "end": 25.6,
+      "aim": 229.67,
+      "speed": 130.13,
+      "load": 359.8
+    },
+    {
+      "start": 25.6,
+      "end": 28.8,
+      "aim": 265.24,
+      "speed": 137.18,
+      "load": 402.42
+    },
+    {
+      "start": 28.8,
+      "end": 32.0,
+      "aim": 229.28,
+      "speed": 111.16,
+      "load": 340.43
+    }
+  ],
+  "peaks": [
+    {
+      "start": 25.6,
+      "end": 28.8,
+      "aim": 265.24,
+      "speed": 137.18,
+      "load": 402.42
+    },
+    {
+      "start": 22.4,
+      "end": 25.6,
+      "aim": 229.67,
+      "speed": 130.13,
+      "load": 359.8
+    },
+    {
+      "start": 28.8,
+      "end": 32.0,
+      "aim": 229.28,
+      "speed": 111.16,
+      "load": 340.43
+    }
+  ],
+  "prediction": null,
+  "personal_skills": null,
+  "local_prediction": null
+}

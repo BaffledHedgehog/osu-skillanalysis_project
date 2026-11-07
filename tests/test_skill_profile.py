@@ -29,7 +29,7 @@ def test_same_chart_reveals_opposite_personal_skill_demands():
 def test_mods_failures_nf_unknown_and_partial_do_not_create_skill_levels():
     eligible=rows()
     invalid=[]
-    for patch in ({'mods':'HD'}, {'mods':'NF'}, {'passed':False}, {'passed_known':False}, {'complete':False}):
+    for patch in ({'mods':'CL'}, {'mods':'NF'}, {'passed':False}, {'passed_known':False}, {'complete':False}):
         group=rows(99,99)
         for r in group:
             r.update(patch);r['analysis']['mods']=r['mods']
@@ -37,9 +37,9 @@ def test_mods_failures_nf_unknown_and_partial_do_not_create_skill_levels():
     profile=build_skill_profile(eligible+invalid)
     assert profile['attempts']==3 and profile['maps']==3
     assert profile['skills'][0]['level']==3.
-    hd=build_skill_profile(eligible+invalid,mods='HD')
-    assert hd['skills'][0]['level']==99
-    assert build_skill_profile(rows(mods='HD'),mods='NM')['status']=='insufficient_data'
+    classic=build_skill_profile(eligible+invalid,mods='CL')
+    assert classic['skills'][0]['level']==99
+    assert build_skill_profile(rows(mods='HD'),mods='NM')['status']=='available'
 
 
 def test_target_is_excluded_and_repeating_one_map_does_not_manufacture_evidence():
@@ -83,8 +83,8 @@ def test_api_exposes_profile_counts_and_target_relative_load(tmp_path):
     assert p['skills'][0]['target_load']==round(analysis['aim'],3)
     assert p['skills'][0]['relative_load'] is not None
     hd=client.get('/api/maps/503/analysis',params={'user':'Player','mods':'HD'}).json()
-    assert hd['personal_skills']['status']=='insufficient_data'
-    assert all(s['relative_load'] is None for s in hd['personal_skills']['skills'])
+    assert hd['personal_skills']['status']=='available'
+    assert [s['level'] for s in hd['personal_skills']['skills']]==[s['level'] for s in p['skills']]
     empty=client.get('/api/maps/503/analysis',params={'user':'Unknown'}).json()
     assert empty['personal_skills']['attempts']==0
     assert client.get('/api/maps/503/analysis').json()['personal_skills'] is None

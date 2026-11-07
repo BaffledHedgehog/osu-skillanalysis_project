@@ -57,6 +57,14 @@ def vector(analysis: dict[str, Any]) -> list[float]:
     ]
 
 
+def model_vector(analysis: dict[str, Any]) -> list[float]:
+    """AR/OD/CS, strains and timing already encode parameter-changing mods."""
+    values=vector(analysis)
+    for key in ('hard_rock','double_time','half_time','easy'):
+        values[FEATURES.index(key)]=0.
+    return values
+
+
 def _dataset(store: Store, user: str, return_weights=False):
     rows = []
     identity = []
@@ -69,12 +77,12 @@ def _dataset(store: Store, user: str, return_weights=False):
         analysis = play["analysis"]
         if analysis is None:
             continue
-        features = vector(analysis)
+        features = model_vector(analysis)
         rows.append((features, int(play["passed"]), play["map_id"]))
         included.append(play)
         identity.append((play["id"], play["map_id"], play["mods"], int(play["passed"]), features))
     weights = np.asarray(sample_weights(included), dtype=float)
-    fingerprint = hashlib.sha256(json.dumps([POLICY_VERSION, as_of_day().isoformat(), identity, weights.tolist()], sort_keys=True).encode()).hexdigest()
+    fingerprint = hashlib.sha256(json.dumps(['effective-parameter-mods-v1',POLICY_VERSION, as_of_day().isoformat(), identity, weights.tolist()], sort_keys=True).encode()).hexdigest()
     if not rows:
         result = np.empty((0, len(FEATURES))), np.array([], dtype=int), np.array([], dtype=str), fingerprint
         return (*result, weights) if return_weights else result
@@ -178,7 +186,7 @@ def train(store: Store, user: str) -> dict[str, Any]:
 
 
 def _score(model: dict[str, Any], analysis: dict[str, Any]) -> float:
-    values = vector(analysis)
+    values = model_vector(analysis)
     linear = model["intercept"] + sum(
         coefficient * (value - mean) / scale
         for value, mean, scale, coefficient in zip(values, model["mean"], model["scale"], model["coef"])
@@ -223,7 +231,7 @@ def predict_pass(store: Store, user: str, analysis: dict[str, Any],
 
 
 def _mods_supported(model, analysis):
-    features = vector(analysis)
+    features = model_vector(analysis)
     values = [features[FEATURES.index(key)] for key in MOD_FEATURES]
     return all(lower <= value <= upper for value, (lower, upper) in zip(values, model.get('mod_bounds', [])))
 
@@ -236,7 +244,7 @@ def _accuracy_dataset(store: Store, user: str, return_weights=False):
         analysis = play["analysis"]
         if analysis is None:
             continue
-        row = (play, vector(analysis))
+        row = (play, model_vector(analysis))
         (local if not play.get('passed_known', 1) else best if play["source"] in BEST_SOURCES else attempts).append(row)
     enough_attempts = len(attempts) >= MIN_PLAYS and len({p[0]["map_id"] for p in attempts}) >= MIN_MAPS
     enough_best = len(best) >= MIN_PLAYS and len({p[0]["map_id"] for p in best}) >= MIN_MAPS
@@ -247,7 +255,7 @@ def _accuracy_dataset(store: Store, user: str, return_weights=False):
     weights = np.asarray(sample_weights([p for p, _ in rows]), dtype=float)
     identity = [(p["id"], p["map_id"], p["mods"], p["accuracy"], features) for p, features in rows]
     fingerprint = hashlib.sha256(json.dumps(
-        ["accuracy-ridge-v2", POLICY_VERSION, as_of_day().isoformat(), source_mode, identity, weights.tolist()], sort_keys=True).encode()).hexdigest()
+        ["accuracy-ridge-effective-mods-v3", POLICY_VERSION, as_of_day().isoformat(), source_mode, identity, weights.tolist()], sort_keys=True).encode()).hexdigest()
     x = np.asarray([features for _, features in rows], dtype=float).reshape(-1, len(FEATURES))
     y = np.asarray([play["accuracy"] for play, _ in rows], dtype=float)
     groups = np.asarray([play["map_id"] for play, _ in rows], dtype=str)
@@ -340,7 +348,7 @@ def predict_accuracy(store: Store, user: str, analysis: dict[str, Any], context=
     if not lower <= analysis["stars"] <= upper:
         return None, {**status, "status": "out_of_range",
                       "message": "Сложность карты вне диапазона обучения; используется предварительная оценка."}
-    values = vector(analysis)
+    values = model_vector(analysis)
     predicted = model["intercept"] + sum(
         coefficient * (value - mean) / scale
         for value, mean, scale, coefficient in zip(values, model["mean"], model["scale"], model["coef"])

@@ -51,7 +51,9 @@ def build_skill_profile(records, mods='NM', target=None):
         if not a or not row.get('passed') or not row.get('passed_known', 1) or not row.get('complete', 1):
             continue
         row_mods = a.get('mods', row.get('mods', 'NM'))
-        if 'NF' in row_mods or row_mods != mods or not _number(row.get('weight', 1)):
+        # Hidden affects reading; the motor-skill reference remains shared.
+        reading_mode=lambda value:('FL' in value,'CL' in value)
+        if 'NF' in row_mods or reading_mode(row_mods)!=reading_mode(mods) or not _number(row.get('weight', 1)):
             continue
         if ((target.get('checksum') and a.get('checksum') == target['checksum'])
                 or (target.get('id') is not None and str(row['map_id']) == str(target['id']))):
@@ -66,16 +68,16 @@ def build_skill_profile(records, mods='NM', target=None):
         source_mode = 'mixed_achievements' if curated and ordinary else 'best_scores' if curated else 'ordinary_passes'
     skills = []
     for key, label, explanation in SKILLS:
-        useful = [r for r in selected if _number(r['analysis'].get(key))]
+        useful = [r for r in selected if _number(r['analysis'].get('mechanical_'+key,r['analysis'].get(key)))]
         by_map = {}
         for row in useful:
-            value = float(row['analysis'][key])
+            value = float(row['analysis'].get('mechanical_'+key,row['analysis'][key]))
             weight = float(row.get('weight', 1))
             group = _key(row)
             if group not in by_map or weight > by_map[group][1]:
                 by_map[group] = (value, weight)
         reference = _quantile(list(by_map.values()), .7) if len(by_map) >= MIN_MAPS else None
-        demand = _number(target.get(key))
+        demand = _number(target.get('mechanical_'+key,target.get(key)))
         ratio = demand / reference if reference is not None and demand is not None else None
         skills.append({
             'id': key, 'label': label, 'description': explanation,
@@ -98,5 +100,6 @@ def build_skill_profile(records, mods='NM', target=None):
         'dominant_demand': dominant['id'] if dominant and dominant['relative_load'] > 1 else None,
         'method': 'recency_weighted_unique_map_quantile',
         'note': 'Ориентир по пройденным картам, не физический предел и не вероятность. '
-                'Моды сравниваются отдельно, давность учитывается, повторы одной карты не добавляют ей голосов.',
+                'HR и DT учитываются через нагрузку карты, чтение Hidden считается отдельным компонентом. '
+                'Давность учитывается, повторы одной карты не добавляют ей голосов.',
     }

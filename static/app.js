@@ -87,6 +87,7 @@ function renderPrediction(prediction) {
   if (!prediction || prediction.pass_probability === null) {
     if (prediction?.prediction_status === 'unknown_skill_range') {
       box.innerHTML = `<div class="prediction-empty">Шанс прохождения пока неизвестен. Для такой скорости, AR или модов нет подходящих примеров в истории.<br>Модель не считает отсутствие опыта доказательством невозможности прохождения.</div><div style="margin-top:13px">${prediction.factors.map(factor => `<div class="prediction-factor">${escapeHtml(factor)}</div>`).join('')}</div>`;
+      if (Number.isFinite(prediction.expected_accuracy)) box.insertAdjacentHTML('beforeend', `<div class="prediction-label">Ориентир accuracy при прохождении</div><div class="accuracy-num">${prediction.expected_accuracy}%</div><p class="prediction-message">Оценка accuracy считается отдельно от шанса прохождения. Для этих условий используется перенос опыта по нагрузке карты.</p>`);
       return;
     }
     const count = prediction?.observations || 0;
@@ -102,6 +103,8 @@ function renderPrediction(prediction) {
   const cnnAccuracy = prediction.accuracy_model === 'validated_pattern_cnn';
   const accuracyV2 = prediction.accuracy_v2_status;
   const accuracyV2Active = prediction.accuracy_model === 'validated_personal_accuracy_v2';
+  const transfer = prediction.accuracy_transfer_status;
+  const transferActive = ['validated_effective_accuracy','transferred_effective_accuracy'].includes(prediction.accuracy_model);
   const accuracyActive = prediction.accuracy_model === 'validated_personal_ridge';
   const mlNote = prediction.model === 'personal_history_posterior'
     ? 'Прогноз уточнен по сохраненным попыткам этой версии карты с теми же модами. Качество такого уточнения еще нужно проверить на следующих играх.'
@@ -115,6 +118,7 @@ function renderPrediction(prediction) {
       ? `ML пока не применяется: на отложенных картах ее ошибка не ниже ошибки базового прогноза.`
       : `Для ML прохождения нужны 40 попыток на 10 картах, минимум 8 успехов и 8 неудач. Сейчас: ${ml?.plays || 0} попыток. Best в обучение прохождения не входят.`;
   const accuracyLabel = cnnAccuracy ? 'CNN: ТОЧНОСТЬ ПО ПАТТЕРНАМ'
+    : transferActive ? (transfer.mechanical_transfer ? 'ML: ПЕРЕНОС ПО УСЛОВИЯМ КАРТЫ' : 'ML: НАГРУЗКА КАРТЫ И ИСТОРИЯ')
     : accuracyV2Active ? 'ML: ТОЧНОСТЬ ПО ПРЕЖНИМ ИГРАМ'
     : populationAccuracy ? 'ML: ТОЧНОСТЬ ПО ГРУППЕ ИГРОКОВ'
     : accuracyActive
@@ -124,6 +128,12 @@ function renderPrediction(prediction) {
   if (cnnAccuracy) {
     const release = cnn.release.accuracy;
     accuracyNote = `CNN проверена на других семействах песен: ${cnn.accuracy_metrics.accuracy_attempts} проходов. Средняя ошибка ${release.test_metric.toFixed(2)} п.п.; у контрольной модели ${release.reference_metric.toFixed(2)} п.п. Это проверка на сохраненной истории, качество будущих игр еще нужно измерить. Диапазон рассчитан по ошибкам проверки.`;
+  } else if (transferActive) {
+    const m = transfer.validation_metrics;
+    accuracyNote = `Модель использует свежие и похожие прошлые проходы. Повторная проверка сохраненной истории NM: ${m.samples} игр, средняя ошибка ${m.mae_pp.toFixed(2)} п.п., у прежней модели ${m.reference_mae_pp.toFixed(2)} п.п.`;
+    if (transfer.mechanical_transfer) accuracyNote += ' Для выбранных модов это перенос опыта по эффективной нагрузке, отдельная надежность на них еще не подтверждена.';
+    if (currentMods().includes('HD')) accuracyNote += ` Чтение Hidden оценивается отдельно; в обучении компонента ${transfer.reading_samples} проходов.`;
+    accuracyNote += ' Диапазон рассчитан по проверочной истории.';
   } else if (accuracyV2Active) {
     const m = accuracyV2.metrics;
     accuracyNote = `Модель выбрана на ранних играх и проверена на ${m.samples} более поздних попытках из ${m.families} семейств карт. Средняя ошибка ${m.mae_pp.toFixed(2)} п.п., у прежней Ridge ${m.ridge_mae_pp.toFixed(2)} п.п. Это проверка сохраненной истории с обновлением профиля только по уже сыгранным играм. Диапазон не является гарантией.`;
@@ -185,7 +195,7 @@ function renderSkills(profile) {
     const targetPosition = Math.min(95, (skill.target_load || 0) / extent * 100);
     const delta = compared ? Math.abs(skill.difference_percent) : null;
     const comparison = compared ? (delta < .1 ? 'На уровне ориентира' : `На ${delta}% ${skill.difference_percent > 0 ? 'выше' : 'ниже'} твоего ориентира`)
-      : `Нужны ${profile.minimum_maps} разные пройденные карты с этими модами`;
+      : `Нужны ${profile.minimum_maps} разные пройденные карты с совместимыми правилами`;
     return `<article class="skill-card"><div class="skill-card-heading"><h3>${escapeHtml(skill.label)}</h3><span>${escapeHtml(skill.description)}</span></div>
       <div class="skill-values"><span>Твой ориентир <strong>${available ? skill.level.toFixed(2) : 'Нет данных'}</strong></span><span>Карта <strong>${skill.target_load !== null ? skill.target_load.toFixed(2) : '-'}</strong></span></div>
       ${available ? `<div class="skill-track" role="img" aria-label="${escapeHtml(skill.label)}: твой ориентир ${skill.level}, нагрузка карты ${skill.target_load ?? 'неизвестна'}"><span class="skill-player-mark" style="left:${levelPosition}%"></span>${skill.target_load !== null ? `<span class="skill-map-mark" style="left:${targetPosition}%"></span>` : ''}</div><div class="skill-legend"><span>Твой ориентир</span><span>Карта</span></div>` : ''}
@@ -194,7 +204,7 @@ function renderSkills(profile) {
   }).join('') + '</div>';
   const dominant = profile.skills.find(skill => skill.id === profile.dominant_demand);
   if (dominant) box.insertAdjacentHTML('beforeend', `<p class="skills-conclusion">Больше относительной нагрузки: ${escapeHtml(dominant.label)}. Это сравнение со своей историей, а не общий рейтинг навыка.</p>`);
-  box.insertAdjacentHTML('beforeend', `<p class="skills-note">${source} ${profile.target_excluded ? 'Выбранная карта исключена из ориентира. ' : ''}Свежие проходы важнее старых. Повторы одной карты не повышают оценку. Это не предел твоих возможностей: пики, чтение и ритм могут добавить сложности.</p>`);
+  box.insertAdjacentHTML('beforeend', `<p class="skills-note">${source} ${profile.target_excluded ? 'Выбранная карта исключена из ориентира. ' : ''}HR и DT учитываются через получившуюся нагрузку; чтение Hidden оценивается отдельно от движений. Свежие проходы важнее старых. Повторы одной карты не повышают оценку. Это не предел твоих возможностей: пики, чтение и ритм могут добавить сложности.</p>`);
 }
 
 function renderAnalysis(analysis) {
@@ -204,8 +214,8 @@ function renderAnalysis(analysis) {
   $('#map-title').textContent = `${analysis.artist} - ${analysis.title}`;
   $('#map-subtitle').textContent = `[${analysis.version}], ${analysis.creator}`;
   $('#stat-stars').textContent = `${analysis.stars.toFixed(2)}*`;
-  $('#stat-aim').textContent = analysis.aim.toFixed(2);
-  $('#stat-speed').textContent = analysis.speed.toFixed(2);
+  $('#stat-aim').textContent = (analysis.mechanical_aim ?? analysis.aim).toFixed(2);
+  $('#stat-speed').textContent = (analysis.mechanical_speed ?? analysis.speed).toFixed(2);
   $('#stat-bpm').textContent = analysis.bpm;
   $('#stat-duration').textContent = `${formatTime(analysis.duration)}, ${analysis.object_count} объектов`;
   const official = $('#official-link');
@@ -214,6 +224,12 @@ function renderAnalysis(analysis) {
   $('#dialog-map-name').textContent = `${analysis.artist} - ${analysis.title} [${analysis.version}] +${analysis.mods}`;
   renderPrediction(analysis.prediction);
   renderSkills(analysis.personal_skills);
+  if (analysis.mods.includes('HD')) {
+    const transfer = analysis.prediction?.accuracy_transfer_status;
+    const correction = transfer?.reading_adjustment_pp;
+    const effect = Number.isFinite(correction) ? `Изменение accuracy из-за чтения: ${correction > 0 ? '+' : ''}${correction.toFixed(1)} п.п. относительно базового расчета.` : '';
+    $('#skills-content').insertAdjacentHTML('beforeend', `<div class="skill-card" style="margin-top:15px"><div class="skill-card-heading"><h3>Hidden: чтение</h3><span>Отдельно от aim и speed</span></div><p class="skills-note">AR ${analysis.ar}. В плотных сценах около ${analysis.reading_density ?? 0} объектов. Перекрытия позиций голов: ${((analysis.overlap_fraction ?? 0)*100).toFixed(1)}%. Смены ритмических интервалов: ${((analysis.rhythm_switch_rate ?? 0)*100).toFixed(1)}%. Смены BPM: ${(analysis.tempo_change_rate ?? 0).toFixed(1)} в минуту.</p><p class="skills-note">${effect} Плотность, ритм и смены темпа описывают нагрузку чтения; это не точная разметка полиритма.</p></div>`);
+  }
   renderTimeline(analysis);
   renderLocalPrediction(analysis.local_prediction);
   updateMods();

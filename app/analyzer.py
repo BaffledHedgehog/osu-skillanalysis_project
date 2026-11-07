@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import rosu_pp_py
+from .reading_features import reading_features
 
 
 MOD_BITS = {"NF": 1, "EZ": 2, "HD": 8, "HR": 16, "DT": 64, "HT": 256, "NC": 512, "FL": 1024, "CL": 0}
@@ -196,6 +197,10 @@ def analyze_map(parsed: ParsedMap, mods: str = "NM") -> dict[str, Any]:
     raw = parsed.content.encode("utf-8")
     beatmap = rosu_pp_py.Beatmap(content=raw)
     attrs = rosu_pp_py.Difficulty(mods=bits, lazer='CL' not in mods_label).calculate(beatmap)
+    # Visibility changes reading, not object positions or their tap schedule.
+    mechanical_bits = bits & ~(MOD_BITS['HD'] | MOD_BITS['FL'])
+    mechanical = (attrs if mechanical_bits == bits else
+                  rosu_pp_py.Difficulty(mods=mechanical_bits, lazer='CL' not in mods_label).calculate(beatmap))
     attributes = rosu_pp_py.BeatmapAttributesBuilder(map=beatmap, mods=bits).build()
     windows, spike_features = _strain_segments(raw, bits, classic='CL' in mods_label)
     peaks = sorted(windows, key=lambda window: window["load"], reverse=True)[:3]
@@ -208,14 +213,19 @@ def analyze_map(parsed: ParsedMap, mods: str = "NM") -> dict[str, Any]:
         "stars": round(float(attrs.stars), 2),
         "aim": round(float(attrs.aim or 0), 2),
         "speed": round(float(attrs.speed or 0), 2),
+        "mechanical_stars": round(float(mechanical.stars), 2),
+        "mechanical_aim": round(float(mechanical.aim or 0), 2),
+        "mechanical_speed": round(float(mechanical.speed or 0), 2),
         "bpm": round(float(beatmap.bpm) * speed_factor),
         "duration": round(parsed.metadata["duration"] / speed_factor),
         "ar": round(float(attributes.ar), 2),
         "od": round(float(attributes.od), 2),
         "cs": round(float(attributes.cs), 2),
+        "hp": round(float(attributes.hp), 2),
         "preempt_ms": float(attributes.ar_hit_window),
         "clock_rate": float(attributes.clock_rate),
         **pattern_features(parsed, float(attributes.clock_rate)),
+        **reading_features(parsed.content,float(attributes.ar_hit_window),float(attributes.cs),float(attributes.clock_rate)),
         **spike_features,
         "max_combo": int(attrs.max_combo or 0),
         "windows": windows,

@@ -1,0 +1,24 @@
+{
+  "controlled_metrics": true,
+  "not_player_quality_measurement": true,
+  "model_brier": 0.12,
+  "baseline_brier": 0.2,
+  "training_maps": [
+    "800000",
+    "800001",
+    "800002",
+    "800003",
+    "800005",
+    "800007",
+    "800008",
+    "800009",
+    "800010"
+  ],
+  "validation_maps": [
+    "800004",
+    "800006",
+    "800011"
+  ],
+  "map_overlap": [],
+  "probe_id": "899999"
+}

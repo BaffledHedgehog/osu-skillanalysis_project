@@ -1,0 +1,157 @@
+{
+  "schema": "effective-map-accuracy-v3",
+  "selected": "ridge_residual_100",
+  "cv": {
+    "hgb_absolute_mae": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.8812289601658327,
+      "bias_pp": 0.682738973754047,
+      "error_q90": 0.07910496721516608,
+      "selection_score": 3.9598208301092157
+    },
+    "hgb_residual_mae": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.955402657542502,
+      "bias_pp": 0.37761025954767735,
+      "error_q90": 0.08384059307233153,
+      "selection_score": 3.9989979461794967
+    },
+    "hgb_balanced_absolute_mae": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 4.044340436577168,
+      "bias_pp": 1.0860556528011676,
+      "error_q90": 0.0859588036840441,
+      "selection_score": 4.164666121882442
+    },
+    "ridge_residual_100": {
+      "samples": 917,
+      "families": 470,
+      "mae_pp": 3.8247998274772197,
+      "bias_pp": 0.0448825810207118,
+      "error_q90": 0.07679684504715123,
+      "selection_score": 3.9556788647119268
+    }
+  },
+  "test": {
+    "samples": 433,
+    "families": 254,
+    "mae_pp": 3.900055088692532,
+    "bias_pp": -0.49230725447342166,
+    "error_q90": 0.08646983003135948,
+    "reference_mae_pp": 4.313134776413328,
+    "reference_bias_pp": -0.866368095024471,
+    "by_mod": {
+      "DT": {
+        "samples": 6,
+        "families": 6,
+        "mae_pp": 4.395163337756553,
+        "bias_pp": 4.375281032805303,
+        "error_q90": 0.07264779122477055,
+        "reference_mae_pp": 2.9176809580013288,
+        "reference_bias_pp": -0.6356276148299274
+      },
+      "HD": {
+        "samples": 7,
+        "families": 7,
+        "mae_pp": 4.952180529688369,
+        "bias_pp": 4.300863155846706,
+        "error_q90": 0.12951143268937543,
+        "reference_mae_pp": 5.506105699802843,
+        "reference_bias_pp": 3.2913403449289134
+      },
+      "HDEZ": {
+        "samples": 1,
+        "families": 1,
+        "mae_pp": 7.758510936516405,
+        "bias_pp": 7.758510936516405,
+        "error_q90": 0.07758510936516405,
+        "reference_mae_pp": 9.834731789632635,
+        "reference_bias_pp": 9.834731789632635
+      },
+      "HDHR": {
+        "samples": 4,
+        "families": 4,
+        "mae_pp": 4.26845815203828,
+        "bias_pp": 4.26845815203828,
+        "error_q90": 0.07778380237759884,
+        "reference_mae_pp": 0.436489654760161,
+        "reference_bias_pp": 0.436489654760161
+      },
+      "HR": {
+        "samples": 7,
+        "families": 3,
+        "mae_pp": 3.3346204655140252,
+        "bias_pp": -1.5662320100810696,
+        "error_q90": 0.043400989705257256,
+        "reference_mae_pp": 5.0752458821695345,
+        "reference_bias_pp": -5.0752458821695345
+      },
+      "HT": {
+        "samples": 5,
+        "families": 1,
+        "mae_pp": 2.511478455593239,
+        "bias_pp": -0.36533449328791884,
+        "error_q90": 0.04200228864528366,
+        "reference_mae_pp": 3.4445389667781474,
+        "reference_bias_pp": -2.5405545933004703
+      },
+      "NM": {
+        "samples": 403,
+        "families": 239,
+        "mae_pp": 3.872761266073696,
+        "bias_pp": -0.8384140960751476,
+        "error_q90": 0.0868496476814858,
+        "reference_mae_pp": 4.350042610635219,
+        "reference_bias_pp": -1.0198925020890648
+      }
+    },
+    "difficulty_bins": {
+      "0-4": {
+        "samples": 43,
+        "families": 39,
+        "mae_pp": 3.074753001328976,
+        "bias_pp": -0.7493103823706253,
+        "error_q90": 0.05799340006869504,
+        "reference_mae_pp": 3.9659385554981523,
+        "reference_bias_pp": -3.356033093681069
+      },
+      "4-5": {
+        "samples": 27,
+        "families": 23,
+        "mae_pp": 3.515403692745807,
+        "bias_pp": -1.126047134501954,
+        "error_q90": 0.059217824172699454,
+        "reference_mae_pp": 5.521003711415384,
+        "reference_bias_pp": -3.3070598638717157
+      },
+      "5-6": {
+        "samples": 164,
+        "families": 116,
+        "mae_pp": 3.741234700955095,
+        "bias_pp": -0.7487615106909588,
+        "error_q90": 0.08436866933626752,
+        "reference_mae_pp": 4.0157097492790355,
+        "reference_bias_pp": -1.043419108438163
+      },
+      "6-100": {
+        "samples": 169,
+        "families": 83,
+        "mae_pp": 4.589520125227098,
+        "bias_pp": -1.3439549719881083,
+        "error_q90": 0.09355450747770747,
+        "reference_mae_pp": 4.86049885251074,
+        "reference_bias_pp": 0.14899601778444713
+      }
+    }
+  },
+  "accepted": true,
+  "protocol": "chronological_purged_families_with_recent_and_similar_past_context",
+  "cutoff": "2026-09-30T14:31:30.830255+00:00",
+  "external_result_used": false,
+  "retrospective_recheck": true,
+  "baseline": "frozen previous HGB predictions on identical historical score ids",
+  "context_features": 69
+}
