@@ -17,6 +17,7 @@ from .recency import sample_weights, progress_summary
 from .sequence_service import predict_cnn
 from .population_ml import predict_population
 from .accuracy_runtime import predict_personal_accuracy
+from .skill_profile import build_skill_profile
 
 
 def _clamp(value: float, lo: float, hi: float) -> float:
@@ -93,7 +94,12 @@ def _summary_from_records(user: str, records: list[dict[str, Any]]) -> dict[str,
 
 
 def user_summary(store: Store, user: str) -> dict[str, Any]:
-    return _summary_from_records(user, _records(store, user))
+    records = _records(store, user)
+    return {**_summary_from_records(user, records), 'skill_profile': build_skill_profile(records)}
+
+
+def personal_skills(store: Store, user: str, target: dict[str, Any]) -> dict[str, Any]:
+    return build_skill_profile(_records(store, user), target['mods'], target)
 
 
 def predict(store: Store, user: str, target: dict[str, Any],

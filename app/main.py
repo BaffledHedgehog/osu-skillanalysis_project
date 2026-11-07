@@ -23,7 +23,7 @@ from urllib.parse import urlparse
 from .analyzer import normalize_mods, parse_map
 from .ml import model_status, train_models
 from .osu_api import api_configured, download_beatmap, import_user_scores
-from .predictor import predict, recommendations, recommendation_bounds, training_maps, user_summary
+from .predictor import predict, recommendations, recommendation_bounds, training_maps, user_summary, personal_skills
 from .player_dataset import collect_dataset
 from .map_discovery import discover_maps
 from .population_ml import population_status
@@ -299,6 +299,7 @@ def create_app(db_path: str | Path | None = None, public_mode: bool | None = Non
             if not analysis:
                 raise HTTPException(404, "Карта не найдена в каталоге.")
             return {**analysis, "prediction": predict(store, user, analysis) if user else None,
+                    'personal_skills': personal_skills(store, user, analysis) if user else None,
                     'local_prediction': sequence_service.predict_local(store, user, analysis) if user else None}
         except ValueError as exc:
             raise HTTPException(400, str(exc)) from exc

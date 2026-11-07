@@ -166,6 +166,37 @@ function renderTimeline(analysis) {
   $('#peak-list').innerHTML = analysis.peaks.map((peak, index) => `<div class="peak-item"><span class="peak-time">${formatTime(peak.start)}-${formatTime(peak.end)}</span><span>${index === 0 ? 'Максимальная нагрузка' : 'Сложный участок'}</span><span class="peak-type">${peak.aim >= peak.speed ? 'Aim' : 'Speed'}</span></div>`).join('');
 }
 
+function renderSkills(profile) {
+  const box = $('#skills-content');
+  if (!profile) {
+    $('#skills-mods').textContent = '-';
+    box.innerHTML = '<p class="skills-note">Укажи игрока, чтобы сравнить его навыки с картой.</p>';
+    return;
+  }
+  $('#skills-mods').textContent = profile.mods;
+  const source = profile.source_mode === 'best_scores' ? 'По лучшим достижениям. Они не описывают обычную попытку.'
+    : profile.source_mode === 'mixed_achievements' ? 'По проходам и лучшим достижениям: обычных попыток пока мало.'
+    : 'По полным пройденным попыткам.';
+  box.innerHTML = '<div class="skills-grid">' + profile.skills.map(skill => {
+    const available = skill.level !== null;
+    const compared = skill.relative_load !== null;
+    const extent = Math.max(skill.level || 0, skill.target_load || 0, .01) * 1.15;
+    const levelPosition = available ? Math.min(95, skill.level / extent * 100) : 0;
+    const targetPosition = Math.min(95, (skill.target_load || 0) / extent * 100);
+    const delta = compared ? Math.abs(skill.difference_percent) : null;
+    const comparison = compared ? (delta < .1 ? 'На уровне ориентира' : `На ${delta}% ${skill.difference_percent > 0 ? 'выше' : 'ниже'} твоего ориентира`)
+      : `Нужны ${profile.minimum_maps} разные пройденные карты с этими модами`;
+    return `<article class="skill-card"><div class="skill-card-heading"><h3>${escapeHtml(skill.label)}</h3><span>${escapeHtml(skill.description)}</span></div>
+      <div class="skill-values"><span>Твой ориентир <strong>${available ? skill.level.toFixed(2) : 'Нет данных'}</strong></span><span>Карта <strong>${skill.target_load !== null ? skill.target_load.toFixed(2) : '-'}</strong></span></div>
+      ${available ? `<div class="skill-track" role="img" aria-label="${escapeHtml(skill.label)}: твой ориентир ${skill.level}, нагрузка карты ${skill.target_load ?? 'неизвестна'}"><span class="skill-player-mark" style="left:${levelPosition}%"></span>${skill.target_load !== null ? `<span class="skill-map-mark" style="left:${targetPosition}%"></span>` : ''}</div><div class="skill-legend"><span>Твой ориентир</span><span>Карта</span></div>` : ''}
+      <div class="skill-comparison ${compared && skill.difference_percent > 0 ? 'higher' : ''}">${comparison}</div>
+      <div class="skills-note">Проходов: ${skill.attempts}. Разных карт: ${skill.maps}.</div></article>`;
+  }).join('') + '</div>';
+  const dominant = profile.skills.find(skill => skill.id === profile.dominant_demand);
+  if (dominant) box.insertAdjacentHTML('beforeend', `<p class="skills-conclusion">Больше относительной нагрузки: ${escapeHtml(dominant.label)}. Это сравнение со своей историей, а не общий рейтинг навыка.</p>`);
+  box.insertAdjacentHTML('beforeend', `<p class="skills-note">${source} ${profile.target_excluded ? 'Выбранная карта исключена из ориентира. ' : ''}Свежие проходы важнее старых. Повторы одной карты не повышают оценку. Это не предел твоих возможностей: пики, чтение и ритм могут добавить сложности.</p>`);
+}
+
 function renderAnalysis(analysis) {
   state.analysis = analysis;
   $('#result-section').classList.remove('hidden');
@@ -182,6 +213,7 @@ function renderAnalysis(analysis) {
   official.href = `https://osu.ppy.sh/beatmaps/${analysis.id}`;
   $('#dialog-map-name').textContent = `${analysis.artist} - ${analysis.title} [${analysis.version}] +${analysis.mods}`;
   renderPrediction(analysis.prediction);
+  renderSkills(analysis.personal_skills);
   renderTimeline(analysis);
   renderLocalPrediction(analysis.local_prediction);
   updateMods();

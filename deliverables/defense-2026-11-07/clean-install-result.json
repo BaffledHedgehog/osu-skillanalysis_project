@@ -1,0 +1,15 @@
+{
+  "fresh_venv": true,
+  "installed_requirements": true,
+  "new_source_copy_without_private_data": true,
+  "health_ok": true,
+  "osu_uploads": 4,
+  "synthetic_qa_passes": 4,
+  "skill_report_available": true,
+  "sqlite_backup_integrity": "ok",
+  "restore_health_ok": true,
+  "restore_skill_report_identical": true,
+  "player_data_touched": false,
+  "independent_human_run": false,
+  "scope": "automated offline install/upload/skill-report and backup/restore; no public API or native replay test"
+}
